@@ -3,7 +3,7 @@ import mongoose, {model, models, Schema} from 'mongoose';
 
 export type Job = {
   _id: string;
-  title: string;
+  summary: string;
   description: string;
   orgName?: string;
   remote: string;
