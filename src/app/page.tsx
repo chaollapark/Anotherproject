@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
 import Hero from "@/app/components/Hero";
 import Jobs from "@/app/components/Jobs";
+import SingleJobPage from "@/app/components/JobDescription";
 import { addOrgAndUserData, JobModel } from "@/models/Job";
 import { getUser } from "@workos-inc/authkit-nextjs";
 
@@ -25,8 +26,18 @@ export default async function Home() {
   );
   return (
     <>
+
       <Hero />
+      <div className="min-h-screen grid grid-cols-1 md:grid-cols-2 gap-8 p-8 bg-gray-100">
+
       <Jobs header={''} jobs={latestJobs} />
+
+      < SingleJobPage params={{
+            jobId: latestJobs[0]._id.toString(),
+          }} />
+      </div>
+
     </>
+
   );
 }
