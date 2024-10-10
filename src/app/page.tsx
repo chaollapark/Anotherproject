@@ -4,6 +4,9 @@ import Jobs from "@/app/components/Jobs";
 import SingleJobPage from "@/app/components/JobDescription";
 import { addOrgAndUserData, JobModel } from "@/models/Job";
 import { getUser } from "@workos-inc/authkit-nextjs";
+import { Suspense } from "react";
+import DynamicJobDescription from "@/app/components/DynamicJobDescription";
+
 
 // Database connection
 const connectDB = async () => {
@@ -24,6 +27,7 @@ export default async function Home() {
     await JobModel.find({}, {}, { sort: '-createdAt' }),
     user,
   );
+
   return (
     <>
 
@@ -32,9 +36,9 @@ export default async function Home() {
 
       <Jobs header={''} jobs={latestJobs} />
 
-      < SingleJobPage params={{
-            jobId: latestJobs[0]._id.toString(),
-          }} />
+      <Suspense fallback={<div>Loading job description...</div>}>
+          <DynamicJobDescription jobs={latestJobs} initialJobId={latestJobs[0]?._id.toString()} />
+        </Suspense>
       </div>
 
     </>
