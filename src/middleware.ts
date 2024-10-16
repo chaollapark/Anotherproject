@@ -22,6 +22,7 @@ export const config = {
     '/list-prices',
     '/job-listings',
     '/job-cancel',
-    '/job-success'
+    '/job-success',
+    '/api/job/:jobId*'
   ]
 };
