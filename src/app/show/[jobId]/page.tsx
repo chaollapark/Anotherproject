@@ -1,6 +1,7 @@
 import {JobModel} from "@/models/Job";
 import mongoose from "mongoose";
 import Image from "next/image";
+import { convertUrlsToLinks } from '@/utils/textUtils';
 
 type PageProps = {
   params: {
@@ -33,9 +34,10 @@ export default async function SingleJobPage(props:PageProps) {
           />
         </div>
       </div>
-      <div className="whitespace-pre-line text-sm text-gray-600">
-        {jobDoc.description}
-      </div>
+      <div 
+        className="whitespace-pre-line text-sm text-gray-600"
+        dangerouslySetInnerHTML={{ __html: convertUrlsToLinks(jobDoc.description) }}
+      />
       <div className="mt-4 bg-gray-200 p-8 rounded-lg">
         <h3 className="font-bold mb-2">Apply by contacting us</h3>
         <div className="flex gap-4">

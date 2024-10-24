@@ -5,3 +5,8 @@
 body{
     @apply text-gray-800;
 }
+
+/* Add these new styles */
+.job-description-link {
+    @apply text-blue-600 hover:underline;
+}
