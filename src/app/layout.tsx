@@ -44,6 +44,7 @@ export default function RootLayout({
             <div>EUjobs.co &copy; 2024 - All rights reserved</div>
             <nav className="space-x-6">
               <Link href="/blog" className="hover:text-gray-700 transition-colors">Blog</Link>
+              <Link href="/events" className="hover:text-gray-700 transition-colors">Events</Link>
               <Link href="/contact" className="hover:text-gray-700 transition-colors">Contact</Link>
               <Link href="https://www.lobbyinglondon.com" className="hover:text-gray-700 transition-colors" target="_blank" rel="noopener noreferrer">Jobs In London</Link>
             </nav>
