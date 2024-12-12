@@ -18,8 +18,8 @@ export default function NewListingFormPage() {
               <p className="font-bold">No Login Required</p>
               <p>You can post a job without creating an account. It&apos;s quick and easy!</p>
             </div>
-            <ValueProposition/>
-            <FAQ/>
+            {/*}<ValueProposition/>*/}
+            {/*}<FAQ/>*/}
             <SecurePaymentBadge/>
           </div>
         </div>

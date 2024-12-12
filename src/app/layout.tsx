@@ -9,9 +9,9 @@ import GoogleAnalytics from "@/app/components/GoogleAnalytics";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Top EU Jobs in Brussels | EU Agencies, Government, & Policy Roles",
+  title: "Top Policy government Jobs in London",
   description:
-    "Find top Eurobrussels bubble jobs, including roles in EU agencies, government affairs, and public policy. Apply today to top career opportunities!.",
+    "Find top london jobs, including roles in long agencies, government affairs, and public policy. Apply today to top career opportunities!.",
   verification: {
     google: "IPQK9o-Ctj-mRI0LGd7JAXC9e1eSeMpA0J25py8xg7c",
   },
@@ -43,27 +43,21 @@ export default function RootLayout({
         {children}
         <footer className="container py-8 text-gray-500 border-t-2 mt-2 md:mt-4 lg:mt-8">
           <div className="flex md:flex-row flex-col justify-between md:items-center">
-            <div>EUjobs.co &copy; 2024 - All rights reserved</div>
+            <div>LobbyinLondon &copy; 2024 - All rights reserved</div>
             <nav className="flex flex-col underline mt-4 md:mt-0 gap-1">
               <Link href="/blog" className="hover:text-gray-700 transition-colors">
-                Eujobs Blog
-              </Link>
-              <Link href="/fairpay" className="hover:text-gray-700 transition-colors">
-                EUjobs Fair Pay Calculator
+                lobbyinglondon Blog
               </Link>
               <Link href="/contact" className="hover:text-gray-700 transition-colors">
-                Eujobs Contact
+                Contact
               </Link>
               <Link
-                href="https://www.lobbyinglondon.com"
+                href="https://www.eujobs.co"
                 className="hover:text-gray-700 transition-colors"
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                Jobs In London
-              </Link>
-              <Link href="/eu-jobs" className="hover:text-gray-700 transition-colors">
-                Browse EU Jobs
+                Jobs In EU
               </Link>
             </nav>
           </div>

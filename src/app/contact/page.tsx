@@ -3,8 +3,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faEnvelope } from '@fortawesome/free-solid-svg-icons';
 
 export const metadata = {
-  title: 'Contact Us - EUjobs.co',
-  description: 'Get in touch with the EUjobs.co team. Contact us for any questions about EU jobs and opportunities.',
+  title: 'Contact Us - LobbyingLondon',
+  description: 'Get in touch with the LobbyingLondon team. Contact us for any questions about Policy jobs and opportunities in London.',
 };
 
 export default function ContactPage() {

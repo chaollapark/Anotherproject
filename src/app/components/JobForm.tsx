@@ -21,15 +21,13 @@ interface JobFormProps {
 export default function JobForm({ jobDoc }: JobFormProps) {
   const router = useRouter();
   // Default to Belgium (ID: 21)
-  const [countryId, setCountryId] = useState(jobDoc?.countryId ? parseInt(jobDoc.countryId) : 21);
-  // Default to Brussels-Capital Region (ID: 254)
-  const [stateId, setStateId] = useState(jobDoc?.stateId ? parseInt(jobDoc.stateId) : 254);
-  // Default to Brussels (ID: 34248)
-  const [cityId, setCityId] = useState(jobDoc?.cityId ? parseInt(jobDoc.cityId) : 34248);
-  // Set default location names
-  const [countryName, setCountryName] = useState(jobDoc?.country || 'Belgium');
-  const [stateName, setStateName] = useState(jobDoc?.state || 'Brussels-Capital Region');
-  const [cityName, setCityName] = useState(jobDoc?.city || 'Brussels');
+  const [countryId, setCountryId] = useState(jobDoc?.countryId ? parseInt(jobDoc.countryId) : 233); // UK ID
+  const [stateId, setStateId] = useState(jobDoc?.stateId ? parseInt(jobDoc.stateId) : 3901); // England ID
+  const [cityId, setCityId] = useState(jobDoc?.cityId ? parseInt(jobDoc.cityId) : 18249); // London ID
+
+  const [countryName, setCountryName] = useState(jobDoc?.country || 'United Kingdom');
+  const [stateName, setStateName] = useState(jobDoc?.state || 'England');
+  const [cityName, setCityName] = useState(jobDoc?.city || 'London');
   const [seniority, setSeniority] = useState(jobDoc?.seniority || 'junior');
   const [plan, setPlan] = useState(jobDoc?.plan || 'basic');
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -135,7 +133,7 @@ export default function JobForm({ jobDoc }: JobFormProps) {
 
   return (
     <Theme className="md:w-1/2">
-      <h1 className="text-4xl font-extrabold mb-2">Post Your Job in the EU&apos;s Capital</h1>
+      <h1 className="text-4xl font-extrabold mb-2">Post Your Job in UK&apos;s Capital</h1>
         <h4 className="text-md text-gray-600">For Questions, contact us on <a className="text-blue-600 hover:text-blue-700" href="mailto:ceo@zmantic.com">ceo@zmantic.com</a></h4>
         <form action={handleSaveJob} className="mt-6 mx-auto">
 

@@ -84,7 +84,7 @@ export default function JobPage({ params }: { params: { id: string } }) {
   return (
     <div className="container mx-auto px-4 py-8 max-w-4xl">
       {job && <JobPostingJsonLd job={job} />}
-        <Link href="https://eujobs.co/" className="text-gray-500 hover:text-gray-600 transition-colors text-right block w-full mb-4">return back home
+        <Link href="https://lobbyinglondon.com/" className="text-gray-500 hover:text-gray-600 transition-colors text-right block w-full mb-4">return back home
         <FontAwesomeIcon icon={faArrowLeft} className="ml-2" />
         </Link>
         {/* Header Section */}

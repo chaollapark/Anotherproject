@@ -27,7 +27,7 @@ export async function POST(req: Request) {
       line_items: [
         {
           price_data: {
-            currency: 'eur',
+            currency: 'gbp',
             product_data: {
               name: `Job Posting - ${plan.charAt(0).toUpperCase() + plan.slice(1)} Plan`,
             },

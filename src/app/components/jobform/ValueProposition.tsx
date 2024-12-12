@@ -17,7 +17,7 @@ const ValueProposition = () => {
   return (
     <div className="w-full mb-8">
       <div className="bg-gray-50 rounded-lg p-6">
-        <h2 className="text-2xl font-bold text-gray-800 mb-6">Why Choose <span className='text-blue-900'>EUjobs.co?</span></h2>
+        <h2 className="text-2xl font-bold text-gray-800 mb-6">Why Choose <span className='text-blue-900'>LobbyingLondon?</span></h2>
         
         {/* Pricing Comparison */}
         <div className="mb-8">
