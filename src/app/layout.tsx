@@ -17,13 +17,13 @@ export const metadata: Metadata = {
   },
   icons: {
     icon: [
-      { url: "/favicon/favicon.ico" },
-      { url: "/favicon/favicon-32x32.png", sizes: "32x32", type: "image/png" },
-      { url: "/favicon/android-chrome-192x192.png", sizes: "192x192", type: "image/png" },
-      { url: "/favicon/android-chrome-512x512.png", sizes: "512x512", type: "image/png" },
+      { url: "/united-kingdom.png" },
     ],
-    apple: [{ url: "/favicon/apple-touch-icon.png" }],
-    shortcut: [{ url: "/favicon/favicon.ico" }],
+    apple:
+      { url: "/united-kingdom.png" },
+    shortcut: [
+      { url: "/united-kingdom.png" },
+    ],
   },
 };
 
@@ -46,7 +46,7 @@ export default function RootLayout({
             <div>LobbyinLondon &copy; 2024 - All rights reserved</div>
             <nav className="flex flex-col underline mt-4 md:mt-0 gap-1">
               <Link href="/blog" className="hover:text-gray-700 transition-colors">
-                lobbyinglondon Blog
+                Blog
               </Link>
               <Link href="/contact" className="hover:text-gray-700 transition-colors">
                 Contact

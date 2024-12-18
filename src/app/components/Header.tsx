@@ -24,9 +24,10 @@ export default async function Header() {
       <div className="container flex flex-wrap items-center justify-between mx-auto my-4 gap-4">
         <Link href={'/'} className="font-bold text-xl group">
           <span className="flex items-center">
-            eujobs.co
+            LobbyingLondon
             <Image 
-              src="/eu-flag.png" 
+              src="/united-kingdom.png" 
+              title="Icon by Riajulislam from Flaticon"
               alt="Policy jobs in London" 
               width={32} 
               height={32} 
