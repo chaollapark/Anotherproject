@@ -11,7 +11,8 @@ import { useState } from "react";
 import "react-country-state-city/dist/react-country-state-city.css";
 import { CitySelect, CountrySelect, StateSelect } from "react-country-state-city";
 import { loadStripe } from '@stripe/stripe-js';
-import { log } from "console";
+import RichTextEditor from "./jobform/RichTextEditor";
+import { Description } from "@radix-ui/themes/dist/esm/components/alert-dialog.js";
 
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);
 
@@ -36,6 +37,7 @@ export default function JobForm({ jobDoc }: JobFormProps) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [showOptional, setShowOptional] = useState(false);
+  const [jobDescription, setJobDescription] = useState(jobDoc?.description || '');
 
   const planFeatures = {
     basic: [
@@ -70,6 +72,7 @@ async function handleSaveJob(data: FormData) {
     data.set('stateId', stateId.toString());
     data.set('cityId', cityId.toString());
     data.set('seniority', seniority);
+    data.set('description', jobDescription);
 
     if (plan === 'basic') {
       data.set('plan', 'basic'); // Directly set to "basic" for free plan
@@ -218,20 +221,12 @@ async function handleSaveJob(data: FormData) {
               </TextField.Root>
             </div>
 
-            <div className="">
+            <div className="pb-8">
               <label className="block text-sm font-medium text-gray-700 mb-1">
               Job Description
               <span className="text-red-500">*</span>
               </label>
-              <TextArea
-              defaultValue={jobDoc?.description || ''}
-              placeholder="Describe the role, responsibilities, requirements, and benefits..."
-              resize="vertical"
-              name="description"
-              maxLength={10000}
-              className="min-h-32"
-              required
-            />
+                <RichTextEditor jobDoc={jobDoc} onChange={(html) => setJobDescription(html)} />
             </div>
 
           </div>
