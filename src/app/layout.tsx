@@ -55,6 +55,12 @@ export default function RootLayout({
                 Eujobs Contact
               </Link>
               <Link
+                href="/fixepso"
+                className="hover:text-gray-700 transition-colors"
+              >
+                Sign the Fix EPSO Petition
+              </Link>
+              <Link
                 href="https://www.lobbyinglondon.com"
                 className="hover:text-gray-700 transition-colors"
                 target="_blank"
