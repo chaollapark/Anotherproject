@@ -39,9 +39,7 @@ const FixEPSoPage = () => {
           src="https://docs.google.com/forms/d/e/1FAIpQLSc0c-7CdxHZMhtnaDWq0Yyx2Oc0rI5tI8gmXDpax78w1mJMqQ/viewform?embedded=true" 
           width="640" 
           height="1518" 
-          frameBorder="0" 
-          marginHeight="0" 
-          marginWidth="0"
+          style={{ border: 'none' }} 
           className="mb-8"
         >
           Loading…
