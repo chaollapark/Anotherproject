@@ -135,7 +135,7 @@ async function handleSaveJob(data: FormData) {
   return (
     <Theme className="md:w-1/2">
       <h1 className="text-4xl font-extrabold mb-2">Post Your Job in the EU&apos;s Capital</h1>
-        <h4 className="text-md text-gray-600">For Questions, contact us on <a className="text-blue-600 hover:text-blue-700" href="mailto:ceo@zmantic.com">ceo@zmantic.com</a></h4>
+        <h4 className="text-md text-gray-600">For Questions, contact us on <a className="text-blue-600 hover:text-blue-700" href="mailto:chaollapark@gmail.com">chaollapark@gmail.com</a></h4>
         <form action={handleSaveJob} className="mt-6 mx-auto">
 
         {jobDoc && <input type="hidden" name="id" value={jobDoc._id} />}
