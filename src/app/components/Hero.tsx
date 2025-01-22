@@ -18,9 +18,9 @@ export default function Hero() {
         eujobs.co - Policy jobs in <span className='underline'>Brussels</span>
       </h1>
       
-      <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+      <div className="flex max-w-4xl mx-auto">
         {/* Search Section */}
-        <div className="bg-white rounded-xl shadow-lg p-6 border border-gray-200 hover:shadow-xl transition-shadow">
+        <div className="w-full bg-white rounded-xl shadow-lg p-6 border border-gray-200 hover:shadow-xl transition-shadow">
           <h2 className="text-lg font-semibold mb-3 text-gray-800">Search Jobs</h2>
           <form onSubmit={handleSubmit} className="flex flex-col gap-3">
             <div className="flex flex-col gap-1">
@@ -46,6 +46,7 @@ export default function Hero() {
         </div>
 
         {/* Newsletter Signup Section */}
+        {/*
         <div className="bg-white rounded-xl shadow-lg p-6 border border-gray-200 hover:shadow-xl transition-shadow">
           <h2 className="text-lg font-semibold mb-3 text-gray-800">Weekly Updates</h2>
           <form 
@@ -69,7 +70,6 @@ export default function Hero() {
                 placeholder="Enter your email"
               />
             </div>
-            
             <div aria-hidden="true" style={{ position: 'absolute', left: '-5000px' }}>
               <input type="text" name="b_7dbc2eeed61fd04abc087d331_889f03a7b8" tabIndex={-1} />
             </div>
@@ -84,6 +84,7 @@ export default function Hero() {
             </button>
           </form>
         </div>
+          */}  
       </div>
     </section>
   );
