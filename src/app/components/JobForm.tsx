@@ -7,11 +7,12 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Button, RadioGroup, TextArea, TextField, Theme } from "@radix-ui/themes";
 import { faChevronDown, faChevronUp } from "@fortawesome/free-solid-svg-icons";
 import { useRouter } from 'next/navigation';
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import "react-country-state-city/dist/react-country-state-city.css";
 import { CitySelect, CountrySelect, StateSelect } from "react-country-state-city";
 import { loadStripe } from '@stripe/stripe-js';
 import RichTextEditor from "./jobform/RichTextEditor";
+import DiscountCodeInput from "./jobform/DiscountCodeProps";
 import { Description } from "@radix-ui/themes/dist/esm/components/alert-dialog.js";
 
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);
@@ -34,10 +35,24 @@ export default function JobForm({ jobDoc }: JobFormProps) {
   const [cityName, setCityName] = useState(jobDoc?.city || 'Brussels');
   const [seniority, setSeniority] = useState(jobDoc?.seniority || 'junior');
   const [plan, setPlan] = useState(jobDoc?.plan || 'basic');
+  const [price, setPrice] = useState(0);
+  const [discountedPrice, setDiscountedPrice] = useState(0); // Store the discounted price
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [showOptional, setShowOptional] = useState(false);
   const [jobDescription, setJobDescription] = useState(jobDoc?.description || '');
+
+  const planPrices: Record<string, number> = {
+    basic: 0, // Free
+    pro: 199.99,
+    recruiter: 999.99,
+  };
+
+  useEffect(() => {
+    const selectedPlanPrice = planPrices[plan];
+    setPrice(selectedPlanPrice);
+    setDiscountedPrice(selectedPlanPrice); // Reset the discounted price when plan changes
+  }, [plan]);
 
   const planFeatures = {
     basic: [
@@ -65,6 +80,7 @@ async function handleSaveJob(data: FormData) {
   setError(null);
 
   try {
+    // Add required fields to the form data
     data.set('country', countryName);
     data.set('state', stateName);
     data.set('city', cityName);
@@ -73,25 +89,28 @@ async function handleSaveJob(data: FormData) {
     data.set('cityId', cityId.toString());
     data.set('seniority', seniority);
     data.set('description', jobDescription);
+    data.set('price', discountedPrice.toString()); // Pass the discounted price to the backend
 
+    // Handle the free "Basic" plan
     if (plan === 'basic') {
-      data.set('plan', 'basic'); // Directly set to "basic" for free plan
+      data.set('plan', 'basic'); // Explicitly set the plan as "basic"
     } else {
-      data.set('plan', 'pending'); // Default to "pending" for paid plans
+      data.set('plan', 'pending'); // Use "pending" for paid plans until payment is completed
     }
 
+    // Save the job and get the job ID
     const savedJob = await saveJobAction(data);
 
+    // Redirect immediately for the free "Basic" plan
     if (plan === 'basic') {
-      // Redirect immediately for Basic plan
       router.push('/');
       return;
     }
 
-    // For paid plans, proceed with Stripe Checkout
+    // For paid plans, initiate Stripe checkout
     const stripe = await stripePromise;
     if (!stripe) {
-      throw new Error('Stripe failed to load');
+      throw new Error('Stripe failed to initialize.');
     }
 
     const response = await fetch('/api/create-checkout-session', {
@@ -100,19 +119,20 @@ async function handleSaveJob(data: FormData) {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        jobId: savedJob._id,
-        plan: plan, // Pass selected paid plan (e.g., "pro", "recruiter")
+        jobId: savedJob._id, // Job ID from the backend
+        plan, // Selected plan
+        price: discountedPrice, // Final price after discount
       }),
     });
 
     const responseData = await response.json();
 
     if (!response.ok) {
-      throw new Error(`Failed to create checkout session: ${responseData.error || 'Unknown error'}`);
+      throw new Error(`Checkout session creation failed: ${responseData.error || 'Unknown error'}`);
     }
 
     if (!responseData.sessionId) {
-      throw new Error('No session ID returned from the server');
+      throw new Error('No session ID returned from the server.');
     }
 
     const result = await stripe.redirectToCheckout({
@@ -124,7 +144,7 @@ async function handleSaveJob(data: FormData) {
     }
   } catch (error) {
     console.error('Error during job save or checkout:', error);
-    setError(error instanceof Error ? error.message : 'An unexpected error occurred');
+    setError(error instanceof Error ? error.message : 'An unexpected error occurred.');
   } finally {
     setIsSubmitting(false);
   }
@@ -388,7 +408,10 @@ async function handleSaveJob(data: FormData) {
                 <RadioGroup.Root 
                 defaultValue={plan} 
                 name="plan" 
-                onValueChange={setPlan}
+            onValueChange={(value) => {
+              setPlan(value);
+              setDiscountedPrice(planPrices[value]);
+            }}
                 className="space-y-4s"
               >
                   <div className="border border-gray-200 rounded-lg p-4 shadow-sm hover:border-blue-500 transition-colors">
@@ -433,6 +456,7 @@ async function handleSaveJob(data: FormData) {
                     </ul>
                   </div>
 
+                  {/* Recruiter plan */}
                   <div className="border border-gray-200 rounded-lg p-4 shadow-sm hover:border-blue-500 transition-colors">
                     <div className="flex items-center mb-2">
                       <RadioGroup.Item 
@@ -461,6 +485,11 @@ async function handleSaveJob(data: FormData) {
                     </ul>
                   </div>
                 </RadioGroup.Root>
+
+              <DiscountCodeInput
+                originalPrice={price}
+                onApplyDiscount={(discountedPrice) => setDiscountedPrice(discountedPrice)}
+              />
               </div>
           )}
 
