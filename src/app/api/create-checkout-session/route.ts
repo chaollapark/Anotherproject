@@ -7,21 +7,31 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
 
 export async function POST(req: Request) {
   try {
-    const { jobId, plan } = await req.json();
+    const { jobId, plan, price } = await req.json(); // Accept `price` from the client
     console.log("Job ID:", jobId);
     console.log("Plan:", plan);
-    
-    // Define prices for each plan
-    const prices = {
-      basic: 9999, 
-      pro: 19999, 
-      recruiter: 99999, 
+    console.log("Price (with discount if applicable):", price);
+
+    // Define default prices for each plan
+    const defaultPrices = {
+      basic: 9999, // €99.99
+      pro: 19999, // €199.99
+      recruiter: 99999, // €999.99
     };
 
-    if (!prices[plan as keyof typeof prices]) {
+    // Ensure the provided plan is valid
+    if (!defaultPrices[plan as keyof typeof defaultPrices]) {
       return NextResponse.json({ error: 'Invalid plan selected' }, { status: 400 });
     }
 
+    // Use the passed price or fallback to default price
+    const finalPrice = price ? Math.round(price * 100) : defaultPrices[plan as keyof typeof defaultPrices]; // Convert to cents
+
+    if (finalPrice <= 0) {
+      return NextResponse.json({ error: 'Invalid price value' }, { status: 400 });
+    }
+
+    // Create a Stripe Checkout session
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ['card'],
       line_items: [
@@ -31,7 +41,7 @@ export async function POST(req: Request) {
             product_data: {
               name: `Job Posting - ${plan.charAt(0).toUpperCase() + plan.slice(1)} Plan`,
             },
-            unit_amount: prices[plan as keyof typeof prices],
+            unit_amount: finalPrice,
           },
           quantity: 1,
         },
@@ -42,6 +52,7 @@ export async function POST(req: Request) {
       metadata: {
         jobId: jobId,
         plan: plan,
+        discountedPrice: finalPrice / 100, // Store the discounted price for later use (optional)
       },
     });
 
