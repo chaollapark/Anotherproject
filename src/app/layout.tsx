@@ -46,13 +46,16 @@ export default function RootLayout({
             <div>EUjobs.co &copy; 2024 - All rights reserved</div>
             <nav className="flex flex-col underline mt-4 md:mt-0 gap-1">
               <Link href="/blog" className="hover:text-gray-700 transition-colors">
-                Eujobs Blog
+                EUjobs Blog
               </Link>
               <Link href="/fairpay" className="hover:text-gray-700 transition-colors">
                 EUjobs Fair Pay Calculator
               </Link>
               <Link href="/contact" className="hover:text-gray-700 transition-colors">
-                Eujobs Contact
+                EUjobs Contact
+              </Link>
+              <Link href="/scholarship" className="hover:text-gray-700 transition-colors">
+                EUjobs Scholarship
               </Link>
               <Link
                 href="/fixepso"
