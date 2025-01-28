@@ -56,7 +56,7 @@ export default function JobForm({ jobDoc }: JobFormProps) {
 
   const planFeatures = {
     basic: [
-      'Job listing visible on our homepage for 30 days',
+      'Job listing visible on our homepage for 15 days',
       'Instant post after submission',
       'Unlimited revisions',
     ],
@@ -64,6 +64,8 @@ export default function JobForm({ jobDoc }: JobFormProps) {
       'Everything in the Basic Plan, plus:',
       'Priority placement at the top of the homepage',
       'Highlighted listing to stand out from the crowd',
+      'Included in mailing list',
+      'Included on Linkedin views 200,000 people'
     ],
     recruiter: [
       'We handle everything—you join the call, and we take care of the rest.',
