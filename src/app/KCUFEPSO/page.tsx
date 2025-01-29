@@ -3,19 +3,19 @@ import React from 'react';
 const KCUFEPSOPage = () => {
   return (
     <div className="container mx-auto px-4 py-12">
-      <h1 className="text-4xl font-bold mb-6">🚀 FOSDEM Hackathon: "EPSO KCUF – Hack the Bureaucracy!"</h1>
+      <h1 className="text-4xl font-bold mb-6">🚀 FOSDEM Hackathon: EPSO KCUF – Hack the Bureaucracy!</h1>
       <p className="mb-4">💥 Your Mission (If You Choose to Accept It)</p>
       <p className="mb-4">
         You are a tragic, pencil-pushing hopeful who dreams of working for the European Union (EU)—not because you love democracy, but because you want to pass life-changing laws (like the DSA, so you can finally use Google Maps on an iPhone).
       </p>
       <p className="mb-4">
-        And, let's be honest… you wouldn't mind an €8K/month salary for warming a seat in an EU office.
+        And, let&apos;s be honest… you wouldn&apos;t mind an €8K/month salary for warming a seat in an EU office.
       </p>
       <p className="mb-4">
         But first—you must survive the EVIL EPSO KCUF entrance exam system.
       </p>
       <p className="mb-4">
-        Unfortunately, EPSO is run by lizard people 🦎 who believe only the rich deserve to be bureaucrats. Their pay-to-win system lets the privileged drop €400 on a single mock exam, while scholarship students in Greece (average salary: €16K/year) get left behind. And let's not forget the soul-crushing 8–14 month wait for test results.
+        Unfortunately, EPSO is run by lizard people 🦎 who believe only the rich deserve to be bureaucrats. Their pay-to-win system lets the privileged drop €400 on a single mock exam, while scholarship students in Greece (average salary: €16K/year) get left behind. And let&apos;s not forget the soul-crushing 8–14 month wait for test results.
       </p>
       <p className="mb-4">
         📢 Your mission: Build hacks, tools, and sabotage plans to expose, fix, or replace EPSO with something better.
@@ -23,9 +23,9 @@ const KCUFEPSOPage = () => {
 
       <h2 className="text-2xl font-bold mb-4">🎯 Challenge Tracks</h2>
       <ul className="list-disc pl-5 mb-4">
-        <li className="mb-2">🛠️ "Fix EPSO" (for the idealists)</li>
-        <li className="mb-2">😈 "KCUF EPSO" (for the rebels)</li>
-        <li className="mb-2">🚀 "Replace EPSO" (for the revolutionaries)</li>
+        <li className="mb-2">🛠️ Fix EPSO (for the idealists)</li>
+        <li className="mb-2">😈 KCUF EPSO (for the rebels)</li>
+        <li className="mb-2">🚀 Replace EPSO (for the revolutionaries)</li>
       </ul>
 
       <h2 className="text-2xl font-bold mb-4">⏳ Hackathon Rules & Timeline</h2>
@@ -39,16 +39,16 @@ const KCUFEPSOPage = () => {
         <li className="mb-2">🔥 Impact: Could this actually make EPSO sweat?</li>
         <li className="mb-2">💣 Rebel Factor: Does it challenge bureaucracy in a creative way?</li>
         <li className="mb-2">🤣 Meme Potential: Can we go viral with this?</li>
-        <li className="mb-2">🛠 Technical Execution: (Optional, because let's be real.)</li>
+        <li className="mb-2">🛠 Technical Execution: (Optional, because let&apos;s be real.)</li>
       </ul>
 
       <h2 className="text-2xl font-bold mb-4">🏆 Prizes & Glory</h2>
       <ul className="list-disc pl-5 mb-4">
-        <li className="mb-2">🏆 "Most Likely to Get an EU Investigation"</li>
-        <li className="mb-2">🏆 "Best Meme Potential"</li>
-        <li className="mb-2">🏆 "KCUF Around & Find Out Award"</li>
-        <li className="mb-2">🏆 "Actually Useful Award"</li>
-        <li className="mb-2">🏆 "How Many Stupid Jokes Did I Make?" Award</li>
+        <li className="mb-2">🏆 Most Likely to Get an EU Investigation</li>
+        <li className="mb-2">🏆 Best Meme Potential</li>
+        <li className="mb-2">🏆 KCUF Around & Find Out Award</li>
+        <li className="mb-2">🏆 Actually Useful Award</li>
+        <li className="mb-2">🏆 How Many Stupid Jokes Did I Make? Award</li>
       </ul>
 
       <h2 className="text-2xl font-bold mb-4">📅 Event Details</h2>
@@ -59,11 +59,11 @@ const KCUFEPSOPage = () => {
 
       <p className="mb-4">🛠️ BTW, What is KCUF?</p>
       <p className="mb-4">
-        KCUF stands for Kitchen Cool Useful Finish—a pnpm package that reverses the string "kcuf" whenever it finds it. (Totally not related to anything else, I swear—pun fully intended.) 😇
+        KCUF stands for Kitchen Cool Useful Finish—a pnpm package that reverses the string &quot;kcuf&quot; whenever it finds it. (Totally not related to anything else, I swear—pun fully intended.) 😇
       </p>
 
       <p className="mb-4">🚀 Think you have what it takes to take down EPSO? Join us.</p>
-      <p className="mb-4">💀 EPSO may be slow, but our hacks won't be. 💀</p>
+      <p className="mb-4">💀 EPSO may be slow, but our hacks won&apos;t be. 💀</p>
     </div>
   );
 };
