@@ -24,13 +24,27 @@ const KCUFEPSOPage = () => {
       <h2 className="text-2xl font-bold mb-4">🎯 Challenge Tracks</h2>
       <ul className="list-disc pl-5 mb-4">
         <li className="mb-2">🛠️ Fix EPSO (for the idealists)</li>
+        <p className="mb-4">
+        Make recruitment fairer, faster, and more transparent.
+Example ideas:
+A public EPSO accountability tracker that shows wait times and delays automatically (scraped)
+A FOIA (I promise I&apos;m not making this word up) request generator
+      </p>
         <li className="mb-2">😈 KCUF EPSO (for the rebels)</li>
+        <p className="mb-4">
+        Use chaos to force EPSO to reform.
+Example ideas:
+Anything to troll EPSO</p>
         <li className="mb-2">🚀 Replace EPSO (for the revolutionaries)</li>
+        <p className="mb-4">
+        Who needs EPSO? Build a better EU hiring system.
+Example ideas:
+A AI trained free mock exam to level the playing field</p>
       </ul>
 
       <h2 className="text-2xl font-bold mb-4">⏳ Hackathon Rules & Timeline</h2>
       <ul className="list-disc pl-5 mb-4">
-        <li className="mb-2">✅ Speed matters: You have 6 hours to build a prototype and pitch it.</li>
+        <li className="mb-2">✅ You have till the end of FOSDEM to finish!</li>
         <li className="mb-2">✅ Chaos is welcome: This is FOSDEM—serious, but not too serious.</li>
       </ul>
 
