@@ -73,7 +73,7 @@ const JobSchema = new Schema({
   applyLink: { type: String, required: false},
   seniority: { 
     type: String,
-    enum: ["intern", "junior", "medior", "senior"],
+    enum: ["intern", "junior", "mid-level", "senior"],
     required: true
   },
   userWorkosId: { type: String, required: false },

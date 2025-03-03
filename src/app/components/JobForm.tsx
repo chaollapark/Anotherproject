@@ -216,8 +216,8 @@ async function handleSaveJob(data: FormData) {
                     <span className="ml-2 text-gray-700">Junior</span>
                   </div>
                   <div className="flex items-center">
-                    <RadioGroup.Item value="medior" className="w-4 h-4 rounded-full border border-gray-300" />
-                    <span className="ml-2 text-gray-700">Medior</span>
+                    <RadioGroup.Item value="mid-level" className="w-4 h-4 rounded-full border border-gray-300" />
+                    <span className="ml-2 text-gray-700">mid-level</span>
                   </div>
                   <div className="flex items-center">
                     <RadioGroup.Item value="senior" className="w-4 h-4 rounded-full border border-gray-300" />
