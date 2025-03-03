@@ -96,7 +96,7 @@ JobSchema.pre('save', function(next) {
 });
 
 // Add an index for slug
-JobSchema.index({ slug: 1 });
+// JobSchema.index({ slug: 1 }); This was creating problems because it was creating another problem - when I remember I'm going to compalain to mongoDB because it's not htere fucking busienss to tell me to write efficient code, I need to push things fast.
 
 export const JobModel = models?.Job || model('Job', JobSchema);
 
