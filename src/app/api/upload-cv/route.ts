@@ -16,7 +16,7 @@ export async function POST(req: NextRequest) {
       throw new Error("Database connection is not established.");
     }
 
-    const bucket = new GridFSBucket(conn.db as Db, {
+    const bucket = new GridFSBucket(conn.db as unknown as Db, {
       bucketName: "cvUploads",
     });
 
