@@ -1,62 +1,81 @@
 import { NextRequest, NextResponse } from "next/server";
-import mongoose from "mongoose";
-import { GridFSBucket, Db } from "mongodb";
+import { bucket } from "@/lib/firebase";
+import pdf from "pdf-parse";
 import dbConnect from "@/lib/dbConnect";
+import mongoose from "mongoose";
+import slugify from "slugify";
+
+const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
+
+const ResumeSchema = new mongoose.Schema({
+  email: String,
+  content: String,
+  filename: String,
+  uploadedAt: { type: Date, default: Date.now },
+  fileUrl: String,
+});
+
+const Resume = mongoose.models.Resume || mongoose.model("Resume", ResumeSchema);
 
 export async function POST(req: NextRequest) {
   try {
     await dbConnect();
 
-    if (mongoose.connection.readyState !== 1) {
-      await new Promise((resolve) => mongoose.connection.once("open", resolve));
-    }
-
-    const conn = mongoose.connection;
-    if (!conn.db) {
-      throw new Error("Database connection is not established.");
-    }
-
-    const bucket = new GridFSBucket(conn.db as unknown as Db, {
-      bucketName: "cvUploads",
-    });
-
     const data = await req.formData();
     const file = data.get("file") as File;
 
     if (!file || file.type !== "application/pdf") {
-      return NextResponse.json({ error: "Only PDF files are allowed." }, { status: 400 });
+      return NextResponse.json({ error: "Only PDF files allowed." }, { status: 400 });
     }
 
-    // Convert ReadableStream to Buffer
-    const reader = file.stream().getReader();
-    let chunks: Uint8Array[] = [];
-    let done = false;
-
-    while (!done) {
-      const { value, done: readerDone } = await reader.read();
-      if (value) chunks.push(value);
-      done = readerDone;
+    if (file.size > MAX_FILE_SIZE) {
+      return NextResponse.json({ error: "File size exceeds 5MB limit." }, { status: 400 });
     }
 
-    const buffer = Buffer.concat(chunks);
+    // Convert File to Buffer
+    const buffer = await file.arrayBuffer();
+    
+    // Extract text from PDF
+    const pdfData = await pdf(Buffer.from(buffer));
+    const text = pdfData.text;
 
-    // Upload buffer to GridFS
-    const uploadStream = bucket.openUploadStream(file.name, {
-      contentType: file.type,
+    // Extract Email from PDF
+    const emailRegex = /[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/g;
+    const emails = text.match(emailRegex);
+    const email = emails ? emails[0] : null;
+
+    // Upload to Firebase Storage
+    const safeFilename = slugify(file.name, { lower: true, strict: true });
+    const fileRef = bucket.file(`cvs/${Date.now()}-${safeFilename}`);
+
+    await fileRef.save(Buffer.from(buffer), {
+      contentType: "application/pdf",
     });
 
-    uploadStream.end(buffer);
+    // Generate Signed URL (valid until 2099)
+    const [fileUrl] = await fileRef.getSignedUrl({
+      action: "read",
+      expires: "03-09-2099",
+    });
 
-    return NextResponse.json({ 
-      success: true, 
-      message: "We'll send you a email with your ranking 1/10 and more info!" 
+    // Save metadata to MongoDB
+    const resume = new Resume({
+      email,
+      content: text,
+      filename: file.name,
+      fileUrl,
+    });
+    await resume.save();
+
+    return NextResponse.json({
+      success: true,
+      message: "CV uploaded successfully! We'll send you an email with your ranking.",
+      email,
+      fileUrl,
     });
 
   } catch (error) {
-    console.error("Error uploading CV:", error);
-    return NextResponse.json(
-      { error: "Failed to upload CV." },
-      { status: 500 }
-    );
+    console.error("Error processing CV:", error);
+    return NextResponse.json({ error: "Failed to process CV." }, { status: 500 });
   }
 }
