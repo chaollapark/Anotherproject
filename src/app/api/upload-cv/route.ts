@@ -33,7 +33,7 @@ export async function POST(req: NextRequest) {
     }
 
     // Convert File to Buffer
-    const buffer = await file.arrayBuffer();
+    const buffer = Buffer.from(await file.arrayBuffer());
 
     // Extract text from PDF using our helper function
     const text: string = await extractTextFromPDF(Buffer.from(buffer));
