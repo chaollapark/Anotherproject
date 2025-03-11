@@ -5,8 +5,7 @@ import dbConnect from "@/lib/dbConnect";
 import mongoose from "mongoose";
 import slugify from "slugify";
 
-export const runtime = "nodejs";
-
+export const runtime = "nodejs"; // ✅ Fix file uploads in Vercel
 
 const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
 
@@ -29,7 +28,7 @@ export async function POST(req: NextRequest) {
 
     // ✅ Ensure file exists
     if (!file) {
-      console.error("❌ No file received.");
+      console.error("❌ No file received in request.");
       return NextResponse.json({ error: "No file uploaded." }, { status: 400 });
     }
 
@@ -39,15 +38,20 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Only PDF files allowed." }, { status: 400 });
     }
 
+    if (file.size === 0) {
+      console.error("❌ Uploaded file is empty!");
+      return NextResponse.json({ error: "Uploaded file is empty." }, { status: 400 });
+    }
+
     if (file.size > MAX_FILE_SIZE) {
       return NextResponse.json({ error: "File size exceeds 5MB limit." }, { status: 400 });
     }
 
-    // ✅ Ensure `arrayBuffer()` is not empty
+    // ✅ Ensure `arrayBuffer()` is valid before creating Buffer
     const arrayBuffer = await file.arrayBuffer();
     if (!arrayBuffer || arrayBuffer.byteLength === 0) {
       console.error("❌ ArrayBuffer is empty.");
-      return NextResponse.json({ error: "Uploaded file is empty." }, { status: 400 });
+      return NextResponse.json({ error: "File upload error: Empty buffer." }, { status: 400 });
     }
 
     const buffer = Buffer.from(arrayBuffer);
