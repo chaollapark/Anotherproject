@@ -103,6 +103,11 @@ export async function POST(req: NextRequest) {
     console.log("📧 Extracted Email:", email);
 
     // 🔴 STEP 8: UPLOAD TO FIREBASE
+    if (!bucket) {
+    console.error("❌ Firebase bucket is not initialized!");
+    return NextResponse.json({ error: "Server configuration error: Firebase storage is unavailable" }, { status: 500 });
+    }
+
     const safeFilename = slugify(file.name, { lower: true, strict: true });
     const fileRef = bucket.file(`cvs/${Date.now()}-${safeFilename}`);
 
