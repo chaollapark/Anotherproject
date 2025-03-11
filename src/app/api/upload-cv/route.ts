@@ -1,9 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
 import { bucket } from "@/lib/firebase";
-import { extractTextFromPDF } from "@/lib/pdfParser"; // ✅ Import the function
+import { extractTextFromPDF } from "@/lib/pdfParser";
 import dbConnect from "@/lib/dbConnect";
 import mongoose from "mongoose";
 import slugify from "slugify";
+
+export const runtime = "nodejs";
+
 
 const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
 
@@ -24,7 +27,15 @@ export async function POST(req: NextRequest) {
     const data = await req.formData();
     const file = data.get("file") as File;
 
-    if (!file || file.type !== "application/pdf") {
+    // ✅ Ensure file exists
+    if (!file) {
+      console.error("❌ No file received.");
+      return NextResponse.json({ error: "No file uploaded." }, { status: 400 });
+    }
+
+    console.log("📂 File received:", file.name, file.type, file.size);
+
+    if (file.type !== "application/pdf") {
       return NextResponse.json({ error: "Only PDF files allowed." }, { status: 400 });
     }
 
@@ -32,39 +43,42 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "File size exceeds 5MB limit." }, { status: 400 });
     }
 
-    // Convert File to Buffer
-    const buffer = Buffer.from(await file.arrayBuffer());
+    // ✅ Ensure `arrayBuffer()` is not empty
+    const arrayBuffer = await file.arrayBuffer();
+    if (!arrayBuffer || arrayBuffer.byteLength === 0) {
+      console.error("❌ ArrayBuffer is empty.");
+      return NextResponse.json({ error: "Uploaded file is empty." }, { status: 400 });
+    }
 
-    // Extract text from PDF using our helper function
-    const text: string = await extractTextFromPDF(Buffer.from(buffer));
-    console.log("Extracted PDF Text:", text); // ✅ Debugging log
+    const buffer = Buffer.from(arrayBuffer);
+    console.log("✅ Successfully created Buffer from file.");
 
-    // Normalize text to remove excess spaces
-    const cleanedText = text.replace(/\s+/g, " ").trim(); 
+    // ✅ Extract text from PDF
+    const text: string = await extractTextFromPDF(buffer);
+    console.log("Extracted PDF Text:", text);
 
-    // Debug: Log cleaned text
+    // ✅ Normalize text
+    const cleanedText = text.replace(/\s+/g, " ").trim();
     console.log("🔍 Cleaned Text:", cleanedText);
 
-    // Extract Email from PDF
+    // ✅ Extract Email
     const emailRegex = /[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/g;
     const emails = cleanedText.match(emailRegex);
     const email = emails ? emails[0] : null;
 
-    // Upload to Firebase Storage
+    // ✅ Upload to Firebase
     const safeFilename = slugify(file.name, { lower: true, strict: true });
     const fileRef = bucket.file(`cvs/${Date.now()}-${safeFilename}`);
 
-    await fileRef.save(Buffer.from(buffer), {
-      contentType: "application/pdf",
-    });
+    await fileRef.save(buffer, { contentType: "application/pdf" });
 
-    // Generate Signed URL (valid until 2099)
+    // ✅ Generate Signed URL
     const [fileUrl] = await fileRef.getSignedUrl({
       action: "read",
       expires: "03-09-2099",
     });
 
-    // Save metadata to MongoDB
+    // ✅ Save to MongoDB
     const resume = new Resume({
       email,
       content: text,
@@ -72,21 +86,19 @@ export async function POST(req: NextRequest) {
       fileUrl,
     });
 
-    console.log("Saving to MongoDB:", resume); // ✅ Debugging log
-
+    console.log("Saving to MongoDB:", resume);
     await resume.save();
-
-    console.log("✅ Successfully saved to MongoDB!"); // ✅ Debugging log
+    console.log("✅ Successfully saved to MongoDB!");
 
     return NextResponse.json({
       success: true,
-      message: "CV uploaded successfully! We'll send you an email with your ranking.",
+      message: "CV uploaded successfully!",
       email,
       fileUrl,
     });
 
   } catch (error) {
-    console.error("Error processing CV:", error);
+    console.error("🚨 Error processing CV:", error);
     return NextResponse.json({ error: "Failed to process CV." }, { status: 500 });
   }
 }
