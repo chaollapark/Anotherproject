@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { bucket } from "@/lib/firebase";
-import pdf from "pdf-parse";
+import { extractTextFromPDF } from "@/lib/pdfParser"; // ✅ Import the function
 import dbConnect from "@/lib/dbConnect";
 import mongoose from "mongoose";
 import slugify from "slugify";
@@ -34,14 +34,20 @@ export async function POST(req: NextRequest) {
 
     // Convert File to Buffer
     const buffer = await file.arrayBuffer();
-    
-    // Extract text from PDF
-    const pdfData = await pdf(Buffer.from(buffer));
-    const text = pdfData.text;
+
+    // Extract text from PDF using our helper function
+    const text: string = await extractTextFromPDF(Buffer.from(buffer));
+    console.log("Extracted PDF Text:", text); // ✅ Debugging log
+
+    // Normalize text to remove excess spaces
+    const cleanedText = text.replace(/\s+/g, " ").trim(); 
+
+    // Debug: Log cleaned text
+    console.log("🔍 Cleaned Text:", cleanedText);
 
     // Extract Email from PDF
     const emailRegex = /[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/g;
-    const emails = text.match(emailRegex);
+    const emails = cleanedText.match(emailRegex);
     const email = emails ? emails[0] : null;
 
     // Upload to Firebase Storage
@@ -65,7 +71,12 @@ export async function POST(req: NextRequest) {
       filename: file.name,
       fileUrl,
     });
+
+    console.log("Saving to MongoDB:", resume); // ✅ Debugging log
+
     await resume.save();
+
+    console.log("✅ Successfully saved to MongoDB!"); // ✅ Debugging log
 
     return NextResponse.json({
       success: true,
