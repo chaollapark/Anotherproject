@@ -111,7 +111,7 @@ export async function POST(req: NextRequest) {
     // 🔴 STEP 9: GENERATE SIGNED URL
     const [fileUrl] = await fileRef.getSignedUrl({
       action: "read",
-      expires: "03-09-2099",
+      expires: new Date("2099-09-03"), // Use proper Date object
     });
 
     console.log("✅ File URL:", fileUrl);
