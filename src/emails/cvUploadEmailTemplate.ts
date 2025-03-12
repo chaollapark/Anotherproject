@@ -6,6 +6,8 @@ export function cvUploadEmailTemplate(fileUrl: string) {
         <p>We have received your CV and it's now securely stored in our system.</p>
         <p>You can view it anytime here: <a href="${fileUrl}" style="color: #007bff;">View CV</a></p>
         <p>What’s next? We will send you our score for your CV - if it's over 7 out of 10 we'll match you with a interview in the next 30 days.</p>
+        <p>Our goal is to gradually reduce you get your interview scheduled to 1 day!</p>
+        <p>In the meantime you can also check out our jobs https://www.eujobs.co </p>
         <p><strong>Stay tuned for updates! and for any questions email me at ceo@zatjob.com </strong></p>
         <p><strong>Cherios</strong></p>
         <p><strong>Madan | CEO</strong></p>
