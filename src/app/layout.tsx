@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import "@radix-ui/themes/styles.css";
+import { PostHogProvider } from "@/app/providers/PostHogProvider";
 import Link from "next/link";
 import GoogleAnalytics from "@/app/components/GoogleAnalytics";
 
@@ -38,43 +39,45 @@ export default function RootLayout({
         {/* Google Analytics Integration */}
         <GoogleAnalytics />
       </head>
-      <body className={inter.className}>
-        <Header />
-        {children}
-        <footer className="container py-8 text-gray-500 border-t-2 mt-2 md:mt-4 lg:mt-8">
-          <div className="flex md:flex-row flex-col justify-between md:items-center">
-            <div>EUjobs.co &copy; 2024 - All rights reserved</div>
-            <nav className="flex flex-col underline mt-4 md:mt-0 gap-1">
-              <Link href="/blog" className="hover:text-gray-700 transition-colors">
-                EUjobs Blog
-              </Link>
-              <Link href="/fairpay" className="hover:text-gray-700 transition-colors">
-                EUjobs Fair Pay Calculator
-              </Link>
-              <Link href="/contact" className="hover:text-gray-700 transition-colors">
-                EUjobs Contact
-              </Link>
-              <Link href="/scholarship" className="hover:text-gray-700 transition-colors">
-                EUjobs Scholarship
-              </Link>
-              <Link
-                href="/fixepso"
-                className="hover:text-gray-700 transition-colors"
-              >
-                Sign the Fix EPSO Petition
-              </Link>
-              <Link
-                href="https://www.lobbyinglondon.com"
-                className="hover:text-gray-700 transition-colors"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                Jobs In London
-              </Link>
-            </nav>
-          </div>
-        </footer>
-      </body>
+      <PostHogProvider>
+        <body className={inter.className}>
+          <Header />
+          {children}
+          <footer className="container py-8 text-gray-500 border-t-2 mt-2 md:mt-4 lg:mt-8">
+            <div className="flex md:flex-row flex-col justify-between md:items-center">
+              <div>EUjobs.co &copy; 2024 - All rights reserved</div>
+              <nav className="flex flex-col underline mt-4 md:mt-0 gap-1">
+                <Link href="/blog" className="hover:text-gray-700 transition-colors">
+                  EUjobs Blog
+                </Link>
+                <Link href="/fairpay" className="hover:text-gray-700 transition-colors">
+                  EUjobs Fair Pay Calculator
+                </Link>
+                <Link href="/contact" className="hover:text-gray-700 transition-colors">
+                  EUjobs Contact
+                </Link>
+                <Link href="/scholarship" className="hover:text-gray-700 transition-colors">
+                  EUjobs Scholarship
+                </Link>
+                <Link
+                  href="/fixepso"
+                  className="hover:text-gray-700 transition-colors"
+                >
+                  Sign the Fix EPSO Petition
+                </Link>
+                <Link
+                  href="https://www.lobbyinglondon.com"
+                  className="hover:text-gray-700 transition-colors"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Jobs In London
+                </Link>
+              </nav>
+            </div>
+          </footer>
+        </body>
+      </PostHogProvider>
     </html>
   );
 }
