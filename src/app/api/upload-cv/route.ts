@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { bucket } from "@/lib/firebase";
 import { extractTextFromPDF } from "@/lib/pdfParser";
+import { sendEmail } from "@/lib/sendEmail";
+import { cvUploadEmailTemplate } from "@/emails/cvUploadEmailTemplate";
 import dbConnect from "@/lib/dbConnect";
 import mongoose from "mongoose";
 import slugify from "slugify";
@@ -132,10 +134,20 @@ export async function POST(req: NextRequest) {
     console.log("Saving to MongoDB:", resume);
     await resume.save();
     console.log("✅ Successfully saved to MongoDB!");
+    // ✅ Send email notification to the user
+    if (email) {
+      try {
+        const subject = "Your CV Has Been Successfully Uploaded!";
+        const message = cvUploadEmailTemplate(fileUrl); // ✅ Use template
 
+        await sendEmail(email, subject, message);
+      } catch (err) {
+        console.error("❌ Error sending confirmation email:", err);
+      }
+    }
     return NextResponse.json({
       success: true,
-      message: "CV uploaded successfully!",
+      message: "CV uploaded! We just sent you a email!",
       email,
       fileUrl,
     });
