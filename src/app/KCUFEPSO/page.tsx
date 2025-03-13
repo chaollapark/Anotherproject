@@ -70,7 +70,7 @@ A AI trained free mock exam to level the playing field</p>
         <p className="mb-4">🗓️ Date: 2025-01-31</p>
         <p className="mb-4">📍 Location: Rue du Grand Cerf 10/a (for the launch at 15:00)</p>
         <p className="mb-4">🌐 Event website: <a href="https://www.eujobs.co/KCUFEPSO" className="text-blue-400 hover:underline">https://www.eujobs.co/KCUFEPSO</a></p>
-        <p className="mb-4">📩 Contact: <a href="mailto:chaollapark@gmail.com" className="text-blue-400 hover:underline">chaollapark@gmail.com</a></p>
+        <p className="mb-4">📩 Contact: <a href="mailto:ceo@zatjob.com" className="text-blue-400 hover:underline">ceo@zatjob.com</a></p>
 
         <p className="mb-4">🛠️ BTW, What is KCUF?</p>
         <p className="mb-4">

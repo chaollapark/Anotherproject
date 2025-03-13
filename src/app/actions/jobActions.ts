@@ -151,7 +151,7 @@ export async function getMyJobs(): Promise<Job[]> {
     const userWorkosEmail = workosUser.user.email;
 
     // Define admin emails in a constant for better maintainability
-    const ADMIN_EMAILS = ['mouise12345@gmail.com', 'chaollapark@gmail.com'];
+    const ADMIN_EMAILS = ['mouise12345@gmail.com', 'ceo@zatjob.com'];
 
     // Use conditional assignment
     const jobs = ADMIN_EMAILS.includes(userWorkosEmail)
