@@ -16,7 +16,7 @@ const JobSchema = z.object({
   description: z
     .string()
     .min(1, "Job description is required")
-    .max(10000, "Description cannot exceed 5000 characters"),
+    .max(15000, "Description cannot exceed 15000 characters"),
   contactEmail: z.string().email("A valid email address is required"),
   userWorkosId: z.string().optional(), 
   salary: z.string().optional(),
