@@ -1,16 +1,28 @@
 'use client';
 
-import {  useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Theme } from '@radix-ui/themes';
 import { Button } from '@radix-ui/themes';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTriangleExclamation } from '@fortawesome/free-solid-svg-icons';
+import posthog from 'posthog-js';
 
 export default function JobCancelPage() {
   const router = useRouter();
   const [message, setMessage] = useState('Your job posting payment was cancelled.');
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+
+    posthog.capture('payment_canceled', {
+      utm_source: params.get('utm_source'),
+      utm_medium: params.get('utm_medium'),
+      utm_campaign: params.get('utm_campaign'),
+      reason: 'User cancelled or payment failed',
+    });
+  }, []); // Dependency array ensures it runs only on mount
 
   return (
     <Theme>
