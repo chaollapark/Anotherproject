@@ -2,6 +2,7 @@
 import { useEffect, Suspense } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import { updateJobStatusAfterPayment } from '@/app/actions/jobActions';
+import posthog from 'posthog-js';
 
 // Create a separate component for the success content
 function SuccessContent() {
@@ -23,7 +24,22 @@ function SuccessContent() {
       .then(data => {
         if (data.jobId && data.plan) {
           updateJobStatusAfterPayment(data.jobId, data.plan);
+          // Extract UTM parameters
+          const params = new URLSearchParams(window.location.search);
+          const utm_source = params.get('utm_source');
+          const utm_medium = params.get('utm_medium');
+          const utm_campaign = params.get('utm_campaign');
 
+          // ✅ PostHog Event Tracking
+          posthog.capture('payment_success', {
+            jobId: data.jobId,
+            plan: data.plan,
+            utm_source,
+            utm_medium,
+            utm_campaign,
+
+          });
+          
           // Trigger Google Analytics event
           if (typeof window !== 'undefined' && window.gtag) {
             window.gtag('event', 'ads_conversion_Success_Page_1', {

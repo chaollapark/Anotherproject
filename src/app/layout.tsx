@@ -1,3 +1,7 @@
+"use client";
+import { useEffect } from "react";
+import { usePathname } from "next/navigation";
+import posthog from "posthog-js";
 import Header from "@/app/components/Header";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
@@ -33,6 +37,23 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const pathname = usePathname();
+
+  useEffect(() => {
+    // ✅ Capture PostHog page view when the route changes
+    posthog.capture("$pageview", { path: pathname });
+  }, [pathname]);
+
+  useEffect(() => {
+    // ✅ Capture PostHog page leave event when user exits
+    const handlePageLeave = () => {
+      posthog.capture("$pageleave", { path: pathname });
+    };
+
+    window.addEventListener("beforeunload", handlePageLeave);
+    return () => window.removeEventListener("beforeunload", handlePageLeave);
+  }, [pathname]);
+
   return (
     <html lang="en">
       <head>
