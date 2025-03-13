@@ -23,8 +23,8 @@ export default function ContactPage() {
               <FontAwesomeIcon icon={faEnvelope} className="text-gray-400 w-6" />
               <div>
                 <div className="font-medium">Madan Chaolla Park - CEO</div>
-                <a href="mailto:chaollapark@gmail.com" className="text-blue-600 hover:text-blue-700">
-                chaollapark@gmail.com
+                <a href="mailto:ceo@zatjob.com" className="text-blue-600 hover:text-blue-700">
+                ceo@zatjob.com
               </a>
               </div>
             </div>

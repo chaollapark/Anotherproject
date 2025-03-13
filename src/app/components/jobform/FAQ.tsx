@@ -13,7 +13,7 @@ const FAQ: React.FC = () => {
 
   const faqs: FAQItem[] = [
  {
-      question: "Differences eujobs vs Eurobrussels?",
+      question: "Differences EUjobs vs Eurobrussels?",
       answer: "EUJobs offers instant payment options and job postings at just 100 euros, compared to the 2000 euros charged by other platforms. Whether you're seeking to post on EUJobs, Eurobrussels, or attract candidates for jobs Euractiv or Euractive Jobs, our cost-effective pricing ensures your job opportunities reach the right audience at a fraction of the cost."
     },
     {
@@ -29,7 +29,7 @@ const FAQ: React.FC = () => {
       answer: "Yes! We have a recuiter plan that provides optional candidate screening services to help you find the most qualified professionals for your open positions."
     },
     {
-      question: "Why post on eubjos and not linkedin?",
+      question: "Why post on EUjobs and not linkedin?",
       answer: "Posting on a local specialized job board like Eubjos allows you to target candidates who are already within your niche or professional 'bubble.' This built-in focus acts as an automatic screening process, ensuring that applicants are more likely to meet your specific needs and qualifications compared to the broader audience on LinkedIn."
     }
   ];

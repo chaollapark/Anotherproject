@@ -7,31 +7,38 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
 
 export async function POST(req: Request) {
   try {
-    const { jobId, plan, price } = await req.json(); // Accept `price` from the client
+    const { jobId, plan, price } = await req.json(); 
     console.log("Job ID:", jobId);
     console.log("Plan:", plan);
     console.log("Price (with discount if applicable):", price);
 
-    // Define default prices for each plan
+    // Define fixed default prices (in cents)
     const defaultPrices = {
-      basic: 9999, // €99.99
-      pro: 19999, // €199.99
-      recruiter: 99999, // €999.99
+      basic: 20000, // €200
+      pro: 50000, // €500
+      recruiter: 100000, // €1000
     };
 
-    // Ensure the provided plan is valid
+    // Validate plan
     if (!defaultPrices[plan as keyof typeof defaultPrices]) {
       return NextResponse.json({ error: 'Invalid plan selected' }, { status: 400 });
     }
 
-    // Use the passed price or fallback to default price
-    const finalPrice = price ? Math.round(price * 100) : defaultPrices[plan as keyof typeof defaultPrices]; // Convert to cents
-
-    if (finalPrice <= 0) {
+    // Ensure price is a valid number
+    const parsedPrice = Number(price);
+    if (isNaN(parsedPrice) || parsedPrice <= 0) {
       return NextResponse.json({ error: 'Invalid price value' }, { status: 400 });
     }
 
-    // Create a Stripe Checkout session
+    // Use the lower price (discounted if valid, otherwise default price)
+    const finalPrice =
+      parsedPrice * 100 <= defaultPrices[plan as keyof typeof defaultPrices]
+        ? Math.round(parsedPrice * 100) 
+        : defaultPrices[plan as keyof typeof defaultPrices];
+
+    console.log("Final Price (cents):", finalPrice);
+
+    // Create Stripe Checkout session
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ['card'],
       line_items: [
@@ -52,12 +59,13 @@ export async function POST(req: Request) {
       metadata: {
         jobId: jobId,
         plan: plan,
-        discountedPrice: finalPrice / 100, // Store the discounted price for later use (optional)
+        discountedPrice: (finalPrice / 100).toFixed(2), // Ensure correct cents-to-euros conversion
       },
     });
 
     console.log("Stripe session created:", session.id);
     return NextResponse.json({ sessionId: session.id });
+
   } catch (err: any) {
     console.error('Error creating checkout session:', err);
     return NextResponse.json({ error: err.message }, { status: 500 });

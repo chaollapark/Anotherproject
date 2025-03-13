@@ -43,8 +43,8 @@ export default function JobForm({ jobDoc }: JobFormProps) {
   const [jobDescription, setJobDescription] = useState(jobDoc?.description || '');
 
   const planPrices: Record<string, number> = {
-    basic: 0, // Free
-    pro: 199.99,
+    basic: 200,
+    pro: 500,
     recruiter: 999.99,
   };
 
@@ -93,7 +93,7 @@ async function handleSaveJob(data: FormData) {
     data.set('description', jobDescription);
     data.set('price', discountedPrice.toString()); // Pass the discounted price to the backend
 
-    // Handle the free "Basic" plan
+    // Handle the "Basic" plan
     if (plan === 'basic') {
       data.set('plan', 'basic'); // Explicitly set the plan as "basic"
     } else {
@@ -103,7 +103,7 @@ async function handleSaveJob(data: FormData) {
     // Save the job and get the job ID
     const savedJob = await saveJobAction(data);
 
-    // Redirect immediately for the free "Basic" plan
+    // Redirect immediately for the "Basic" plan
     if (plan === 'basic') {
       router.push('/');
       return;
@@ -157,7 +157,7 @@ async function handleSaveJob(data: FormData) {
   return (
     <Theme className="md:w-1/2">
       <h1 className="text-4xl font-extrabold mb-2">Post Your Job in the EU&apos;s Capital</h1>
-        <h4 className="text-md text-gray-600">For Questions, contact us on <a className="text-blue-600 hover:text-blue-700" href="mailto:chaollapark@gmail.com">chaollapark@gmail.com</a></h4>
+        <h4 className="text-md text-gray-600">For Questions, contact us on <a className="text-blue-600 hover:text-blue-700" href="mailto:ceo@zatjob.com">ceo@zatjob.com</a></h4>
         <form action={handleSaveJob} className="mt-6 mx-auto">
 
         {jobDoc && <input type="hidden" name="id" value={jobDoc._id} />}
@@ -423,7 +423,7 @@ async function handleSaveJob(data: FormData) {
                       id="basic"
                       className="w-4 h-4 rounded-full mr-2 cursor-pointer"
                     />
-                        <label className="pl-2 font-bold text-lg cursor-pointer" htmlFor="basic">Basic (Free)</label>
+                        <label className="pl-2 font-bold text-lg cursor-pointer" htmlFor="basic">Basic (€200)</label>
                     </div>
                     <ul className="space-y-2 ml-6">
                       {planFeatures.basic.map((feature, index) => (
@@ -444,7 +444,7 @@ async function handleSaveJob(data: FormData) {
                       id="pro"
                       className="w-4 h-4 rounded-full mr-2 cursor-pointer"
                     />
-                      <label className="pl-2 font-bold text-lg cursor-pointer" htmlFor="pro">Pro (€199.99)</label>
+                      <label className="pl-2 font-bold text-lg cursor-pointer" htmlFor="pro">Pro (€500)</label>
                     </div>
                     <ul className="space-y-2 ml-6">
                       {planFeatures.pro.map((feature, index) => (
@@ -470,7 +470,7 @@ async function handleSaveJob(data: FormData) {
                         <label className="font-bold text-lg cursor-pointer" htmlFor="recruiter">
                         Recruiter
                         <span className="ml-2 text-gray-500 line-through">€2000</span>
-                          <span className="ml-2 text-green-600">€999.99</span>
+                          <span className="ml-2 text-green-600">€1000</span>
                         </label>
                         <div className="text-sm text-green-600">Save over 50% for a limited time!</div>
                       </div>
