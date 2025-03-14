@@ -104,10 +104,10 @@ async function handleSaveJob(data: FormData) {
     const savedJob = await saveJobAction(data);
 
     // Redirect immediately for the "Basic" plan
-    if (plan === 'basic') {
-      router.push('/');
-      return;
-    }
+    // if (plan === 'basic') {
+    //   router.push('/');
+    //   return;
+    // }
 
     // For paid plans, initiate Stripe checkout
     const stripe = await stripePromise;
