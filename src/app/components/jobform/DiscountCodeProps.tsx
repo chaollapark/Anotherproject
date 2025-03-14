@@ -13,7 +13,8 @@ export default function DiscountCodeInput({ originalPrice, onApplyDiscount }: Di
   const [error, setError] = useState<string | null>(null);
 
   const validDiscountCodes: Record<string, number> = {
-    "SAVE25": 0.25, 
+    "EUobserver25": 0.25,
+    "SAVE25": 0.25,
   };
 
   const handleApply = () => {
