@@ -43,9 +43,9 @@ export default function JobForm({ jobDoc }: JobFormProps) {
   const [jobDescription, setJobDescription] = useState(jobDoc?.description || '');
 
   const planPrices: Record<string, number> = {
-    basic: 200,
-    pro: 500,
-    recruiter: 999.99,
+    basic: 400,
+    pro: 1000,
+    recruiter: 3500,
   };
 
   useEffect(() => {
@@ -56,24 +56,26 @@ export default function JobForm({ jobDoc }: JobFormProps) {
 
   const planFeatures = {
     basic: [
-      'Job listing visible on our homepage for 15 days',
-      'Instant post after submission',
-      'Unlimited revisions',
+      'Job listing live for 30 days on our high-traffic homepage',
+      'Reach 60,000+ targeted professionals searching for EU jobs',
+      'Instant job posting—go live in minutes',
+      'Unlimited edits & updates to your listing anytime',
+      '1 AI-matched candidate from our database within the first week'
     ],
     pro: [
       'Everything in the Basic Plan, plus:',
-      'Priority placement at the top of the homepage',
-      'Highlighted listing to stand out from the crowd',
-      'Included in mailing list',
-      'Included on Linkedin views 200,000 people'
+      'Priority placement at the top of our homepage',
+      'Highlighted listing—stand out and attract more applicants',
+      '3 AI-matched candidates from our database within the first week'
     ],
     recruiter: [
-      'We handle everything—you join the call, and we take care of the rest.',
-      'Filter and deliver the top 20 candidates tailored to your needs.',
-      "You’re in control: Choose how many candidates you’d like to interview.",
-      'Customize your ideal candidate profile.',
-      'Interview scheduling (Zoom or in-person)—seamlessly organized for you.',
-      'Includes all features of the Pro Plan.'
+      'AI-powered candidate filtering—we shortlist top 20 candidates for you',
+      'Personalized screening(if requested)—we refine candidates to match your ideal profile',
+      'Full interview scheduling (Zoom or in-person)—you just show up!',
+      'Custom hiring strategy—tailored for your needs',
+      'VIP Employer Support—we handle everything, so you don’t have to',
+      'One week on the EUobserver newsletter',
+      'Includes all features of the Pro Plan for maximum visibility'
     ],
   };
 
@@ -93,11 +95,15 @@ async function handleSaveJob(data: FormData) {
     data.set('description', jobDescription);
     data.set('price', discountedPrice.toString()); // Pass the discounted price to the backend
 
-    // Handle the "Basic" plan
-    if (plan === 'basic') {
-      data.set('plan', 'basic'); // Explicitly set the plan as "basic"
-    } else {
-      data.set('plan', 'pending'); // Use "pending" for paid plans until payment is completed
+    // Handle the "Basic" plan FREE
+    // if (plan === 'basic') {
+    //   data.set('plan', 'basic'); // Explicitly set the plan as "basic"
+    // } else {
+    //   data.set('plan', 'pending'); // Use "pending" for paid plans until payment is completed
+    // }
+    // Paid Basic Plan
+    if (plan === 'basic' || plan === 'pro' || plan === 'recruiter') {
+      data.set('plan', 'pending'); // Set all plans to "pending" until payment is completed
     }
 
     // Save the job and get the job ID
@@ -423,7 +429,7 @@ async function handleSaveJob(data: FormData) {
                       id="basic"
                       className="w-4 h-4 rounded-full mr-2 cursor-pointer"
                     />
-                        <label className="pl-2 font-bold text-lg cursor-pointer" htmlFor="basic">Basic (€200)</label>
+                        <label className="pl-2 font-bold text-lg cursor-pointer" htmlFor="basic">Basic (€400)</label>
                     </div>
                     <ul className="space-y-2 ml-6">
                       {planFeatures.basic.map((feature, index) => (
@@ -444,7 +450,7 @@ async function handleSaveJob(data: FormData) {
                       id="pro"
                       className="w-4 h-4 rounded-full mr-2 cursor-pointer"
                     />
-                      <label className="pl-2 font-bold text-lg cursor-pointer" htmlFor="pro">Pro (€500)</label>
+                      <label className="pl-2 font-bold text-lg cursor-pointer" htmlFor="pro">Pro (€1000)</label>
                     </div>
                     <ul className="space-y-2 ml-6">
                       {planFeatures.pro.map((feature, index) => (
@@ -468,11 +474,8 @@ async function handleSaveJob(data: FormData) {
                     />
                       <div className="pl-2">
                         <label className="font-bold text-lg cursor-pointer" htmlFor="recruiter">
-                        Recruiter
-                        <span className="ml-2 text-gray-500 line-through">€2000</span>
-                          <span className="ml-2 text-green-600">€1000</span>
+                        Recruiter (€3500)
                         </label>
-                        <div className="text-sm text-green-600">Save over 50% for a limited time!</div>
                       </div>
                     </div>
                     <ul className="space-y-2 ml-6">
