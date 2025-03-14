@@ -14,11 +14,11 @@ const FAQ: React.FC = () => {
   const faqs: FAQItem[] = [
  {
       question: "Differences EUjobs vs Eurobrussels?",
-      answer: "EUJobs offers instant payment options and job postings at just 100 euros, compared to the 2000 euros charged by other platforms. Whether you're seeking to post on EUJobs, Eurobrussels, or attract candidates for jobs Euractiv or Euractive Jobs, our cost-effective pricing ensures your job opportunities reach the right audience at a fraction of the cost."
+      answer: "EUJobs offers instant payment options and job postings at just 400 euros, compared to the 2000 euros charged by other platforms. Whether you're seeking to post on EUJobs, Eurobrussels, or attract candidates for jobs Euractiv or Euractive Jobs, our cost-effective pricing ensures your job opportunities reach the right audience at a fraction of the cost."
     },
     {
       question: "Why use eujobs instead of euractiv jobs Brussels?",
-      answer: "EUJobs is the fastest-growing Brussels public affairs job site, offering affordable job postings at just 100 euros instead of the 1000 euros charged by others. For employers targeting Brussels employment or professionals seeking European jobs in Brussels, EUJobs stands out as an effective alternative to Euractiv Jobs and Euroactive Jobs platforms."
+      answer: "EUJobs is the fastest-growing Brussels public affairs job site, offering affordable job postings at just 400 euros instead of the 1000 euros charged by others. For employers targeting Brussels employment or professionals seeking European jobs in Brussels, EUJobs stands out as an effective alternative to Euractiv Jobs and Euroactive Jobs platforms."
     },
     {
       question: "How long are job listings active?",
