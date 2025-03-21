@@ -6,6 +6,7 @@ import "@radix-ui/themes/styles.css";
 import { PostHogProvider } from "@/app/providers/PostHogProvider";
 import Link from "next/link";
 import GoogleAnalytics from "@/app/components/GoogleAnalytics";
+import ConsentProvider from "@/components/ConsentProvider";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -41,6 +42,8 @@ export default function RootLayout({
       </head>
       <PostHogProvider>
         <body className={inter.className}>
+          {/* 👇 Add Klaro ConsentProvider */}
+          <ConsentProvider />
           <Header />
 
           {/* Weekend Sale Banner */}
