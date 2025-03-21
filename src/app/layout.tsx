@@ -16,7 +16,7 @@ const inter = Inter({ subsets: ["latin"] });
 export const metadata: Metadata = {
   title: "Top EU Jobs in Brussels | EU Agencies, Government, & Policy Roles",
   description:
-    "Find top Eurobrussels bubble jobs, including roles in EU agencies, government affairs, and public policy. Apply today to top career opportunities!.",
+    "All EU policy jobs in one place—Brussels, EU agencies, government affairs, and public policy roles.",
   verification: {
     google: "IPQK9o-Ctj-mRI0LGd7JAXC9e1eSeMpA0J25py8xg7c",
   },
@@ -54,7 +54,6 @@ export default function RootLayout({
           <div className="bg-yellow-100 text-yellow-900 font-semibold text-center py-3 shadow-sm">
             🎉 Weekend Sale: <span className="font-bold">50% OFF</span> all job post plans – this weekend only!
           </div>
-
           {children}
           <footer className="container py-8 text-gray-500 border-t-2 mt-2 md:mt-4 lg:mt-8">
             <div className="flex md:flex-row flex-col justify-between md:items-center">

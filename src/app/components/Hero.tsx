@@ -33,7 +33,7 @@ export default function Hero() {
   return (
     <section className="container my-8">
       <h1 className="text-4xl font-bold text-center mb-6">
-        EUjobs.co - Policy jobs in <span className="underline">EUROPE</span>
+        One place for all EU Policy Jobs
       </h1>
 
       <div className="flex max-w-4xl mx-auto">
