@@ -42,6 +42,11 @@ export default function RootLayout({
       <PostHogProvider>
         <body className={inter.className}>
           <Header />
+
+          {/* Weekend Sale Banner */}
+          <div className="bg-yellow-100 text-yellow-900 font-semibold text-center py-3 shadow-sm">
+            🎉 Weekend Sale: <span className="font-bold">50% OFF</span> all job post plans – this weekend only!
+          </div>
           {children}
           <footer className="container py-8 text-gray-500 border-t-2 mt-2 md:mt-4 lg:mt-8">
             <div className="flex md:flex-row flex-col justify-between md:items-center">
