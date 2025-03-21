@@ -9,11 +9,13 @@ const klaroConfig = {
   acceptAll: true,
   hideDeclineAll: false,
   privacyPolicy: '/privacy-policy',
+
   translations: {
     en: {
       privacyPolicyUrl: '/privacy-policy',
     },
   },
+
   services: [
     {
       name: 'google-analytics',
@@ -29,23 +31,23 @@ const klaroConfig = {
       required: false,
     },
   ],
+
   callback: function (consents: any) {
     if (typeof window !== 'undefined' && typeof window.gtag === 'function') {
-      if (consents['google-analytics']) {
-        window.gtag('consent', 'update', {
-          ad_storage: 'granted',
-          analytics_storage: 'granted',
-          ad_user_data: 'granted',
-          ad_personalization: 'granted',
-        });
-      } else {
-        window.gtag('consent', 'update', {
-          ad_storage: 'denied',
-          analytics_storage: 'denied',
-          ad_user_data: 'denied',
-          ad_personalization: 'denied',
-        });
-      }
+      const analyticsConsent = consents['google-analytics'];
+      const adsConsent = consents['google-ads'];
+
+      window.gtag('consent', 'update', {
+        ad_storage: adsConsent ? 'granted' : 'denied',
+        analytics_storage: analyticsConsent ? 'granted' : 'denied',
+        ad_user_data: adsConsent ? 'granted' : 'denied',
+        ad_personalization: adsConsent ? 'granted' : 'denied',
+      });
+
+      console.log('[Klaro] Consent Mode updated:', {
+        analytics: analyticsConsent,
+        ads: adsConsent,
+      });
     }
   },
 };
