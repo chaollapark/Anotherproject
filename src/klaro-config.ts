@@ -33,23 +33,34 @@ const klaroConfig = {
   ],
 
   callback: function (consents: any) {
-    if (typeof window !== 'undefined' && typeof window.gtag === 'function') {
-      const analyticsConsent = consents['google-analytics'];
-      const adsConsent = consents['google-ads'];
-
-      window.gtag('consent', 'update', {
-        ad_storage: adsConsent ? 'granted' : 'denied',
-        analytics_storage: analyticsConsent ? 'granted' : 'denied',
-        ad_user_data: adsConsent ? 'granted' : 'denied',
-        ad_personalization: adsConsent ? 'granted' : 'denied',
-      });
-
-      console.log('[Klaro] Consent Mode updated:', {
-        analytics: analyticsConsent,
-        ads: adsConsent,
-      });
+    // Wait for gtag to be available
+    if (typeof window !== 'undefined') {
+      const updateConsent = () => {
+        if (typeof window.gtag === 'function') {
+          const analyticsConsent = consents['google-analytics'];
+          const adsConsent = consents['google-ads'];
+  
+          window.gtag('consent', 'update', {
+            ad_storage: adsConsent ? 'granted' : 'denied',
+            analytics_storage: analyticsConsent ? 'granted' : 'denied',
+            ad_user_data: adsConsent ? 'granted' : 'denied',
+            ad_personalization: adsConsent ? 'granted' : 'denied',
+          });
+  
+          console.log('[Klaro] Consent update sent:', {
+            ad_storage: adsConsent,
+            analytics_storage: analyticsConsent,
+          });
+        } else {
+          console.warn('[Klaro] gtag not ready, retrying...');
+          setTimeout(updateConsent, 200); // Retry until gtag is defined
+        }
+      };
+  
+      updateConsent();
     }
-  },
+  }
+  
 };
 
 export default klaroConfig;
