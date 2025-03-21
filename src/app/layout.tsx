@@ -7,6 +7,9 @@ import { PostHogProvider } from "@/app/providers/PostHogProvider";
 import Link from "next/link";
 import GoogleAnalytics from "@/app/components/GoogleAnalytics";
 import ConsentProvider from "@/components/ConsentProvider";
+import '@/styles/klaro.css';
+import KlaroStyles from '@/components/KlaroStyles';
+
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -43,6 +46,7 @@ export default function RootLayout({
       <PostHogProvider>
         <body className={inter.className}>
           {/* 👇 Add Klaro ConsentProvider */}
+          <KlaroStyles />
           <ConsentProvider />
           <Header />
 

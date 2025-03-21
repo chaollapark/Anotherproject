@@ -1,7 +1,6 @@
 'use client';
 
 import { useEffect } from 'react';
-import 'klaro/dist/klaro.css';
 import klaroConfig from '@/klaro-config';
 
 export default function ConsentProvider() {
