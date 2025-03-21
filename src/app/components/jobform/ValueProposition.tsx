@@ -44,11 +44,11 @@ const ValueProposition = () => {
         <div className="space-y-4">
           <div className="flex items-center">
             <FontAwesomeIcon icon={faClock} className="mr-3 text-blue-600 h-4" />
-            <p className="text-gray-700">Your job gets posted instantly - no review required.</p>
+            <p className="text-gray-700">35,431 monthly users in February.</p>
           </div>
           <div className="flex items-center">
             <FontAwesomeIcon icon={faShieldAlt} className="mr-3 text-purple-600 h-4" />
-            <p className="text-gray-700">Recruiter plan where we vet and set meetings for hiring</p>
+            <p className="text-gray-700">OpenAI, SEC, and 34 companies use us</p>
           </div>
           <div className="flex items-center">
             <FontAwesomeIcon icon={faChartLine} className="mr-3 text-green-600" />
@@ -59,7 +59,7 @@ const ValueProposition = () => {
         {/* Call to Action */}
         <div className="mt-6 text-center">
           <p className="text-sm text-gray-600 mb-2">
-            Pay 1/20th compared to other job boards
+            Didn&apos;t find a candidate 100% moneyback guarantee.
           </p>
         </div>
       </div>
