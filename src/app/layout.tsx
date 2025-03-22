@@ -1,6 +1,7 @@
 import Header from "@/app/components/Header";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
+import Script from "next/script";
 import "./globals.css";
 import "@radix-ui/themes/styles.css";
 import { PostHogProvider } from "@/app/providers/PostHogProvider";
@@ -40,6 +41,18 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
+      <Script id="google-consent-default" strategy="beforeInteractive">
+        {`
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){ dataLayer.push(arguments); }
+          gtag('consent', 'default', {
+            analytics_storage: 'denied',
+            ad_storage: 'denied',
+            ad_user_data: 'denied',
+            ad_personalization: 'denied'
+          });
+        `}
+      </Script>
         {/* Google Analytics Integration */}
         <GoogleAnalytics />
       </head>
