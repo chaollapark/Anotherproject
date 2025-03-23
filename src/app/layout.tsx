@@ -16,6 +16,11 @@ import LogoScroller from "@/app/components/layout/LogoScroller";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
+  metadataBase: new URL('https://www.eujobs.co'),
+  alternates: {
+    canonical: '/',
+  },
+
   title: "Top EU Jobs in Brussels | EU Agencies, Government, & Policy Roles",
   description:
     "All EU policy jobs in one place—Brussels, EU agencies, government affairs, and public policy roles.",
