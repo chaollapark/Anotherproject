@@ -10,6 +10,7 @@ import GoogleAnalytics from "@/app/components/GoogleAnalytics";
 import ConsentProvider from "@/components/ConsentProvider";
 import '@/styles/klaro.css';
 import KlaroStyles from '@/components/KlaroStyles';
+import LogoScroller from "@/app/components/layout/LogoScroller";
 
 
 const inter = Inter({ subsets: ["latin"] });
@@ -62,10 +63,8 @@ export default function RootLayout({
           <KlaroStyles />
           <ConsentProvider />
           <Header />
-
-          {/* Weekend Sale Banner */}
-          <div className="bg-yellow-100 text-yellow-900 font-semibold text-center py-3 shadow-sm">
-            🎉 Weekend Sale: <span className="font-bold">50% OFF</span> all job post plans – this weekend only!
+          <div className="relative border border-gray-200 rounded-md bg-gray-50">
+            <LogoScroller />
           </div>
           {children}
           <footer className="container py-8 text-gray-500 border-t-2 mt-2 md:mt-4 lg:mt-8">
@@ -83,20 +82,6 @@ export default function RootLayout({
                 </Link>
                 <Link href="/scholarship" className="hover:text-gray-700 transition-colors">
                   EUjobs Scholarship
-                </Link>
-                <Link
-                  href="/fixepso"
-                  className="hover:text-gray-700 transition-colors"
-                >
-                  Sign the Fix EPSO Petition
-                </Link>
-                <Link
-                  href="https://www.lobbyinglondon.com"
-                  className="hover:text-gray-700 transition-colors"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  Jobs In London
                 </Link>
               </nav>
             </div>

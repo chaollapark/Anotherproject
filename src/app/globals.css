@@ -17,3 +17,22 @@ body{
   background-size: 60px 60px; /* Larger grid squares for a softer look */
   z-index: -1; /* Keeps it behind other content */
 }
+
+@keyframes scroll {
+  0% {
+    transform: translateX(0%);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.animate-scroll {
+  animation: scroll 40s linear infinite;
+}
+
+.logo-strip {
+  display: flex;
+  flex-wrap: nowrap;
+  white-space: nowrap;
+}
