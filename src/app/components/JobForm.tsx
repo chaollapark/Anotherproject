@@ -43,12 +43,10 @@ export default function JobForm({ jobDoc }: JobFormProps) {
   const [jobDescription, setJobDescription] = useState(jobDoc?.description || '');
 
   const planPrices: Record<string, number> = {
-    // basic: 400,
-    // pro: 1000,
-    // recruiter: 3500,
+    
     basic: 200,
     pro: 500,
-    recruiter: 1750,
+    recruiter: 1000,
   };
 
   useEffect(() => {
@@ -168,10 +166,6 @@ async function handleSaveJob(data: FormData) {
       <h1 className="text-4xl font-extrabold mb-2">Post Your Job in the EU&apos;s Capital</h1>
         <h4 className="text-md text-gray-600">For Questions, contact us on <a className="text-blue-600 hover:text-blue-700" href="mailto:ceo@zatjob.com">ceo@zatjob.com</a></h4>
         
-        {/* WEEKEND DISCOUNT */}
-        <div className="bg-yellow-100 text-yellow-900 font-semibold px-4 py-2 rounded-md mb-4 shadow">
-        🎉 Weekend Sale: <span className="font-bold">50% OFF</span> all plans until Sunday night!
-        </div>
         <form action={handleSaveJob} className="mt-6 mx-auto">
 
         {jobDoc && <input type="hidden" name="id" value={jobDoc._id} />}
@@ -437,14 +431,7 @@ async function handleSaveJob(data: FormData) {
                       id="basic"
                       className="w-4 h-4 rounded-full mr-2 cursor-pointer"
                     />
-                        {/* <label className="pl-2 font-bold text-lg cursor-pointer" htmlFor="basic">Basic (€400)</label> */}
-                        <div className="flex items-center justify-between w-full">
-                          <label className="line-through text-gray-500" htmlFor="basic">Basic (€400)</label>
-                          <span className="ml-2 text-red-600 font-semibold">€200</span>
-                          <span className="ml-2 px-2 py-1 text-sm font-semibold text-red-700 bg-red-100 rounded-full">
-                            50% OFF!
-                          </span>
-                        </div>
+                        <label className="pl-2 font-bold text-lg cursor-pointer" htmlFor="basic">Basic (€200)</label>
                     </div>
                     <ul className="space-y-2 ml-6">
                       {planFeatures.basic.map((feature, index) => (
@@ -465,14 +452,7 @@ async function handleSaveJob(data: FormData) {
                       id="pro"
                       className="w-4 h-4 rounded-full mr-2 cursor-pointer"
                     />
-                      {/* <label className="pl-2 font-bold text-lg cursor-pointer" htmlFor="pro">Pro (€1000)</label> */}
-                      <div className="flex items-center justify-between w-full">
-                          <label className="line-through text-gray-500" htmlFor="basic">Pro (€1000)</label>
-                          <span className="ml-2 text-red-600 font-semibold">€500</span>
-                          <span className="ml-2 px-2 py-1 text-sm font-semibold text-red-700 bg-red-100 rounded-full">
-                            50% OFF!
-                          </span>
-                        </div>
+                      <label className="pl-2 font-bold text-lg cursor-pointer" htmlFor="pro">Pro (€500)</label>
                     </div>
                     <ul className="space-y-2 ml-6">
                       {planFeatures.pro.map((feature, index) => (
@@ -495,17 +475,9 @@ async function handleSaveJob(data: FormData) {
                       className="w-4 h-4 rounded-full mr-2 cursor-pointer"
                     />
                       <div className="pl-2">
-                        {/* <label className="font-bold text-lg cursor-pointer" htmlFor="recruiter">
-                        Recruiter (€3500)
-                        </label> */}
-                        
-                        <div className="flex items-center justify-between w-full">
-                          <label className="line-through text-gray-500" htmlFor="basic">Recruiter (€3500)</label>
-                          <span className="ml-2 text-red-600 font-semibold">€1750</span>
-                          <span className="ml-2 px-2 py-1 text-sm font-semibold text-red-700 bg-red-100 rounded-full">
-                            50% OFF!
-                          </span>
-                        </div>
+                        <label className="font-bold text-lg cursor-pointer" htmlFor="recruiter">
+                        Recruiter (€1000)
+                        </label>
                       </div>
                     </div>
                     <ul className="space-y-2 ml-6">

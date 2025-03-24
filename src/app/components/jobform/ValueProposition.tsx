@@ -11,7 +11,7 @@ const ValueProposition = () => {
   const competitorPricing = [
     { name: 'Eurobrussels', price: '€2000' },
     { name: 'Euractiv Jobs', price: '€1000' },
-    { name: 'Eujobs Brussels', price: '€400', highlight: true }
+    { name: 'Eujobs Brussels', price: '€200', highlight: true }
   ];
 
   return (
@@ -44,15 +44,15 @@ const ValueProposition = () => {
         <div className="space-y-4">
           <div className="flex items-center">
             <FontAwesomeIcon icon={faClock} className="mr-3 text-blue-600 h-4" />
-            <p className="text-gray-700">35,431 monthly users in February.</p>
+            <p className="text-gray-700">110,000+ monthly users in March.</p>
           </div>
           <div className="flex items-center">
             <FontAwesomeIcon icon={faShieldAlt} className="mr-3 text-purple-600 h-4" />
-            <p className="text-gray-700">OpenAI, SEC, and 34 companies use us</p>
+            <p className="text-gray-700">OpenAI, SEC, and 34+ companies trust us.</p>
           </div>
           <div className="flex items-center">
             <FontAwesomeIcon icon={faChartLine} className="mr-3 text-green-600" />
-            <p className="text-gray-700">100% Belgian VAT complient</p>
+            <p className="text-gray-700">Why visit 17 Policy jobsites, all jobs are here</p>
           </div>
         </div>
 
