@@ -11,9 +11,9 @@ import { useState, useEffect } from "react";
 import "react-country-state-city/dist/react-country-state-city.css";
 import { CitySelect, CountrySelect, StateSelect } from "react-country-state-city";
 import { loadStripe } from '@stripe/stripe-js';
+import posthog from 'posthog-js';
 import RichTextEditor from "./jobform/RichTextEditor";
 import DiscountCodeInput from "./jobform/DiscountCodeProps";
-import { Description } from "@radix-ui/themes/dist/esm/components/alert-dialog.js";
 
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!);
 
@@ -143,6 +143,11 @@ async function handleSaveJob(data: FormData) {
     if (!responseData.sessionId) {
       throw new Error('No session ID returned from the server.');
     }
+    
+    posthog.capture('proceeded_to_checkout', {
+      plan,
+      price: discountedPrice
+    });
 
     const result = await stripe.redirectToCheckout({
       sessionId: responseData.sessionId,
@@ -421,6 +426,10 @@ async function handleSaveJob(data: FormData) {
             onValueChange={(value) => {
               setPlan(value);
               setDiscountedPrice(planPrices[value]);
+              posthog.capture('selected_plan', {
+                plan: value,
+                price: planPrices[value]
+              });
             }}
                 className="space-y-4s"
               >
