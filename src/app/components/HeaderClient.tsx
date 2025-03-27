@@ -1,6 +1,7 @@
 "use client";
 import Link from "next/link";
 import { useState } from "react";
+import posthog from "posthog-js";
 
 interface HeaderClientProps {
   isAuthDisabled: boolean;
@@ -16,6 +17,11 @@ export default function HeaderClient({
   isJobPoster,
 }: HeaderClientProps) {
   const [menuOpen, setMenuOpen] = useState(false);
+
+  const handlePostJobClick = () => {
+    posthog.capture('post_a_job_click');
+    setMenuOpen(false);
+  };
 
   return (
     <>
@@ -133,6 +139,7 @@ export default function HeaderClient({
           <Link
             className="text-sm sm:text-base rounded-md py-1 px-4 bg-gray-600 text-white hover:bg-gray-700 transition-colors duration-200 whitespace-nowrap"
             href="/dashboard"
+            onClick={handlePostJobClick}
           >
             Dashboard
           </Link>
