@@ -53,7 +53,7 @@ export default function HeaderClient({
         } transition-transform duration-300 md:hidden`}
       >
         <div className="flex flex-col items-center justify-center h-full gap-6">
-          {!isAuthDisabled && !user && (
+          {/* {!isAuthDisabled && !user && (
             <Link
               className="text-lg text-white transition-colors hover:bg-gray-700 rounded-md bg-gray-600 py-2 px-6"
               href={signInUrl}
@@ -61,7 +61,7 @@ export default function HeaderClient({
             >
               Login
             </Link>
-          )}
+          )} */}
 
           {!isAuthDisabled && user && (
             <form
@@ -108,14 +108,14 @@ export default function HeaderClient({
 
       {/* Desktop menu */}
       <nav className="hidden md:flex md:flex-wrap gap-4">
-        {!isAuthDisabled && !user && (
+        {/* {!isAuthDisabled && !user && (
           <Link
             className="text-sm sm:text-base transition-colors hover:bg-gray-300 rounded-md bg-gray-200 py-2 px-4 whitespace-nowrap"
             href={signInUrl}
           >
             Login
           </Link>
-        )}
+        )} */}
 
         {!isAuthDisabled && user && (
           <form action="/api/auth/logout" method="POST">
