@@ -131,6 +131,7 @@ export default function HeaderClient({
         <Link
           className="text-sm sm:text-base rounded-md py-2 px-4 bg-purple-500 text-white hover:bg-purple-600 transition-colors duration-200 whitespace-nowrap"
           href="/new-listing/form"
+          onClick={handlePostJobClick}
         >
           Post a job
         </Link>
@@ -139,7 +140,7 @@ export default function HeaderClient({
           <Link
             className="text-sm sm:text-base rounded-md py-1 px-4 bg-gray-600 text-white hover:bg-gray-700 transition-colors duration-200 whitespace-nowrap"
             href="/dashboard"
-            onClick={handlePostJobClick}
+            onClick={() => setMenuOpen(false)}
           >
             Dashboard
           </Link>
