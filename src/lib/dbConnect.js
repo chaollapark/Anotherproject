@@ -6,11 +6,13 @@ if (!MONGODB_URI) {
   throw new Error('Please define the MONGODB_URI environment variable inside .env.local');
 }
 
-let cached = global.mongoose;
-
-if (!cached) {
-  cached = global.mongoose = { conn: null, promise: null };
+//remember to do single global sockets
+if (!global.mongoose) {
+  global.mongoose = { conn: null, promise: null };
 }
+
+//before it was initialized beore the if statement and it didn't work... (I got fucked)
+const cached = global.mongoose;
 
 async function dbConnect() {
   if (cached.conn) {
@@ -18,6 +20,7 @@ async function dbConnect() {
   }
 
   if (!cached.promise) {
+    console.log('🔌 Connecting to MongoDB...');
     const opts = {
       bufferCommands: false,
     };
