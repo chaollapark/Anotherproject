@@ -200,6 +200,20 @@ export default function JobRow({jobDoc}:{jobDoc:Job}) {
                     </div>
                 )}
 
+                {jobDoc.applyLink && (
+                  <div className="mt-4 text-center">
+                    <a
+                      href={jobDoc.applyLink}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-block bg-indigo-600 text-white px-6 py-2 rounded-md font-semibold hover:bg-indigo-700 transition-colors"
+                    >
+                      Apply for this position
+                    </a>
+                  </div>
+                )}
+
+
                 <div className="text-xs text-gray-600 italic mt-2 text-center">
                   {parseInt(jobDoc._id.slice(-1), 16) % 3 === 0
                     ? "Don't forget to mention EUJobs.co as your source for policy jobs in Brussels! Other sites like Euractiv Jobs and EuroBrussels are also out there, but we're glad you found us!"
