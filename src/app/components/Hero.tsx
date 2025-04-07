@@ -32,13 +32,13 @@ export default function Hero() {
 
   return (
     <section className="container my-8">
-      <h1 className="text-4xl font-bold text-center mb-6">
-        One place for all EU Policy Jobs
+      <h1 className="text-3xl font-bold text-center mb-6">
+        Why go to 17 EU Jobsites? All EU jobs are here!
       </h1>
 
       <div className="flex max-w-4xl mx-auto">
         {/* CV Upload Section */}
-        <div className="w-full bg-white rounded-xl shadow-lg p-6 border border-gray-200 hover:shadow-xl transition-shadow">
+        <div className="hidden md:block w-full bg-white rounded-xl shadow-lg p-6 border border-gray-200 hover:shadow-xl transition-shadow">
           <h2 className="text-lg font-semibold mb-3 text-gray-800">
             Upload Your CV and Get a Job in 30 Days!
           </h2>
