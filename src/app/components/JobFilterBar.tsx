@@ -8,7 +8,7 @@ export default function JobFilterBar() {
 
   const filters = [
     { label: "Best EU jobs", path: "best-jobs" },
-    // { label: "EU Institutions", path: "eu-institutions-jobs" },
+    { label: "EU Institutions", path: "eu-institutions-jobs" },
     { label: "EU Agencies", path: "eu-agencies-jobs" },
     { label: "Eurobrussels", path: "eurobrussels-jobs" },
     //immature as I am I named Euractiv jobs as "losers" and not there is too much code to change
