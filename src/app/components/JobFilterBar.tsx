@@ -13,6 +13,7 @@ export default function JobFilterBar() {
     { label: "Eurobrussels", path: "eurobrussels-jobs" },
     //immature as I am I named Euractiv jobs as "losers" and not there is too much code to change
     { label: "Euractiv", path: "euractiv-jobs" },
+    { label: "JobsInBrussels", path:"jobs-in-Brussels"}
   ];
 
   return (

@@ -9,6 +9,7 @@ const FILTER_MAP: Record<string, string> = {
   "eu-institutions-jobs": "eu-institution",
   "eu-agencies-jobs": "eu-rss",
   "eurobrussels-jobs": "eurobrussels",
+  "jobs-in-Brussels": "jobsin",
   "euractiv-jobs": "losers", // 😎
 };
 
