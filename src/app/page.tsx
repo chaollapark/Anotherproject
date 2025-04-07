@@ -1,6 +1,7 @@
 import dbConnect from '@/lib/dbConnect';
 import Hero from "@/app/components/Hero";
 import Jobs from "@/app/components/Jobs";
+import JobFilterBar from "@/app/components/JobFilterBar";
 import { fetchJobs } from "@/models/Job";
 import { searchJobs } from "@/app/actions/jobActions";
 
@@ -27,6 +28,7 @@ export default async function Home({
 
       {/* Page Content */}
       <Hero />
+      <JobFilterBar />
       <Jobs header={header} initialJobs={jobs} isSearchResult={!!searchPhrase} />
     </div>
   );

@@ -29,6 +29,7 @@ export type Job = {
   seniority: string;
   plan?: string;
   userWorkosId?: string;
+  source?: string;
 };
 
 function generateSlug(title: string | null | undefined, companyName: string | null | undefined, id: string): string {
@@ -45,6 +46,10 @@ function generateSlug(title: string | null | undefined, companyName: string | nu
   const shortId = id.slice(-6);
   return `${titleSlug}-at-${companySlug}-${shortId}`;
 }
+
+// -----------------------------
+// Schema & Model
+// -----------------------------
 
 const JobSchema = new Schema({
   title: { type: String },
@@ -77,6 +82,7 @@ const JobSchema = new Schema({
     required: true
   },
   userWorkosId: { type: String, required: false },
+  source: { type: String, required: false },
   plan: {
     type: String, 
     enum: ['pending', 'basic', 'pro', 'recruiter', 'unlimited'],
@@ -99,6 +105,10 @@ JobSchema.pre('save', function(next) {
 // JobSchema.index({ slug: 1 }); This was creating problems because it was creating another problem - when I remember I'm going to compalain to mongoDB because it's not htere fucking busienss to tell me to write efficient code, I need to push things fast.
 
 export const JobModel = models?.Job || model('Job', JobSchema);
+
+// -----------------------------
+// Fetching Functions
+// -----------------------------
 
 // Updated fetchJobs function
 export async function fetchJobs(limit: number = 10) {
@@ -142,4 +152,27 @@ export async function findJobBySlug(slug: string) {
     console.error('Error finding job by slug:', error);
     return null;
   }
+}
+
+export async function fetchJobsBySource(source: string) {
+  await dbConnect();
+
+  // ✅ 1. Fetch global featured jobs (no source filtering)
+  const featuredJobs = await JobModel.find(
+    { plan: { $in: ['pro', 'recruiter'] } },
+    {},
+    { sort: '-createdAt', limit: 5 }
+  );
+
+  // ✅ 2. Fetch regular jobs for that specific source (excluding featured)
+  const regularJobs = await JobModel.find(
+    {
+      source,
+      plan: { $nin: ['pro', 'recruiter', 'pending'] }
+    },
+    {},
+    { sort: '-createdAt', limit: 50 }
+  );
+
+  return JSON.parse(JSON.stringify([...featuredJobs, ...regularJobs]));
 }
