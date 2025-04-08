@@ -11,6 +11,7 @@ import ConsentProvider from "@/components/ConsentProvider";
 import '@/styles/klaro.css';
 import KlaroStyles from '@/components/KlaroStyles';
 import LogoScroller from "@/app/components/layout/LogoScroller";
+import FloatingSignup from "@/app/components/FloatingSignup";
 
 
 const inter = Inter({ subsets: ["latin"] });
@@ -72,6 +73,9 @@ export default function RootLayout({
             <LogoScroller />
           </div>
           {children}
+          {/* Floating Email Signup */}
+          <FloatingSignup />
+          
           <footer className="container py-8 text-gray-500 border-t-2 mt-2 md:mt-4 lg:mt-8">
             <div className="flex md:flex-row flex-col justify-between md:items-center">
               <div>EUjobs.co &copy; 2024 - All rights reserved</div>
