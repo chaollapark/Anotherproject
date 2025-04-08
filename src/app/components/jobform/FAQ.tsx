@@ -12,25 +12,21 @@ const FAQ: React.FC = () => {
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
 
   const faqs: FAQItem[] = [
- {
-      question: "Differences EUjobs vs Eurobrussels?",
-      answer: "EUJobs offers instant payment options and job postings at just 200 euros, compared to the 2000 euros charged by other platforms. Whether you're seeking to post on EUJobs, Eurobrussels, or attract candidates for jobs Euractiv or Euractive Jobs, our cost-effective pricing ensures your job opportunities reach the right audience at a fraction of the cost."
-    },
-    {
-      question: "Why use eujobs instead of euractiv jobs Brussels?",
-      answer: "EUJobs is the fastest-growing Brussels public affairs job site, offering affordable job postings at just 200 euros instead of the 1000 euros charged by others. For employers targeting Brussels employment or professionals seeking European jobs in Brussels, EUJobs stands out as an effective alternative to Euractiv Jobs and Euroactive Jobs platforms."
-    },
-    {
-      question: "How long are job listings active?",
-      answer: "Job listings on Euractiv Jobs remain active for 30 days from the date of posting. If you're looking to attract top talent in Brussels or across the EU job market, you can renew or extend your listing to keep it visible. Euractiv Jobs ensures your postings reach professionals searching for European jobs in Brussels, Eurobrussels roles, and more."
-    },
-    {
-      question: "Do you offer candidate screening?",
-      answer: "Yes! We have a recuiter plan that provides optional candidate screening services to help you find the most qualified professionals for your open positions."
-    },
     {
       question: "Why post on EUjobs and not linkedin?",
-      answer: "Posting on a local specialized job board like Eubjos allows you to target candidates who are already within your niche or professional 'bubble.' This built-in focus acts as an automatic screening process, ensuring that applicants are more likely to meet your specific needs and qualifications compared to the broader audience on LinkedIn."
+      answer: "EUjobs is a niche, local job board designed to connect you with candidates who are already in your industry and region. Unlike the broad reach of LinkedIn, EUjobs helps you target a more relevant pool of applicants—people who are more likely to have the right skills, background, and motivation for your role. It’s a smarter, more efficient way to hire."
+    },
+    {
+      question: "Differences EUjobs vs other 17 job boards?",
+      answer: "EUjobs stands out by offering everything in one place. It’s the most visited platform because job seekers don’t have to browse multiple websites—they come straight to us. Plus, EUjobs is the most affordable option, powered by modern, user-friendly technology that makes hiring faster and easier."
+    },
+    {
+      question: "Does EUjobs also offer headhunting?",
+      answer: "Yes! EUjobs offers headhunting services. You pay 200 Euros upfront, and 1800 if you hire one of the suggested candidates."
+    },
+    {
+      question: "Is EUjobs free for NGOs?",
+      answer: "Yes! EUjobs is—and will always be—free for NGOs. Just send a quick email to ceo@zatjob.com (Zatjob is EUjobs’ parent company), and we’ll set you up."
     }
   ];
 
