@@ -9,21 +9,21 @@ import {
 
 const ValueProposition = () => {
   const competitorPricing = [
-    { name: 'Eurobrussels', price: '€2000' },
+    { name: 'Euro Brussels', price: '€2000' },
     { name: 'Euractiv Jobs', price: '€1000' },
-    { name: 'Eujobs Brussels', price: '€200', highlight: true }
+    { name: 'Eujobs Brussels', price: '€100', highlight: true }
   ];
 
   return (
     <div className="w-full mb-8">
       <div className="bg-gray-50 rounded-lg p-6">
-        <h2 className="text-2xl font-bold text-gray-800 mb-6">Why Choose <span className='text-blue-900'>EUjobs.co?</span></h2>
+        <h2 className="text-2xl font-bold text-gray-800 mb-6">Why Employers Choose <span className='text-blue-900'>EUjobs.co?</span></h2>
         
         {/* Pricing Comparison */}
         <div className="mb-8">
           <h3 className="text-xl font-semibold mb-4 flex items-center">
             <FontAwesomeIcon icon={faEuroSign} className="mr-2 text-green-600 h-4" />
-            Unbeatable Pricing
+            All EU Policy Jobs. Best Price.
           </h3>
           <div className="grid grid-cols-3 gap-4 text-center">
             {competitorPricing.map((competitor) => (
@@ -44,7 +44,7 @@ const ValueProposition = () => {
         <div className="space-y-4">
           <div className="flex items-center">
             <FontAwesomeIcon icon={faClock} className="mr-3 text-blue-600 h-4" />
-            <p className="text-gray-700">110,000+ monthly users in March.</p>
+            <p className="text-gray-700">Over 110,000 monthly users.</p>
           </div>
           <div className="flex items-center">
             <FontAwesomeIcon icon={faShieldAlt} className="mr-3 text-purple-600 h-4" />
@@ -59,7 +59,7 @@ const ValueProposition = () => {
         {/* Call to Action */}
         <div className="mt-6 text-center">
           <p className="text-sm text-gray-600 mb-2">
-            Didn&apos;t find a candidate 100% moneyback guarantee.
+            Didn&apos;t find the right candidate? Get a 100% money-back guarantee.
           </p>
         </div>
       </div>
