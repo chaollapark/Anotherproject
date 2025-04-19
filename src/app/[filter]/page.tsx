@@ -10,7 +10,7 @@ const FILTER_MAP: Record<string, string> = {
   "eu-agencies-jobs": "eu-rss",
   "eurobrussels-jobs": "eurobrussels",
   "jobs-in-Brussels": "jobsin",
-  "euractiv-jobs": "losers", // 😎
+  "euractiv-jobs": "euractiv", // 😎
 };
 
 export const revalidate = 60;

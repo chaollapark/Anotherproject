@@ -11,7 +11,6 @@ export default function JobFilterBar() {
     { label: "EU Institutions", path: "eu-institutions-jobs" },
     { label: "EU Agencies", path: "eu-agencies-jobs" },
     { label: "Eurobrussels", path: "eurobrussels-jobs" },
-    //immature as I am I named Euractiv jobs as "losers" and not there is too much code to change
     { label: "Euractiv", path: "euractiv-jobs" },
     { label: "JobsInBrussels", path:"jobs-in-Brussels"}
   ];
