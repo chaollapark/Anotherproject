@@ -1,8 +1,40 @@
-// Job.js
-const mongoose = require('mongoose');
+import { model, models, Schema } from 'mongoose';
+import mongoose from 'mongoose';
+import dbConnect from '@/lib/dbConnect';
 
-function generateSlug(title, companyName, id) {
-  const processString = (str) =>
+export type Job = {
+  _id: string;
+  title: string;
+  slug: string;  
+  description: string;
+  companyName: string;
+  remote: string;
+  type: string;
+  salary: number;
+  country: string;
+  state: string;
+  city: string;
+  countryId: string;
+  stateId: string;
+  cityId: string;
+  jobIcon: string;
+  postalCode: number;
+  street: string;
+  contactName: string;
+  contactPhone: string;
+  contactEmail: string;
+  applyLink: string;  
+  createdAt: string;
+  updatedAt: string;
+  expiresOn: string;
+  seniority: string;
+  plan?: string;
+  userWorkosId?: string;
+  source?: string;
+};
+
+function generateSlug(title: string | null | undefined, companyName: string | null | undefined, id: string): string {
+  const processString = (str: string | null | undefined) =>
     (str || '')
       .toLowerCase()
       .replace(/[^\w\s-]/g, '')
@@ -10,45 +42,42 @@ function generateSlug(title, companyName, id) {
       .replace(/-+/g, '-')
       .trim();
 
-  const titleSlug   = processString(title)       || 'untitled';
+  const titleSlug = processString(title) || 'untitled';
   const companySlug = processString(companyName) || 'unknown-company';
-  const shortId     = id.slice(-6);
+  const shortId = id.slice(-6);
+
   return `${titleSlug}-at-${companySlug}-${shortId}`;
 }
 
-const JobSchema = new mongoose.Schema({
-  title:        { type: String },
-  slug:         { type: String, unique: true, sparse: true },
-  description:  { type: String, required: true },
-  companyName:  { type: String },
-  type:         { type: String },
-  salary:       { type: Number },
-  country:      { type: String },
-  state:        { type: String },
-  city:         { type: String },
-  countryId:    { type: String },
-  stateId:      { type: String },
-  cityId:       { type: String },
-  postalCode:   { type: Number },
-  street:       { type: String },
-  jobIcon:      { type: String },
-  contactName:  { type: String },
+const JobSchema = new Schema({
+  title: { type: String },
+  slug: { 
+    type: String,
+    unique: true,
+    sparse: true,
+  },
+  description: { type: String, required: true },
+  companyName: { type: String },
+  type: { type: String },
+  salary: { type: Number },
+  country: { type: String },
+  state: { type: String },
+  city: { type: String },
+  countryId: { type: String },
+  stateId: { type: String },
+  cityId: { type: String },
+  postalCode: { type: Number },
+  street: { type: String },
+  jobIcon: { type: String },
+  contactName: { type: String },
   contactPhone: { type: String },
   contactEmail: { type: String },
-  applyLink:    { type: String },
-  source:       { type: String },
-  expiresOn:    { type: String },
-
-  // Optional dedupe field: only indexed/enforced when present
-  relativeLink: {
-    type:   String,
-    unique: true,
-    sparse: true
-  },
-
+  applyLink: { type: String },
+  source: { type: String },
+  expiresOn: { type: String },
   seniority: {
     type: String,
-    enum: ['intern', 'junior', 'mid-level', 'senior'],
+    enum: ["intern", "junior", "mid-level", "senior"],
     required: true,
   },
   userWorkosId: { type: String },
@@ -56,19 +85,74 @@ const JobSchema = new mongoose.Schema({
     type: String,
     enum: ['pending', 'basic', 'pro', 'recruiter', 'unlimited'],
     default: 'pending',
-  },
+  }
 }, { timestamps: true });
 
-// Build sparse unique index on relativeLink
-JobSchema.index({ relativeLink: 1 }, { unique: true, sparse: true });
-
-// Pre-save slug generation
-JobSchema.pre('save', function (next) {
+JobSchema.pre('save', function(next) {
   if (this.isModified('title') || this.isModified('companyName') || !this.slug) {
     this.slug = generateSlug(this.title, this.companyName, this._id.toString());
   }
   next();
 });
 
-const JobModel = mongoose.models.Job || mongoose.model('Job', JobSchema);
-module.exports = { JobModel };
+export const JobModel = models?.Job || model('Job', JobSchema);
+
+export async function fetchJobs(limit: number = 10) {
+  try {
+    await dbConnect();
+
+    const proJobs = await JobModel.find(
+      { plan: ['recruiter', 'pro'] },
+      {},
+      { sort: '-createdAt', limit }
+    );
+
+    const remainingLimit = limit - proJobs.length;
+    const otherJobs = await JobModel.find(
+      {
+        plan: {
+          $nin: ['pro', 'pending', 'recruiter']
+        }
+      },
+      {},
+      { sort: '-createdAt', limit: remainingLimit }
+    );
+
+    return JSON.parse(JSON.stringify([...proJobs, ...otherJobs]));
+  } catch (error) {
+    console.error('Error fetching jobs:', error);
+    return [];
+  }
+}
+
+export async function findJobBySlug(slug: string) {
+  try {
+    await dbConnect();
+    const job = await JobModel.findOne({ slug });
+    return job ? JSON.parse(JSON.stringify(job)) : null;
+  } catch (error) {
+    console.error('Error finding job by slug:', error);
+    return null;
+  }
+}
+
+export async function fetchJobsBySource(source: string) {
+  await dbConnect();
+
+  const featuredJobs = await JobModel.find(
+    { plan: { $in: ['pro', 'recruiter'] } },
+    {},
+    { sort: '-createdAt', limit: 5 }
+  );
+
+  const regularJobs = await JobModel.find(
+    {
+      source,
+      plan: { $nin: ['pro', 'recruiter', 'pending'] }
+    },
+    {},
+    { sort: '-createdAt', limit: 50 }
+  );
+
+  return JSON.parse(JSON.stringify([...featuredJobs, ...regularJobs]));
+}
