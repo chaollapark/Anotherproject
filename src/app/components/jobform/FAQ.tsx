@@ -25,8 +25,12 @@ const FAQ: React.FC = () => {
       answer: "Yes! EUjobs offers headhunting services. You pay 200 Euros upfront, and 1800 if you hire one of the suggested candidates."
     },
     {
-      question: "Is EUjobs free for NGOs?",
-      answer: "Yes! EUjobs is—and will always be—free for NGOs. Just send a quick email to ceo@zatjob.com (Zatjob is EUjobs’ parent company), and we’ll set you up."
+      question: "How does Headhunter work?",
+      answer: "You pay us € 500 upfront and get a premium listing. Then we only get paid if you hire one of the suggested candidates."
+    },
+    {
+      question: "What is the Headhunting process?",
+      answer: "Users upload their CVs, we match them with your job offer. You just show up to the call we set up."
     }
   ];
 

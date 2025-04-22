@@ -58,25 +58,22 @@ export default function JobForm({ jobDoc }: JobFormProps) {
   const planFeatures = {
     basic: [
       'Job listing live for 30 days on our high-traffic homepage',
-      'Reach 60,000+ targeted professionals searching for EU jobs',
+      'Reach 110,000+ targeted professionals searching for EU jobs',
       'Instant job posting—go live in minutes',
       'Unlimited edits & updates to your listing anytime',
-      '1 AI-matched candidate from our database within the first week'
+      'Included in our bi-weekly newsletter'
     ],
     pro: [
       'Everything in the Basic Plan, plus:',
       'Priority placement at the top of our homepage',
       'Highlighted listing—stand out and attract more applicants',
-      '3 AI-matched candidates from our database within the first week'
+      'Featured in our bi-weekly newsletter'
     ],
     recruiter: [
-      'AI-powered candidate filtering—we shortlist top 20 candidates for you',
-      'Personalized screening(if requested)—we refine candidates to match your ideal profile',
-      'Full interview scheduling (Zoom or in-person)—you just show up!',
-      'Custom hiring strategy—tailored for your needs',
-      'VIP Employer Support—we handle everything, so you don’t have to',
-      'One week on the EUobserver newsletter',
-      'Includes all features of the Pro Plan for maximum visibility'
+      'Everything in the Pro Plan, plus:',
+      'You pay us after you hire one of our candidates',
+      'We vet candidates and set up meetings',
+      '500 upfront and 1500 after you hire'
     ],
   };
 

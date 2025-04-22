@@ -7,9 +7,6 @@ import "@radix-ui/themes/styles.css";
 import { PostHogProvider } from "@/app/providers/PostHogProvider";
 import Link from "next/link";
 import GoogleAnalytics from "@/app/components/GoogleAnalytics";
-import ConsentProvider from "@/components/ConsentProvider";
-import '@/styles/klaro.css';
-import KlaroStyles from '@/components/KlaroStyles';
 import LogoScroller from "@/app/components/layout/LogoScroller";
 import FloatingSignup from "@/app/components/FloatingSignup";
 
@@ -48,15 +45,15 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head>
-      <Script id="google-consent-default" strategy="beforeInteractive">
+        <Script id="google-consent-default" strategy="beforeInteractive">
         {`
           window.dataLayer = window.dataLayer || [];
           function gtag(){ dataLayer.push(arguments); }
           gtag('consent', 'default', {
-            analytics_storage: 'denied',
-            ad_storage: 'denied',
-            ad_user_data: 'denied',
-            ad_personalization: 'denied'
+            analytics_storage: 'granted',
+            ad_storage: 'granted',
+            ad_user_data: 'granted',
+            ad_personalization: 'granted'
           });
         `}
       </Script>
@@ -65,9 +62,6 @@ export default function RootLayout({
       </head>
       <PostHogProvider>
         <body className={inter.className}>
-          {/* 👇 Add Klaro ConsentProvider */}
-          <KlaroStyles />
-          <ConsentProvider />
           <Header />
           <div className="relative border border-gray-200 rounded-md bg-gray-50">
             <LogoScroller />
