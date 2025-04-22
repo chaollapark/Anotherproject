@@ -59,9 +59,6 @@ importers:
       gray-matter:
         specifier: ^4.0.3
         version: 4.0.3
-      klaro:
-        specifier: ^0.7.21
-        version: 0.7.21(@babel/core@7.26.10)(eslint@8.57.1)
       mongodb:
         specifier: ^6.14.0
         version: 6.14.0
@@ -3080,9 +3077,6 @@ packages:
   kind-of@6.0.3:
     resolution: {integrity: sha512-dcS1ul+9tmeD95T+x28/ehLgd9mENa3LsvDTtzm3vyBEO7RPptvAD+t44WVXaUjTBRcrpFeFlC8WCruUR456hw==}
     engines: {node: '>=0.10.0'}
-
-  klaro@0.7.21:
-    resolution: {integrity: sha512-PbF23xYGPObhg2GL0yqskPqRTziv3RTwVi9QZiBEB/BVulS/e1fFprgRiW6f4utPjb61q/16fWgPwHuuXJZYRA==}
 
   language-subtag-registry@0.3.23:
     resolution: {integrity: sha512-0K65Lea881pHotoGEa5gDlMxt3pctLi2RplBb7Ezh4rRdLEOtgi7n4EwK9lamnUCkKBqaeKRVebTq6BAxSkpXQ==}
@@ -8082,15 +8076,6 @@ snapshots:
       json-buffer: 3.0.1
 
   kind-of@6.0.3: {}
-
-  klaro@0.7.21(@babel/core@7.26.10)(eslint@8.57.1):
-    dependencies:
-      '@babel/eslint-parser': 7.26.10(@babel/core@7.26.10)(eslint@8.57.1)
-      sass: 1.86.0
-      webpack-merge: 5.10.0
-    transitivePeerDependencies:
-      - '@babel/core'
-      - eslint
 
   language-subtag-registry@0.3.23: {}
 
