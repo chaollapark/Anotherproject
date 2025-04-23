@@ -46,7 +46,7 @@ export default function JobForm({ jobDoc }: JobFormProps) {
     
     basic: 100,
     pro: 300,
-    recruiter: 1000,
+    recruiter: 500,
   };
 
   useEffect(() => {
@@ -482,7 +482,7 @@ async function handleSaveJob(data: FormData) {
                     />
                       <div className="pl-2">
                         <label className="font-bold text-lg cursor-pointer" htmlFor="recruiter">
-                        Recruiter (€1000)
+                        Recruiter (€500 upfront + €1500 after hire)
                         </label>
                       </div>
                     </div>
