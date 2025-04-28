@@ -44,9 +44,9 @@ export default function JobForm({ jobDoc }: JobFormProps) {
 
   const planPrices: Record<string, number> = {
     
-    basic: 100,
-    pro: 300,
-    recruiter: 500,
+    basic: 200,
+    pro: 500,
+    recruiter: 1500,
   };
 
   useEffect(() => {
@@ -58,22 +58,24 @@ export default function JobForm({ jobDoc }: JobFormProps) {
   const planFeatures = {
     basic: [
       'Job listing live for 30 days on our high-traffic homepage',
-      'Reach 110,000+ targeted professionals searching for EU jobs',
+      'Reach 110 000+ targeted professionals searching for EU jobs',
       'Instant job posting—go live in minutes',
       'Unlimited edits & updates to your listing anytime',
-      'Included in our bi-weekly newsletter'
+      'Included in our bi-weekly newsletter',
+      '💸 Pricing: €200 upfront + €1 800 success fee if you hire a candidate we propose'
     ],
     pro: [
       'Everything in the Basic Plan, plus:',
-      'Priority placement at the top of our homepage',
-      'Highlighted listing—stand out and attract more applicants',
-      'Featured in our bi-weekly newsletter'
+      '📌 Priority placement at the top of our homepage',
+      '✨ Highlighted listing—stand out and attract more applicants',
+      '🚀 Featured slot in our bi-weekly newsletter',
+      '🏷️ 10% discount: €500 upfront + €1 300 success fee only if you hire'
     ],
     recruiter: [
       'Everything in the Pro Plan, plus:',
-      'You pay us after you hire one of our candidates',
-      'We vet candidates and set up meetings',
-      '500 upfront and 1500 after you hire'
+      'No upfront hire fee—you pay €300 now, €1 700 only on success',
+      'Full candidate vetting & meeting scheduling',
+      '25% discount: €1 500 instead of €2 000'
     ],
   };
 
@@ -437,7 +439,7 @@ async function handleSaveJob(data: FormData) {
                       id="basic"
                       className="w-4 h-4 rounded-full mr-2 cursor-pointer"
                     />
-                        <label className="pl-2 font-bold text-lg cursor-pointer" htmlFor="basic">Basic (€100)</label>
+                        <label className="pl-2 font-bold text-lg cursor-pointer" htmlFor="basic">Basic (€200)</label>
                     </div>
                     <ul className="space-y-2 ml-6">
                       {planFeatures.basic.map((feature, index) => (
@@ -458,7 +460,7 @@ async function handleSaveJob(data: FormData) {
                       id="pro"
                       className="w-4 h-4 rounded-full mr-2 cursor-pointer"
                     />
-                      <label className="pl-2 font-bold text-lg cursor-pointer" htmlFor="pro">Pro (€300)</label>
+                      <label className="pl-2 font-bold text-lg cursor-pointer" htmlFor="pro">Pro (€500)</label>
                     </div>
                     <ul className="space-y-2 ml-6">
                       {planFeatures.pro.map((feature, index) => (
@@ -482,7 +484,7 @@ async function handleSaveJob(data: FormData) {
                     />
                       <div className="pl-2">
                         <label className="font-bold text-lg cursor-pointer" htmlFor="recruiter">
-                        Recruiter (€500 upfront + €1500 after hire)
+                        Recruiter (€1500 25% discount!)
                         </label>
                       </div>
                     </div>
