@@ -62,14 +62,14 @@ export default function JobForm({ jobDoc }: JobFormProps) {
       'Instant job posting—go live in minutes',
       'Unlimited edits & updates to your listing anytime',
       'Included in our bi-weekly newsletter',
-      '💸 Pricing: €200 upfront + €1 800 success fee if you hire a candidate we propose'
+      'Pricing: €200 upfront + €1 800 success fee if you hire a candidate we propose'
     ],
     pro: [
       'Everything in the Basic Plan, plus:',
-      '📌 Priority placement at the top of our homepage',
-      '✨ Highlighted listing—stand out and attract more applicants',
-      '🚀 Featured slot in our bi-weekly newsletter',
-      '🏷️ 10% discount: €500 upfront + €1 300 success fee only if you hire'
+      'Priority placement at the top of our homepage',
+      'Highlighted listing—stand out and attract more applicants',
+      'Featured slot in our bi-weekly newsletter',
+      '10% discount: €500 upfront + €1 300 success fee only if you hire'
     ],
     recruiter: [
       'Everything in the Pro Plan, plus:',
