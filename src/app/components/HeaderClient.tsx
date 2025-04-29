@@ -80,11 +80,19 @@ export default function HeaderClient({
           )}
 
           <Link
-            className="text-lg text-white rounded-md py-2 px-6 bg-purple-500 hover:bg-purple-600 transition-colors"
+            className="text-lg text-white rounded-md py-2 px-6 bg-purple-500 hover:bg-purple-600 transition-colors mr-4 inline-flex items-center justify-center"
             href="/new-listing/form"
             onClick={() => setMenuOpen(false)}
           >
             Post a Job
+          </Link>
+
+          <Link
+            className="text-lg text-white rounded-md py-2 px-6 bg-blue-600 hover:bg-blue-700 transition-colors inline-flex items-center justify-center"
+            href="/headhunter"
+            onClick={() => setMenuOpen(false)}
+          >
+            Headhunter
           </Link>
 
           {!isAuthDisabled && isJobPoster && user && (
@@ -129,11 +137,19 @@ export default function HeaderClient({
         )}
 
         <Link
-          className="text-sm sm:text-base rounded-md py-2 px-4 bg-purple-500 text-white hover:bg-purple-600 transition-colors duration-200 whitespace-nowrap"
+          className="text-sm sm:text-base rounded-md py-2 px-4 bg-purple-500 text-white hover:bg-purple-600 transition-colors duration-200 whitespace-nowrap mr-4 inline-flex items-center justify-center"
           href="/new-listing/form"
           onClick={handlePostJobClick}
         >
           Post a job
+        </Link>
+
+        <Link
+          className="text-sm sm:text-base rounded-md py-2 px-4 bg-blue-600 text-white hover:bg-blue-700 transition-colors duration-200 whitespace-nowrap inline-flex items-center justify-center"
+          href="/headhunter"
+          onClick={() => setMenuOpen(false)}
+        >
+          Headhunter
         </Link>
 
         {!isAuthDisabled && isJobPoster && user && (
