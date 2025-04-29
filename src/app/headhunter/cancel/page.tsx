@@ -9,7 +9,7 @@ export default function HeadhunterCancel() {
         <div className="text-gray-600 text-6xl mb-6">×</div>
         <h1 className="text-3xl font-bold text-gray-900 mb-4">Payment Cancelled</h1>
         <p className="text-xl text-gray-600 mb-8">
-          Your payment was cancelled. If you experienced any issues or have questions, please don't hesitate to contact us.
+          Your payment was cancelled. If you experienced any issues or have questions, please don&apos;t hesitate to contact us.
         </p>
         <div className="space-x-4">
           <Link
