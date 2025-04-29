@@ -14,9 +14,9 @@ export async function POST(req: Request) {
 
     // Define fixed default prices (in cents)
     const defaultPrices = {
-      basic: 20000, // €200
-      pro: 50000, // €500
-      recruiter: 150000, // €1500
+      basic: 10000, // €100
+      pro: 30000, // €300
+      recruiter: 50000, // €500
     };
 
     // Validate plan
