@@ -25,7 +25,7 @@ export default function WhyChooseUs() {
             ))}
           </div>
           <div className="mt-8 text-center text-gray-600">
-            Trusted by 10+ organizations
+            Trusted by 45+ organizations
           </div>
         </div>
       </div>
