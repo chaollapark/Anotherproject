@@ -28,7 +28,7 @@ const plans = [
     tierId: "tier3",
     upfrontFee: "€1,500",
     successFee: "Flat",
-    notes: "Unlimited hires",
+    notes: "One invoice great discount",
     features: ["25% Discount", "10 top candidate guarantee"]
   }
 ]
