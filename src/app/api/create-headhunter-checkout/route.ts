@@ -9,7 +9,16 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
 
 export async function POST(req: Request) {
   try {
-    const { tier, companyName, role, email, phone, notes } = await req.json();
+    const body = await req.json();
+    const { tier, name, companyName, role, email, phone, notes } = body;
+
+    // Validate required fields
+    if (!name) {
+      return NextResponse.json(
+        { error: 'Name is required', receivedData: body },
+        { status: 400 }
+      );
+    }
 
     // Connect to MongoDB
     await dbConnect();
@@ -17,6 +26,7 @@ export async function POST(req: Request) {
     // Save headhunter request to database
     const headhunterRequest = await HeadhunterRequest.create({
       tier,
+      name,
       companyName,
       role,
       email,
