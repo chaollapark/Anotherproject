@@ -3,6 +3,7 @@ import Hero from "@/app/components/Hero";
 import Jobs from "@/app/components/Jobs";
 import JobFilterBar from "@/app/components/JobFilterBar"; // ✅ import
 import { fetchJobsBySource, fetchJobs } from "@/models/Job";
+import { notFound } from "next/navigation";
 
 const FILTER_MAP: Record<string, string> = {
   "best-jobs": "",
@@ -15,10 +16,21 @@ const FILTER_MAP: Record<string, string> = {
 
 export const revalidate = 60;
 
+// Generate static pages for all valid filters at build time
+export function generateStaticParams() {
+  return Object.keys(FILTER_MAP).map(filter => ({ filter }));
+}
+
 export default async function FilteredPage({ params }: { params: { filter: string } }) {
   await dbConnect();
 
   const source = FILTER_MAP[params.filter];
+  
+  // Return 404 for invalid filters
+  if (params.filter && !FILTER_MAP.hasOwnProperty(params.filter)) {
+    notFound();
+  }
+  
   const jobs = source ? await fetchJobsBySource(source) : await fetchJobs(10);
   const header = source ? `Jobs from ${params.filter.replace(/-/g, ' ')}` : 'Latest Jobs';
 

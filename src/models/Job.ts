@@ -156,3 +156,35 @@ export async function fetchJobsBySource(source: string) {
 
   return JSON.parse(JSON.stringify([...featuredJobs, ...regularJobs]));
 }
+
+export async function fetchJobsByCity(cityName: string) {
+  await dbConnect();
+
+  const featuredJobs = await JobModel.find(
+    { plan: { $in: ['pro', 'recruiter'] } },
+    {},
+    { sort: '-createdAt', limit: 5 }
+  );
+
+  const regularJobs = await JobModel.find(
+    {
+      city: { $regex: new RegExp(cityName, 'i') },
+      plan: { $nin: ['pro', 'recruiter', 'pending'] }
+    },
+    {},
+    { sort: '-createdAt', limit: 50 }
+  );
+
+  return JSON.parse(JSON.stringify([...featuredJobs, ...regularJobs]));
+}
+
+export async function getAllJobSlugs() {
+  try {
+    await dbConnect();
+    const jobs = await JobModel.find({}, 'slug');
+    return jobs.map(job => job.slug).filter(Boolean); // Filter out any undefined/null slugs
+  } catch (error) {
+    console.error('Error fetching all job slugs:', error);
+    return [];
+  }
+}
