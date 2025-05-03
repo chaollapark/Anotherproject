@@ -23,7 +23,7 @@ export default async function BlogIndex() {
             <p className="text-gray-600">{job.companyName}</p>
             <p className="mb-2 text-sm text-gray-500">{job.seniority}</p>
             <Link 
-              href={`/jobs/${job._id}`} 
+              href={`/jobs/${job.slug}`} 
               className="inline-block text-blue-600 hover:underline"
             >
               View Details
