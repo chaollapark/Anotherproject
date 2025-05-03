@@ -71,6 +71,9 @@ export default function RootLayout({
             <div className="flex md:flex-row flex-col justify-between md:items-center">
               <div>EUjobs.co &copy; 2024 - All rights reserved</div>
               <nav className="flex flex-col underline mt-4 md:mt-0 gap-1">
+                <Link href="/all-jobs" className="hover:text-gray-700 transition-colors">
+                  All Jobs Directory
+                </Link>
                 <Link href="/blog" className="hover:text-gray-700 transition-colors">
                   EUjobs Blog
                 </Link>
