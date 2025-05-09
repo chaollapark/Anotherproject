@@ -44,8 +44,8 @@ export default function JobForm({ jobDoc }: JobFormProps) {
 
   const planPrices: Record<string, number> = {
     
-    basic: 100,
-    pro: 300,
+    basic: 200,
+    pro: 400,
     recruiter: 500,
   };
 
@@ -438,7 +438,7 @@ async function handleSaveJob(data: FormData) {
                       id="basic"
                       className="w-4 h-4 rounded-full mr-2 cursor-pointer"
                     />
-                        <label className="pl-2 font-bold text-lg cursor-pointer" htmlFor="basic">Basic (€100)</label>
+                        <label className="pl-2 font-bold text-lg cursor-pointer" htmlFor="basic">Basic (€200)</label>
                     </div>
                     <ul className="space-y-2 ml-6">
                       {planFeatures.basic.map((feature, index) => (
@@ -459,7 +459,7 @@ async function handleSaveJob(data: FormData) {
                       id="pro"
                       className="w-4 h-4 rounded-full mr-2 cursor-pointer"
                     />
-                      <label className="pl-2 font-bold text-lg cursor-pointer" htmlFor="pro">Pro (€300)</label>
+                      <label className="pl-2 font-bold text-lg cursor-pointer" htmlFor="pro">Pro (€400)</label>
                     </div>
                     <ul className="space-y-2 ml-6">
                       {planFeatures.pro.map((feature, index) => (

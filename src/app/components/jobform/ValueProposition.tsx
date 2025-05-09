@@ -11,7 +11,7 @@ const ValueProposition = () => {
   const competitorPricing = [
     { name: 'Euro Brussels', price: '€2000' },
     { name: 'Euractiv Jobs', price: '€1000' },
-    { name: 'Eujobs Brussels', price: '€100', highlight: true }
+    { name: 'Eujobs Brussels', price: '€200', highlight: true }
   ];
 
   return (
