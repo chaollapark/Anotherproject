@@ -1,11 +1,12 @@
 'use client';
 import TimeAgo from "@/app/components/TimeAgo";
 import {Job} from "@/models/Job";
-import {faStar, faCopy, faShareAlt, faUpRightFromSquare} from "@fortawesome/free-solid-svg-icons";
+import {faStar, faCopy, faShareAlt, faUpRightFromSquare, faEnvelope} from "@fortawesome/free-solid-svg-icons";
 
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import { useState } from 'react';
 import Link from 'next/link';
+import EmailJobModal from "@/app/components/ui/EmailJobModal";
 
 const JobDescription = ({ description }: { description: string }) => {
   return (
@@ -32,6 +33,7 @@ export default function JobRow({jobDoc}:{jobDoc:Job}) {
   const isPro = jobDoc.plan === "pro" || jobDoc.plan === "recruiter";
   const slug: string = jobDoc.slug;
   const [copied, setCopied] = useState(false);
+  const [isEmailModalOpen, setIsEmailModalOpen] = useState(false);
 
   const copyToClipboard = async (slug: string) => {
     try {
@@ -130,7 +132,10 @@ export default function JobRow({jobDoc}:{jobDoc:Job}) {
                 </span>
               </button>
               <button
-                onClick={shareOnLinkedIn}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  shareOnLinkedIn();
+                }}
                 className="flex items-center gap-2 text-gray-600 hover:text-blue-600 transition-colors"
               >
                 <FontAwesomeIcon 
@@ -138,6 +143,19 @@ export default function JobRow({jobDoc}:{jobDoc:Job}) {
                   className="w-4 h-4" 
                 />
                 <span className="">Share on LinkedIn</span>
+              </button>
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setIsEmailModalOpen(true);
+                }}
+                className="flex items-center gap-2 text-gray-600 hover:text-blue-600 transition-colors"
+              >
+                <FontAwesomeIcon 
+                  icon={faEnvelope} 
+                  className="w-4 h-4" 
+                />
+                <span className="">Email to Me</span>
               </button>
             </div>
             {/* Job Description Section */}
@@ -226,6 +244,14 @@ export default function JobRow({jobDoc}:{jobDoc:Job}) {
           </div>
         )}
       </div>
+      
+      {/* Email Job Modal */}
+      <EmailJobModal 
+        isOpen={isEmailModalOpen} 
+        onClose={() => setIsEmailModalOpen(false)} 
+        jobSlug={slug} 
+        jobTitle={jobDoc.title} 
+      />
     </div>
   );
 }
