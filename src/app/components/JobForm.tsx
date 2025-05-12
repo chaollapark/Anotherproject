@@ -74,7 +74,7 @@ export default function JobForm({ jobDoc }: JobFormProps) {
       'Full candidate vetting & meeting scheduling',
       'You pay us after you hire one of our candidates',
       'We vet candidates and set up meetings',
-      '500 upfront and 1500 after you hire',
+      '500 upfront and 1300 after you hire',
     ],
   };
 
