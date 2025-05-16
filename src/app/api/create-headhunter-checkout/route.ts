@@ -39,7 +39,7 @@ export async function POST(req: Request) {
 
     // Define tier prices (in cents)
     const tierPrices = {
-      tier1: 20000, // €200
+      tier1: 0, // €0
       tier2: 50000, // €500
       tier3: 150000, // €1500
     };

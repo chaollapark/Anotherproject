@@ -10,8 +10,8 @@ const plans = [
   {
     name: "Tier 1",
     tierId: "tier1",
-    upfrontFee: "€200",
-    successFee: "€1,800 on hire",
+    upfrontFee: "€0",
+    successFee: "€4,000 on hire",
     notes: "Want to test our headhunter service?",
     features: ["Standard sourcing", "Pay on success", "10 top candidate guarantee"]
   },
@@ -19,15 +19,15 @@ const plans = [
     name: "Tier 2",
     tierId: "tier2",
     upfrontFee: "€500",
-    successFee: "€1,300 on hire",
+    successFee: "€3,000 on hire",
     notes: "Priority sourcing",
-    features: ["10% Discount", "Pay on success", "10 top candidate guarantee"]
+    features: ["13% Discount", "Pay on success", "10 top candidate guarantee"]
   },
   {
     name: "Tier 3",
     tierId: "tier3",
-    upfrontFee: "€1,500",
-    successFee: "Flat",
+    upfrontFee: "€1,000",
+    successFee: "€2,000 on hire",
     notes: "One invoice great discount",
     features: ["25% Discount", "10 top candidate guarantee"]
   }
