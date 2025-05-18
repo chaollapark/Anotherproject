@@ -74,6 +74,9 @@ export default function RootLayout({
                 <Link href="/all-jobs" className="hover:text-gray-700 transition-colors">
                   All Jobs Directory
                 </Link>
+                <Link href="/org" className="hover:text-gray-700 transition-colors">
+                  EU Organizations Directory
+                </Link>
                 <Link href="/blog" className="hover:text-gray-700 transition-colors">
                   EUjobs Blog
                 </Link>
