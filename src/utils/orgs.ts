@@ -68,13 +68,13 @@ export function getOrganizations(): ParsedOrganization[] {
   
   const parser = new XMLParser({
     ignoreAttributes: false,
-    isArray: (name) => ['interestRepresentative', 'levelOfInterest', 'interest', 'fundingSource'].includes(name),
+    isArray: (name: string) => ['interestRepresentative', 'levelOfInterest', 'interest', 'fundingSource'].includes(name),
   });
   
   const result = parser.parse(xmlData);
   const organizations = result.ListOfIRPublicDetail.resultList.interestRepresentative || [];
   
-  return organizations.map(org => {
+  return organizations.map((org: any) => {
     // Extract originalName from nested structure
     const originalName = org.n?.originalName || 'Unknown Organization';
     
@@ -91,12 +91,12 @@ export function getOrganizations(): ParsedOrganization[] {
 }
 
 export function getOrganizationsByCategory(category: string): ParsedOrganization[] {
-  return getOrganizations().filter(org => org.category === category);
+  return getOrganizations().filter((org: ParsedOrganization) => org.category === category);
 }
 
 export function getOrganizationBySlug(category: string, slug: string): ParsedOrganization | undefined {
   return getOrganizations().find(
-    org => org.category === category && org.slug === slug
+    (org: ParsedOrganization) => org.category === category && org.slug === slug
   );
 }
 
@@ -104,7 +104,7 @@ export function getRelatedOrganizations(category: string, currentSlug: string, l
   const orgsInCategory = getOrganizationsByCategory(category);
   
   // Exclude the current organization and pick random ones
-  const filteredOrgs = orgsInCategory.filter(org => org.slug !== currentSlug);
+  const filteredOrgs = orgsInCategory.filter((org: ParsedOrganization) => org.slug !== currentSlug);
   
   // Shuffle array to get random selection
   const shuffled = [...filteredOrgs].sort(() => 0.5 - Math.random());
@@ -127,7 +127,7 @@ export function generateWhyWorkHere(org: ParsedOrganization): string {
   
   // Add information about interests/sectors if available
   if (org.interests && org.interests.length > 0) {
-    const sectors = org.interests.slice(0, 3).map(interest => interest.n).join(', ');
+    const sectors = org.interests.slice(0, 3).map((interest: {n: string}) => interest.n).join(', ');
     summary += ` Their work focuses on ${sectors}.`;
   }
   

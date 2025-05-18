@@ -3,24 +3,9 @@ import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { getOrganizationBySlug, getRelatedOrganizations, generateWhyWorkHere, getOrganizationsByCategory } from '@/utils/orgs';
 
-// Generate static paths for all valid organizations
-export function generateStaticParams() {
-  const validCategories = ['ngo', 'company', 'think-tank', 'other'];
-  const params = [];
-  
-  for (const category of validCategories) {
-    const orgsInCategory = getOrganizationsByCategory(category);
-    
-    const categoryParams = orgsInCategory.map(org => ({
-      category,
-      slug: org.slug
-    }));
-    
-    params.push(...categoryParams);
-  }
-  
-  return params;
-}
+// Mark this page as dynamically rendered
+export const dynamic = 'force-dynamic';
+export const dynamicParams = true;
 
 interface OrganizationPageProps {
   params: {
@@ -77,8 +62,10 @@ export default function OrganizationPage({ params }: OrganizationPageProps) {
     (organization.webSiteURL.startsWith('http') ? organization.webSiteURL : `http://${organization.webSiteURL}`) : 
     null;
   
-  // Get funding sources if available
-  const fundingSources = organization.financialData?.closedYear?.fundingSources?.map(src => src.source) || [];
+  // Get funding sources if available and ensure it's an array
+  const fundingSources = Array.isArray(organization.financialData?.closedYear?.fundingSources) 
+    ? organization.financialData.closedYear.fundingSources.map((src: {source: string}) => src.source)
+    : [];
   
   // Get total budget if available
   const totalBudget = organization.financialData?.closedYear?.totalBudget?.absoluteCost;

@@ -12,10 +12,9 @@ interface CategoryPageProps {
 // Valid categories
 const validCategories = ['ngo', 'company', 'think-tank', 'other'];
 
-// Generate static paths for all categories
-export function generateStaticParams() {
-  return validCategories.map(category => ({ category }));
-}
+// Mark this page as dynamically rendered
+export const dynamic = 'force-dynamic';
+export const dynamicParams = true;
 
 // Generate metadata for each category page
 export function generateMetadata({ params }: CategoryPageProps): Metadata {
