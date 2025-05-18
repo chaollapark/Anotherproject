@@ -28,6 +28,7 @@ export type Job = {
   updatedAt: string;
   expiresOn: string;
   seniority: string;
+  experienceRequirements?: string;
   plan?: string;
   userWorkosId?: string;
   source?: string;
