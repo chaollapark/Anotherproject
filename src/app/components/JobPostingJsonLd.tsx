@@ -4,9 +4,10 @@ import { Job } from '@/models/Job';
 
 interface JobPostingJsonLdProps {
   job: Job;
+  currentUrl?: string; // Add current URL for canonical link generation
 }
 
-const JobPostingJsonLd: React.FC<JobPostingJsonLdProps> = ({ job }) => {
+const JobPostingJsonLd: React.FC<JobPostingJsonLdProps> = ({ job, currentUrl }) => {
   // Convert employment type to Schema.org format
   const getEmploymentType = (type: string) => {
     const types: { [key: string]: string } = {
@@ -19,19 +20,55 @@ const JobPostingJsonLd: React.FC<JobPostingJsonLdProps> = ({ job }) => {
     return types[type.toLowerCase()] || type.toUpperCase();
   };
   
-  // Get experience requirements based on seniority
-  const getExperienceRequirements = (seniority: string | undefined) => {
-    if (!seniority) return undefined;
-    
-    const seniorityLower = seniority.toLowerCase();
-    if (seniorityLower.includes('intern') || seniorityLower.includes('junior')) {
-      return 'EntryLevel';
-    } else if (seniorityLower.includes('mid')) {
-      return 'MidLevel';
-    } else if (seniorityLower.includes('senior')) {
-      return 'SeniorLevel';
+  // Helper for kebab-case conversion
+  const toKebabCase = (str: string): string => {
+    return str
+      .toLowerCase()
+      .replace(/\s+/g, '-')           // Replace spaces with -
+      .replace(/[^\w\-]+/g, '')     // Remove all non-word chars
+      .replace(/\-\-+/g, '-')        // Replace multiple - with single -
+      .replace(/^-+/, '')               // Trim - from start
+      .replace(/-+$/, '');              // Trim - from end
+  };
+
+  // Generate canonical URL for a job using existing slug
+  const getCanonicalUrl = (host: string = 'eujobs.co'): string => {
+    // Use the job's existing slug instead of generating a new one
+    return `https://${host}/jobs/${job.slug}`;
+  };
+
+  // Get experience requirements based on seniority or title
+  const getExperienceRequirements = (): { value?: string, qualificationText?: string } => {
+    // Check if experience requirements is present but invalid
+    if (job.experienceRequirements && 
+        !['EntryLevel', 'MidLevel', 'SeniorLevel'].includes(job.experienceRequirements)) {
+      // Return the invalid value as qualification text
+      return { 
+        value: undefined, 
+        qualificationText: job.experienceRequirements 
+      };
     }
-    return undefined;
+    
+    // Valid experience requirements present, return it
+    if (job.experienceRequirements && 
+        ['EntryLevel', 'MidLevel', 'SeniorLevel'].includes(job.experienceRequirements)) {
+      return { value: job.experienceRequirements };
+    }
+
+    // Infer from seniority or title
+    const title = job.title?.toLowerCase() || '';
+    const seniority = job.seniority?.toLowerCase() || '';
+    const combinedText = `${title} ${seniority}`;
+    
+    if (combinedText.includes('intern') || combinedText.includes('junior')) {
+      return { value: 'EntryLevel' };
+    } else if (combinedText.includes('mid')) {
+      return { value: 'MidLevel' };
+    } else if (combinedText.includes('senior')) {
+      return { value: 'SeniorLevel' };
+    }
+
+    return { value: undefined };
   };
   
   // Estimate salary based on seniority or title
@@ -115,8 +152,47 @@ const JobPostingJsonLd: React.FC<JobPostingJsonLdProps> = ({ job }) => {
   // Calculate estimated salary if needed
   const estimatedSalary = estimateBaseSalary();
   
-  // Get proper experience requirements
-  const experienceReq = job.experienceRequirements || getExperienceRequirements(job.seniority);
+  // Check if applicationUrl is on our domain or needs to be canonical
+  const getApplicationUrl = () => {
+    // Extract host from currentUrl if provided
+    let currentHost = 'eujobs.co';
+    if (currentUrl) {
+      try {
+        const url = new URL(currentUrl);
+        currentHost = url.hostname;
+      } catch (e) {
+        console.error('Error parsing currentUrl:', e);
+      }
+    }
+    
+    // If no applyLink exists, use our canonical URL
+    if (!job.applyLink) {
+      return getCanonicalUrl(currentHost);
+    }
+    
+    // Check if existing applyLink is on our domain
+    try {
+      const applyUrl = new URL(job.applyLink);
+      if (applyUrl.hostname === currentHost) {
+        // Link already points to our domain, keep it
+        return job.applyLink;
+      }
+      // Link points elsewhere, use canonical URL
+      return getCanonicalUrl(currentHost);
+    } catch (e) {
+      // Invalid URL, use canonical URL
+      return getCanonicalUrl(currentHost);
+    }
+  };
+  
+  // Process experience requirements
+  const experienceData = getExperienceRequirements();
+  
+  // Handle qualifications
+  let qualifications = '';
+  if (experienceData.qualificationText) {
+    qualifications = experienceData.qualificationText;
+  }
   
   const jsonLd = {
     '@context': 'https://schema.org',
@@ -135,6 +211,8 @@ const JobPostingJsonLd: React.FC<JobPostingJsonLdProps> = ({ job }) => {
       address: jobLocationAddress,
     },
     employmentType: getEmploymentType(job.type),
+    applicationUrl: getApplicationUrl(),
+    
     // Add salary if available or estimated
     ...(job.salary && {
       baseSalary: {
@@ -160,13 +238,13 @@ const JobPostingJsonLd: React.FC<JobPostingJsonLdProps> = ({ job }) => {
         ...(job.contactName && { name: job.contactName }),
       },
     }),
-    // Add direct apply link if available
-    ...(job.applyLink && {
-      applicationUrl: job.applyLink
-    }),
     // Add experience level if available
-    ...(experienceReq && {
-      experienceRequirements: experienceReq
+    ...(experienceData.value && {
+      experienceRequirements: experienceData.value
+    }),
+    // Add qualifications if available
+    ...(qualifications && {
+      qualifications: qualifications
     }),
   };
 
