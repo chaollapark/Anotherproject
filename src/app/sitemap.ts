@@ -17,7 +17,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const lobbyingEntityEntries: MetadataRoute.Sitemap = lobbyingEntities.map(entity => ({
     url: `${baseUrl}/lobbying-entities/${entity.slug}`,
     lastModified: entity.updatedAt ? new Date(entity.updatedAt) : new Date(),
-    changeFrequency: 'daily',
+    changeFrequency: 'yearly',
     priority: 0.8,
   }));
 
@@ -25,7 +25,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const jobs = await JobModel.find({}, 'slug status updatedAt').lean();
   const jobEntries: MetadataRoute.Sitemap = jobs.map((job: any) => { // Added 'any' for job type, refine if you have a specific lean type
     let priority = 0.7;
-    let changefreq: 'always' | 'hourly' | 'daily' | 'weekly' | 'monthly' | 'yearly' | 'never' = 'daily';
+    let changefreq: 'monthly' | 'yearly' | 'never' = 'monthly';
 
     if (job.status === 'expired') {
       priority = 0.3;
@@ -54,7 +54,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     {
       url: `${baseUrl}/lobbying-entities`,
       lastModified: new Date(),
-      changeFrequency: 'daily',
+      changeFrequency: 'yearly',
       priority: 0.9,
     },
     {
@@ -74,7 +74,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     {
       url: `${baseUrl}/blog`,
       lastModified: new Date(),
-      changeFrequency: 'daily', // Aligned to 'daily' as it's often more frequent
+      changeFrequency: 'monthly', // Aligned to 'daily' as it's often more frequent
       priority: 1.0, // Kept higher priority from API route version
     },
     {
