@@ -83,6 +83,9 @@ export default function RootLayout({
                 <Link href="/contact" className="hover:text-gray-700 transition-colors">
                   EUjobs Contact
                 </Link>
+                <Link href="/lobbying-entities" className="hover:text-gray-700 transition-colors">
+                  EU Lobbying Entities Directory
+                </Link>
               </nav>
             </div>
           </footer>
