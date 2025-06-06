@@ -9,9 +9,9 @@ import {
 
 const ValueProposition = () => {
   const competitorPricing = [
-    { name: 'Euro Brussels', price: '€2000' },
-    { name: 'Euractiv Jobs', price: '€1000' },
-    { name: 'Eujobs Brussels', price: '€200', highlight: true }
+    { name: 'Euro Brussels', price: '€1400' },
+    { name: 'Euractiv Jobs', price: '€800' },
+    { name: 'Eujobs Brussels', price: '€50', highlight: true }
   ];
 
   return (
@@ -23,7 +23,7 @@ const ValueProposition = () => {
         <div className="mb-8">
           <h3 className="text-xl font-semibold mb-4 flex items-center">
             <FontAwesomeIcon icon={faEuroSign} className="mr-2 text-green-600 h-4" />
-            All EU Policy Jobs. Best Price.
+            We have all policy jobs in one place.
           </h3>
           <div className="grid grid-cols-3 gap-4 text-center">
             {competitorPricing.map((competitor) => (
