@@ -22,11 +22,11 @@ const FAQ: React.FC = () => {
     },
     {
       question: "Does EUjobs also offer headhunting?",
-      answer: "Yes! EUjobs offers headhunting services. You pay 200 Euros upfront, and 1800 if you hire one of the suggested candidates."
+      answer: "Yes! EUjobs offers headhunting services. You pay 0 Euros upfront, and 4000 Euros if you hire one of the suggested candidates."
     },
     {
       question: "How does Headhunter work?",
-      answer: "You pay us € 500 upfront and get a premium listing. Then we only get paid if you hire one of the suggested candidates."
+      answer: "You pay us € 0 upfront and get a premium listing. Then we only get paid if you hire one of the suggested candidates."
     },
     {
       question: "What is the Headhunting process?",
