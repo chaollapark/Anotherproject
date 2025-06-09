@@ -9,6 +9,7 @@ import Link from "next/link";
 import GoogleAnalytics from "@/app/components/GoogleAnalytics";
 import LogoScroller from "@/app/components/layout/LogoScroller";
 import FloatingSignup from "@/app/components/FloatingSignup";
+import FloatingPostJobButton from "@/app/components/FloatingPostJobButton";
 
 
 const inter = Inter({ subsets: ["latin"] });
@@ -66,6 +67,8 @@ export default function RootLayout({
           {children}
           {/* Floating Email Signup */}
           <FloatingSignup />
+          {/* Floating Post a Job Button */}
+          <FloatingPostJobButton />
           
           <footer className="container py-8 text-gray-500 border-t-2 mt-2 md:mt-4 lg:mt-8">
             <div className="flex md:flex-row flex-col justify-between md:items-center">
