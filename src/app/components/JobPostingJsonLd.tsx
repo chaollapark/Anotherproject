@@ -37,39 +37,63 @@ const JobPostingJsonLd: React.FC<JobPostingJsonLdProps> = ({ job, currentUrl }) 
     return `https://${host}/jobs/${job.slug}`;
   };
 
-  // Get experience requirements based on seniority or title
-  const getExperienceRequirements = (): { value?: string, qualificationText?: string } => {
-    // Check if experience requirements is present but invalid
-    if (job.experienceRequirements && 
-        !['EntryLevel', 'MidLevel', 'SeniorLevel'].includes(job.experienceRequirements)) {
-      // Return the invalid value as qualification text
-      return { 
-        value: undefined, 
-        qualificationText: job.experienceRequirements 
+  // Map job level to valid OccupationalExperienceRequirements for Google
+  const getExperienceRequirements = () => {
+    // If a numeric value is already provided, use it
+    if (typeof job.experienceRequirements === 'number') {
+      return {
+        value: {
+          '@type': 'OccupationalExperienceRequirements',
+          minimumExperienceInMonths: job.experienceRequirements * 12,
+          description: `${job.experienceRequirements} years of experience`
+        }
       };
-    }
-    
-    // Valid experience requirements present, return it
-    if (job.experienceRequirements && 
-        ['EntryLevel', 'MidLevel', 'SeniorLevel'].includes(job.experienceRequirements)) {
-      return { value: job.experienceRequirements };
     }
 
     // Infer from seniority or title
     const title = job.title?.toLowerCase() || '';
     const seniority = job.seniority?.toLowerCase() || '';
     const combinedText = `${title} ${seniority}`;
-    
+
     if (combinedText.includes('intern') || combinedText.includes('junior')) {
-      return { value: 'EntryLevel' };
+      return {
+        value: {
+          '@type': 'OccupationalExperienceRequirements',
+          minimumExperienceInMonths: 0,
+          description: 'No experience required'
+        }
+      };
     } else if (combinedText.includes('mid')) {
-      return { value: 'MidLevel' };
+      return {
+        value: {
+          '@type': 'OccupationalExperienceRequirements',
+          minimumExperienceInMonths: 60,
+          description: 'At least 5 years of experience'
+        }
+      };
     } else if (combinedText.includes('senior')) {
-      return { value: 'SeniorLevel' };
+      return {
+        value: {
+          '@type': 'OccupationalExperienceRequirements',
+          minimumExperienceInMonths: 96,
+          description: 'At least 8 years of experience'
+        }
+      };
+    }
+
+    // Fallback: if a string is present, use as description only
+    if (job.experienceRequirements && typeof job.experienceRequirements === 'string') {
+      return {
+        value: {
+          '@type': 'OccupationalExperienceRequirements',
+          description: job.experienceRequirements
+        }
+      };
     }
 
     return { value: undefined };
   };
+
   
   // Estimate salary based on seniority or title
   const estimateBaseSalary = () => {
@@ -190,8 +214,8 @@ const JobPostingJsonLd: React.FC<JobPostingJsonLdProps> = ({ job, currentUrl }) 
   
   // Handle qualifications
   let qualifications = '';
-  if (experienceData.qualificationText) {
-    qualifications = experienceData.qualificationText;
+  if (experienceData.value && experienceData.value.description) {
+    qualifications = experienceData.value.description;
   }
   
   const jsonLd = {
@@ -238,7 +262,7 @@ const JobPostingJsonLd: React.FC<JobPostingJsonLdProps> = ({ job, currentUrl }) 
         ...(job.contactName && { name: job.contactName }),
       },
     }),
-    // Add experience level if available
+    // Add experience requirements if available
     ...(experienceData.value && {
       experienceRequirements: experienceData.value
     }),
