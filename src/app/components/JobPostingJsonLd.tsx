@@ -1,5 +1,8 @@
 'use client';
 
+// Define currentHost from env at the top level so it's available everywhere
+const currentHost = process.env.NEXT_PUBLIC_BASE_URL || '';
+
 import { Job } from '@/models/Job';
 
 interface JobPostingJsonLdProps {
@@ -32,7 +35,7 @@ const JobPostingJsonLd: React.FC<JobPostingJsonLdProps> = ({ job, currentUrl }) 
   };
 
   // Generate canonical URL for a job using existing slug
-  const getCanonicalUrl = (host: string = 'eujobs.co'): string => {
+  const getCanonicalUrl = (host: string = currentHost): string => {
     // Use the job's existing slug instead of generating a new one
     return `https://${host}/jobs/${job.slug}`;
   };
