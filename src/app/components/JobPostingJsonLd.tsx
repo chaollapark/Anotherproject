@@ -44,7 +44,7 @@ const JobPostingJsonLd: React.FC<JobPostingJsonLdProps> = ({ job, currentUrl }) 
       return {
         value: {
           '@type': 'OccupationalExperienceRequirements',
-          minimumExperienceInMonths: job.experienceRequirements * 12,
+          monthsOfExperience: job.experienceRequirements * 12,
           description: `${job.experienceRequirements} years of experience`
         }
       };
@@ -59,7 +59,7 @@ const JobPostingJsonLd: React.FC<JobPostingJsonLdProps> = ({ job, currentUrl }) 
       return {
         value: {
           '@type': 'OccupationalExperienceRequirements',
-          minimumExperienceInMonths: 0,
+          monthsOfExperience: 0,
           description: 'No experience required'
         }
       };
@@ -67,7 +67,7 @@ const JobPostingJsonLd: React.FC<JobPostingJsonLdProps> = ({ job, currentUrl }) 
       return {
         value: {
           '@type': 'OccupationalExperienceRequirements',
-          minimumExperienceInMonths: 60,
+          monthsOfExperience: 60,
           description: 'At least 5 years of experience'
         }
       };
@@ -75,7 +75,7 @@ const JobPostingJsonLd: React.FC<JobPostingJsonLdProps> = ({ job, currentUrl }) 
       return {
         value: {
           '@type': 'OccupationalExperienceRequirements',
-          minimumExperienceInMonths: 96,
+          monthsOfExperience: 96,
           description: 'At least 8 years of experience'
         }
       };
@@ -235,7 +235,7 @@ const JobPostingJsonLd: React.FC<JobPostingJsonLdProps> = ({ job, currentUrl }) 
       address: jobLocationAddress,
     },
     employmentType: getEmploymentType(job.type),
-    applicationUrl: getApplicationUrl(),
+    url: getCanonicalUrl(currentHost),
     
     // Add salary if available or estimated
     ...(job.salary && {
