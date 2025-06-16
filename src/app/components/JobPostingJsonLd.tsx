@@ -1,5 +1,8 @@
 'use client';
 
+// Define currentHost from env at the top level so it's available everywhere
+const currentHost = process.env.NEXT_PUBLIC_BASE_URL || '';
+
 import { Job } from '@/models/Job';
 
 interface JobPostingJsonLdProps {
@@ -32,7 +35,7 @@ const JobPostingJsonLd: React.FC<JobPostingJsonLdProps> = ({ job, currentUrl }) 
   };
 
   // Generate canonical URL for a job using existing slug
-  const getCanonicalUrl = (host: string = 'eujobs.co'): string => {
+  const getCanonicalUrl = (host: string = currentHost): string => {
     // Use the job's existing slug instead of generating a new one
     return `https://${host}/jobs/${job.slug}`;
   };
@@ -44,7 +47,7 @@ const JobPostingJsonLd: React.FC<JobPostingJsonLdProps> = ({ job, currentUrl }) 
       return {
         value: {
           '@type': 'OccupationalExperienceRequirements',
-          minimumExperienceInMonths: job.experienceRequirements * 12,
+          monthsOfExperience: job.experienceRequirements * 12,
           description: `${job.experienceRequirements} years of experience`
         }
       };
@@ -59,7 +62,7 @@ const JobPostingJsonLd: React.FC<JobPostingJsonLdProps> = ({ job, currentUrl }) 
       return {
         value: {
           '@type': 'OccupationalExperienceRequirements',
-          minimumExperienceInMonths: 0,
+          monthsOfExperience: 0,
           description: 'No experience required'
         }
       };
@@ -67,7 +70,7 @@ const JobPostingJsonLd: React.FC<JobPostingJsonLdProps> = ({ job, currentUrl }) 
       return {
         value: {
           '@type': 'OccupationalExperienceRequirements',
-          minimumExperienceInMonths: 60,
+          monthsOfExperience: 60,
           description: 'At least 5 years of experience'
         }
       };
@@ -75,7 +78,7 @@ const JobPostingJsonLd: React.FC<JobPostingJsonLdProps> = ({ job, currentUrl }) 
       return {
         value: {
           '@type': 'OccupationalExperienceRequirements',
-          minimumExperienceInMonths: 96,
+          monthsOfExperience: 96,
           description: 'At least 8 years of experience'
         }
       };
@@ -235,7 +238,7 @@ const JobPostingJsonLd: React.FC<JobPostingJsonLdProps> = ({ job, currentUrl }) 
       address: jobLocationAddress,
     },
     employmentType: getEmploymentType(job.type),
-    applicationUrl: getApplicationUrl(),
+    url: getCanonicalUrl(currentHost),
     
     // Add salary if available or estimated
     ...(job.salary && {
