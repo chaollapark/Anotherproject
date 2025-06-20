@@ -22,7 +22,7 @@
     "@sendgrid/mail": "^8.1.5",
     "@stripe/react-stripe-js": "^3.1.1",
     "@stripe/stripe-js": "^5.4.0",
-    "@workos-inc/authkit-nextjs": "^0.14.0",
+    "@workos-inc/authkit-nextjs": "^2.3.3",
     "@workos-inc/node": "^7.4.0",
     "axios": "^1.6.8",
     "firebase-admin": "^13.2.0",
