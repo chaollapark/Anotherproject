@@ -7,6 +7,7 @@ import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import { useState } from 'react';
 import Link from 'next/link';
 import EmailJobModal from "@/app/components/ui/EmailJobModal";
+import posthog from 'posthog-js';
 
 const JobDescription = ({ description }: { description: string }) => {
   return (
@@ -157,6 +158,25 @@ export default function JobRow({jobDoc}:{jobDoc:Job}) {
                 />
                 <span className="">Email to Me</span>
               </button>
+              {/* Inline Write My Cover Letter Button */}
+              <a
+                href="https://client-production-a6d6.up.railway.app/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-2 bg-green-100 hover:bg-green-200 text-green-800 px-3 py-1 rounded-md font-medium border border-green-300 transition-colors"
+                style={{ fontSize: '0.95em' }}
+                onClick={e => {
+                  e.stopPropagation();
+                  posthog.capture('write_my_cover_letter_click', {
+                    job_title: jobDoc.title,
+                    job_slug: slug,
+                    company: jobDoc.companyName,
+                    location: 'inline_social_buttons'
+                  });
+                }}
+              >
+                <span>Write my cover letter</span>
+              </a>
             </div>
             {/* Job Description Section */}
             {jobDoc.description && (
@@ -221,15 +241,53 @@ export default function JobRow({jobDoc}:{jobDoc:Job}) {
                 >
                   Apply for this position
                 </Link>
+                {/* Centered Write My Cover Letter Button */}
+                <div className="flex justify-center mt-3">
+                  <a
+                    href="https://client-production-a6d6.up.railway.app/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="bg-green-600 hover:bg-green-700 text-white py-2 px-4 rounded-md font-semibold transition-colors shadow-md"
+                    onClick={e => {
+                      e.stopPropagation();
+                      posthog.capture('write_my_cover_letter_click', {
+                        job_title: jobDoc.title,
+                        job_slug: slug,
+                        company: jobDoc.companyName
+                      });
+                    }}
+                  >
+                    Write my cover letter
+                  </a>
+                </div>
               </div>
             ) : (
-              <div className="flex justify-end mt-4">
+              <div className="flex flex-col items-center mt-4">
                 <Link
                   href={`/jobs/${slug}`}
                   className="bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-md transition-colors"
                 >
                   View Full Details
                 </Link>
+                {/* Centered Write My Cover Letter Button */}
+                <div className="flex justify-center mt-3">
+                  <a
+                    href="https://client-production-a6d6.up.railway.app/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="bg-green-600 hover:bg-green-700 text-white py-2 px-4 rounded-md font-semibold transition-colors shadow-md"
+                    onClick={e => {
+                      e.stopPropagation();
+                      posthog.capture('write_my_cover_letter_click', {
+                        job_title: jobDoc.title,
+                        job_slug: slug,
+                        company: jobDoc.companyName
+                      });
+                    }}
+                  >
+                    Write my cover letter
+                  </a>
+                </div>
               </div>
             )}
 
