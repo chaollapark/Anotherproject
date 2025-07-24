@@ -20,6 +20,7 @@ import {
   faCopy,
   faShareAlt
 } from "@fortawesome/free-solid-svg-icons";
+import posthog from 'posthog-js';
 
 export default function JobPage({ params }: { params: { id: string } }) {
   const [copied, setCopied] = useState(false);
@@ -154,6 +155,25 @@ export default function JobPage({ params }: { params: { id: string } }) {
                 />
                   <span className="text-sm">Share on LinkedIn</span>
                 </button>
+                {/* Inline Write My Cover Letter Button */}
+                <a
+                  href="https://client-production-a6d6.up.railway.app/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-2 bg-green-100 hover:bg-green-200 text-green-800 px-3 py-1 rounded-md font-medium border border-green-300 transition-colors"
+                  style={{ fontSize: '0.95em' }}
+                  onClick={e => {
+                    e.stopPropagation();
+                    posthog.capture('write_my_cover_letter_click', {
+                      job_title: job.title,
+                      job_slug: job.slug,
+                      company: job.companyName,
+                      location: 'inline_social_buttons'
+                    });
+                  }}
+                >
+                  <span>Write my cover letter</span>
+                </a>
               </div>
             </div>
           </div>
@@ -219,7 +239,7 @@ export default function JobPage({ params }: { params: { id: string } }) {
 
         {/* Apply Button */}
         {job.applyLink && (
-          <div className="mt-6 flex justify-center">
+          <div className="mt-6 flex flex-col items-center">
             <a
             href={`${job.applyLink}`}
             target="_blank" rel="noopener noreferrer"
@@ -227,7 +247,47 @@ export default function JobPage({ params }: { params: { id: string } }) {
           >
             Apply for this position
           </a>
+            {/* Centered Write My Cover Letter Button */}
+            <div className="flex justify-center mt-3">
+              <a
+                href="https://client-production-a6d6.up.railway.app/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="bg-green-600 hover:bg-green-700 text-white py-2 px-4 rounded-md font-semibold transition-colors shadow-md"
+                onClick={e => {
+                  e.stopPropagation();
+                  posthog.capture('write_my_cover_letter_click', {
+                    job_title: job.title,
+                    job_slug: job.slug,
+                    company: job.companyName
+                  });
+                }}
+              >
+                Write my cover letter
+              </a>
             </div>
+          </div>
+        )}
+        {/* If no applyLink, still show centered button */}
+        {!job.applyLink && (
+          <div className="mt-6 flex justify-center">
+            <a
+              href="https://client-production-a6d6.up.railway.app/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="bg-green-600 hover:bg-green-700 text-white py-2 px-4 rounded-md font-semibold transition-colors shadow-md"
+              onClick={e => {
+                e.stopPropagation();
+                posthog.capture('write_my_cover_letter_click', {
+                  job_title: job.title,
+                  job_slug: job.slug,
+                  company: job.companyName
+                });
+              }}
+            >
+              Write my cover letter
+            </a>
+          </div>
         )}
       </div>
   );
