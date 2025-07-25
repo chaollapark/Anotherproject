@@ -3,6 +3,7 @@
 import { usePathname, useSearchParams } from "next/navigation"
 import { useEffect, Suspense } from "react"
 import { usePostHog } from 'posthog-js/react'
+import { useRouter } from "next/navigation"
 
 import posthog from 'posthog-js'
 import { PostHogProvider as PHProvider } from 'posthog-js/react'
@@ -19,6 +20,7 @@ export function PostHogProvider({ children }: { children: React.ReactNode }) {
   return (
     <PHProvider client={posthog}>
       <SuspendedPostHogPageView />
+      <PostHogPageLeave />
       {children}
     </PHProvider>
   )
@@ -83,4 +85,43 @@ function SuspendedPostHogPageView() {
       <PostHogPageView />
     </Suspense>
   )
+}
+
+// Add this new component to capture $pageleave events
+function PostHogPageLeave() {
+  const router = useRouter();
+
+  useEffect(() => {
+    const handleRouteChange = () => {
+      posthog.capture('$pageleave');
+    };
+    const handleBeforeUnload = () => {
+      posthog.capture('$pageleave');
+    };
+
+    // Next.js App Router does not have router.events, so we use the browser event
+    window.addEventListener('beforeunload', handleBeforeUnload);
+
+    // Listen for route changes
+    const origPush = router.push;
+    const origReplace = router.replace;
+    router.push = (...args) => {
+      posthog.capture('$pageleave');
+      // @ts-ignore
+      return origPush.apply(router, args);
+    };
+    router.replace = (...args) => {
+      posthog.capture('$pageleave');
+      // @ts-ignore
+      return origReplace.apply(router, args);
+    };
+
+    return () => {
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+      router.push = origPush;
+      router.replace = origReplace;
+    };
+  }, [router]);
+
+  return null;
 }
