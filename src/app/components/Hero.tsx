@@ -3,6 +3,12 @@
 import { useState, useRef } from "react";
 import { FaCheckCircle, FaSpinner, FaCloudUploadAlt, FaFile } from "react-icons/fa";
 
+declare global {
+  interface Window {
+    posthog?: { capture: (event: string, props?: Record<string, any>) => void };
+  }
+}
+
 export default function Hero() {
   const [file, setFile] = useState<File | null>(null);
   const [message, setMessage] = useState("");
@@ -102,76 +108,27 @@ export default function Hero() {
       </h1>
 
       <div className="flex max-w-4xl mx-auto">
-        {/* CV Upload Section */}
-        <div className="hidden md:block w-full bg-white rounded-xl shadow-lg p-4 border border-gray-200 hover:shadow-xl transition-shadow mb-4">
-          <h2 className="text-base font-semibold mb-2 text-gray-800">
-            Upload Your CV and Get a Job in 30 Days!
+        {/* Cover Letter Writer Section */}
+        <div className="hidden md:block w-full bg-white rounded-xl shadow-lg p-4 border border-gray-200 hover:shadow-xl transition-shadow mb-4 flex flex-col items-center justify-center">
+          <h2 className="text-base font-semibold mb-2 text-gray-800 text-center">
+            Free AI Coverletter Writer
           </h2>
-          
-          {/* Hidden file input */}
-          <input
-            ref={fileInputRef}
-            type="file"
-            accept="application/pdf"
-            onChange={handleFileChange}
-            className="hidden"
-            value={file ? undefined : ""}
-            key={uploadSuccess ? "reset-input" : "upload-input"}
-            disabled={isUploading}
-          />
-          
-          {/* Drag & Drop Zone */}
-          <div 
-            className={`border-2 border-dashed rounded-lg p-3 mb-3 text-center cursor-pointer
-              ${isDragging ? 'border-indigo-500 bg-indigo-50' : 'border-gray-300 hover:border-indigo-400'}
-              ${isUploading ? 'opacity-50 pointer-events-none' : ''}
-              transition-all duration-200`}
-            onDragOver={handleDragOver}
-            onDragLeave={handleDragLeave}
-            onDrop={handleDrop}
-            onClick={openFileDialog}
+          <a
+            href="https://client-production-a6d6.up.railway.app/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="transition-colors flex items-center justify-center gap-2 text-white py-2 px-4 rounded-md text-sm bg-green-600 hover:bg-green-700 font-semibold shadow-md mt-2"
+            onClick={() => {
+              if (typeof window !== 'undefined' && window.posthog) {
+                window.posthog.capture('coverletter_writer_click', { location: 'hero_section' });
+              }
+            }}
           >
-            <div className="flex items-center justify-center gap-2">
-              <FaCloudUploadAlt className="text-xl text-indigo-500" />
-              <p className="text-sm text-gray-600">
-                {file ? 
-                  <span className="flex items-center gap-2">
-                    <FaFile className="text-indigo-600" />
-                    <span className="font-medium truncate max-w-[150px] inline-block">{file.name}</span>
-                  </span> : 
-                  <span>
-                    Drag PDF or <span className="text-indigo-600 font-medium">browse</span>
-                  </span>
-                }
-              </p>
-            </div>
-          </div>
-
-          <div className="flex gap-2">
-            <button
-              onClick={handleUpload}
-              disabled={isUploading || !file}
-              className={`transition-colors flex-1 flex items-center justify-center gap-1 text-white py-1.5 px-3 rounded-md text-sm ${isUploading || !file ? 'bg-indigo-400 cursor-not-allowed' : 'bg-indigo-600 hover:bg-indigo-700'}`}
-            >
-              {isUploading ? (
-                <>
-                  <FaSpinner className="animate-spin" />
-                  <span>Processing...</span>
-                </>
-              ) : (
-                "Upload CV"
-              )}
-            </button>
-          </div>
-
-          {message && (
-            <div className={`mt-2 p-2 text-sm rounded-md ${uploadSuccess ? 'bg-green-100 text-green-800' : isUploading ? 'bg-blue-100 text-blue-800' : 'bg-gray-100 text-gray-800'}`}>
-              <div className="flex items-center gap-1">
-                {uploadSuccess && <FaCheckCircle className="text-green-600 text-sm flex-shrink-0" />}
-                <p className="text-xs">{message}</p>
-              </div>
-            </div>
-          )}
+            <span>Write 3 Coverletters for free!</span>
+          </a>
+          <p className="mt-3 text-xs text-gray-600 text-center">
+            17x More Applications. Same Time.
+          </p>
         </div>
       </div>
     </section>
