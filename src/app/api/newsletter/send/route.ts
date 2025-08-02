@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { sendNewsletter } from '@/lib/newsletter';
+import { sendNewsletter } from '@/lib/newsletter.tsx';
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);

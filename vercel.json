@@ -1,7 +1,7 @@
 {
   "crons": [
     {
-      "path": "/api/newsletter/send?secret=YOUR_NEWSLETTER_SECRET",
+      "path": "/api/newsletter/send?secret=a7b3c9d1e5f6g8h2i4j0k1l3m",
       "schedule": "0 10 * * 5"
     }
   ]
