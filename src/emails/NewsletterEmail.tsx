@@ -1,18 +1,17 @@
-import { 
-  Body, 
-  Button, 
-  Container, 
-  Head, 
-  Hr, 
-  Html, 
-  Img, 
-  Preview, 
-  Section, 
-  Text 
+import {
+  Body,
+  Button,
+  Container,
+  Head,
+  Hr,
+  Html,
+  Img,
+  Preview,
+  Section,
+  Text,
 } from '@react-email/components';
 import * as React from 'react';
 
-// Define the shape of the job prop directly
 interface JobForEmail {
   _id: string;
   title: string;
@@ -28,23 +27,23 @@ interface NewsletterEmailProps {
 
 const baseUrl = process.env.VERCEL_URL
   ? `https://${process.env.VERCEL_URL}`
-  : 'http://localhost:3000';
+  : 'http://eujobs.online';
 
 export const NewsletterEmail = ({ jobs = [] }: NewsletterEmailProps) => (
   <Html>
     <Head />
-    <Preview>Your weekly EU job digest is here!</Preview>
+    <Preview>Your weekly EU jobs digest from eujobs.co!</Preview>
     <Body style={main}>
       <Container style={container}>
         <Img
           src={`${baseUrl}/favicon/android-chrome-192x192.png`}
           width="48"
           height="48"
-          alt="EU Job Board"
+          alt="eujobs.co"
         />
         <Text style={paragraph}>Hi there,</Text>
         <Text style={paragraph}>
-          Here are the latest jobs from the Brussels bubble and beyond, curated just for you.
+          Here are the latest jobs from the Brussels bubble and beyond, curated just for you by eujobs.co.
         </Text>
         <Section style={jobSection}>
           {jobs.length > 0 ? (
@@ -65,10 +64,10 @@ export const NewsletterEmail = ({ jobs = [] }: NewsletterEmailProps) => (
         <Text style={paragraph}>
           Best,
           <br />
-          The EU Job Team
+          The eujobs.co Team
         </Text>
         <Hr style={hr} />
-        <Text style={footer}>EU Job Board, Brussels, Belgium</Text>
+        <Text style={footer}>eujobs.co, Brussels, Belgium</Text>
       </Container>
     </Body>
   </Html>
@@ -76,40 +75,18 @@ export const NewsletterEmail = ({ jobs = [] }: NewsletterEmailProps) => (
 
 export default NewsletterEmail;
 
+// Styles
 const main = {
   backgroundColor: '#ffffff',
-  fontFamily:
-    '-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Oxygen-Sans,Ubuntu,Cantarell,"Helvetica Neue",sans-serif',
+  fontFamily: 'sans-serif',
 };
-
-const container = {
-  margin: '0 auto',
-  padding: '20px 0 48px',
-};
-
-const jobSection = {
-  padding: '0 20px',
-};
-
-const paragraph = {
-  fontSize: '16px',
-  lineHeight: '26px',
-};
-
-const jobTitle = {
-  fontSize: '18px',
-  fontWeight: 'bold' as const,
-  lineHeight: '22px',
-};
-
-const jobCompany = {
-  fontSize: '14px',
-  lineHeight: '22px',
-  color: '#555'
-}
-
+const container = { margin: '0 auto', padding: '20px 0 48px' };
+const jobSection = { padding: '0 20px' };
+const paragraph = { fontSize: '16px', lineHeight: '26px' };
+const jobTitle = { fontSize: '18px', fontWeight: 'bold' as const };
+const jobCompany = { fontSize: '14px', color: '#555' };
 const button = {
-  backgroundColor: '#5E5DF0',
+  backgroundColor: '#007bff',
   borderRadius: '3px',
   color: '#fff',
   fontSize: '16px',
@@ -119,13 +96,5 @@ const button = {
   padding: '12px',
   width: '100%',
 };
-
-const hr = {
-  borderColor: '#cccccc',
-  margin: '20px 0',
-};
-
-const footer = {
-  color: '#8898aa',
-  fontSize: '12px',
-};
+const hr = { borderColor: '#cccccc', margin: '20px 0' };
+const footer = { color: '#8898aa', fontSize: '12px' };

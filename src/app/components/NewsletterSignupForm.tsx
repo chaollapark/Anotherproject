@@ -12,29 +12,15 @@ export default function NewsletterSignupForm() {
     setIsLoading(true);
     setMessage('');
 
-    if (!email) {
-      setMessage('Please enter your email.');
-      setIsLoading(false);
-      return;
-    }
-
     try {
       const response = await fetch('/api/subscribers', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email }),
       });
-
       const data = await response.json();
-
-      if (response.ok) {
-        setMessage(data.message || 'Success!');
-        setEmail('');
-      } else {
-        setMessage(data.message || 'An error occurred.');
-      }
+      setMessage(data.message || 'An error occurred.');
+      if (response.ok) setEmail('');
     } catch (error) {
       setMessage('Something went wrong. Please try again.');
     }
@@ -44,8 +30,8 @@ export default function NewsletterSignupForm() {
 
   return (
     <div className="p-6 max-w-md mx-auto bg-white rounded-xl shadow-md space-y-4">
-      <h2 className="text-2xl font-bold text-center text-gray-800">Stay in the Loop</h2>
-      <p className="text-center text-gray-600">Subscribe to our weekly newsletter and get the best EU jobs delivered to your inbox.</p>
+      <h2 className="text-2xl font-bold text-center text-gray-800">Subscribe to eujobs.co</h2>
+      <p className="text-center text-gray-600">Get the best EU jobs delivered weekly to your inbox.</p>
       <form onSubmit={handleSubmit} className="space-y-4">
         <input
           type="email"
@@ -58,7 +44,7 @@ export default function NewsletterSignupForm() {
         <button
           type="submit"
           disabled={isLoading}
-          className="w-full px-4 py-2 font-bold text-white bg-blue-600 rounded-md hover:bg-blue-700 disabled:bg-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+          className="w-full px-4 py-2 font-bold text-white bg-blue-600 rounded-md hover:bg-blue-700 disabled:bg-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
         >
           {isLoading ? 'Subscribing...' : 'Subscribe'}
         </button>

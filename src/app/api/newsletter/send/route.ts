@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { sendNewsletter } from '@/lib/newsletter.tsx';
+import { sendNewsletter } from '@/lib/newsletter';
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
@@ -18,7 +18,6 @@ export async function GET(request: Request) {
     }
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : 'Failed to send newsletter';
-    console.error('API Error:', errorMessage);
     return NextResponse.json({ message: 'Error sending newsletter', error: errorMessage }, { status: 500 });
   }
 }
