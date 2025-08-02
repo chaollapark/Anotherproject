@@ -11,10 +11,19 @@ import {
   Text 
 } from '@react-email/components';
 import * as React from 'react';
-import { Job } from '@/models/Job'; // Assuming Job type is exported from your model
+
+// Define the shape of the job prop directly
+interface JobForEmail {
+  _id: string;
+  title: string;
+  slug: string;
+  companyName: string;
+  city: string;
+  country: string;
+}
 
 interface NewsletterEmailProps {
-  jobs?: Job[];
+  jobs?: JobForEmail[];
 }
 
 const baseUrl = process.env.VERCEL_URL
