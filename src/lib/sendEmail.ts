@@ -1,52 +1,53 @@
-import sgMail from '@sendgrid/mail';
+import * as Brevo from '@getbrevo/brevo';
 import * as dotenv from 'dotenv';
 
 // Load environment variables for local testing
 dotenv.config();
 
 /**
- * SendGrid email configuration
+ * Brevo email configuration
  */
 
 // Get the API key from environment variable
-const apiKey = (process.env.SENDGRID_API_KEY || '').replace(/["']/g, '').trim();
+const apiKey = (process.env.BREVO_API_KEY || '').replace(/["']/g, '').trim();
 
-// Initialize SendGrid client with API key
-sgMail.setApiKey(apiKey);
+// Initialize Brevo client with API key
+const apiInstance = new Brevo.TransactionalEmailsApi();
+apiInstance.setApiKey(
+  Brevo.TransactionalEmailsApiApiKeys.apiKey,
+  apiKey
+);
 
 // Log success message without exposing the key
-console.log('SendGrid email service initialized');
+console.log('Brevo email service initialized');
 
 export async function sendEmail(to: string, subject: string, message: string) {
   try {
     // Get sender email from environment or use default
-    const fromEmail = process.env.EMAIL_FROM || 'madan@lobbyinglondon.com';
+    const fromEmail = process.env.EMAIL_FROM || 'noreply@eujobs.online';
     
-    // Create email message
-    const msg = {
-      to: to,
-      from: fromEmail, // Use verified sender from environment variables
-      subject: subject,
-      html: message, // SendGrid also supports HTML formatting
-    };
+    // Ensure we're using a clean email format for Brevo
+    const cleanEmail = fromEmail.includes('<') ? fromEmail.match(/<(.+?)>/)?.[1] || fromEmail : fromEmail;
     
-    console.log(`Attempting to send email from: ${fromEmail} to: ${to}`);
+    // Create email message using Brevo
+    const sendSmtpEmail = new Brevo.SendSmtpEmail();
+    sendSmtpEmail.subject = subject;
+    sendSmtpEmail.htmlContent = message;
+    sendSmtpEmail.sender = { name: 'EUJobs.co', email: cleanEmail };
+    sendSmtpEmail.to = [{ email: to }];
+    
+    console.log(`Attempting to send email from: ${cleanEmail} to: ${to}`);
     
     // Send email
-    const response = await sgMail.send(msg);
+    const response = await apiInstance.sendTransacEmail(sendSmtpEmail);
     
-    console.log("✅ Email sent successfully with SendGrid");
+    console.log("✅ Email sent successfully with Brevo");
     return response;
   } catch (error) {
-    console.error("❌ Error sending email with SendGrid:", error);
+    console.error("❌ Error sending email with Brevo:", error);
     // Log error details for debugging while keeping sensitive info secure
-    if (error && typeof error === 'object' && 'response' in error) {
-      const err = error as { code?: number; response?: { body?: { errors?: any[] } } };
-      console.error(`Status code: ${err.code || 'unknown'}`);
-      
-      if (err.response?.body?.errors) {
-        console.error('Error details:', err.response.body.errors);
-      }
+    if (error && typeof error === 'object') {
+      console.error('Error details:', error);
     }
     
     throw new Error("Failed to send email.");
