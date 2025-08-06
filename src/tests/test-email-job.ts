@@ -1,5 +1,5 @@
 /**
- * Test script for the 'send job to myself' feature using SendGrid
+ * Test script for the 'send job to myself' feature using Brevo
  * Run with: pnpm tsx src/tests/test-email-job.ts
  */
 
@@ -9,7 +9,7 @@ import { sendEmail } from '../lib/sendEmail';
 const TEST_EMAIL = 'chaollapark@gmail.com'; // Replace with your test email
 
 async function testSendJobEmail() {
-  console.log('🧪 Testing Send Job Email with SendGrid...');
+  console.log('🧪 Testing Send Job Email with Brevo...');
   
   try {
     // Use a mock job instead of accessing the database
@@ -23,7 +23,7 @@ async function testSendJobEmail() {
       type: 'full',
       seniority: 'senior',
       salary: '80,000 - 100,000 EUR',
-      description: '<p>This is a test job description for testing the SendGrid email functionality.</p>',
+              description: '<p>This is a test job description for testing the Brevo email functionality.</p>',
       applyLink: 'https://eujobs.co/apply/test'
     };
     
@@ -52,17 +52,17 @@ async function testSendJobEmail() {
           <a href="https://eujobs.co/jobs/${job.slug}" style="color: #3b82f6; text-decoration: none;">View on EUJobs.co</a>
         </div>
 
-        <p style="color: #6b7280; font-size: 12px; margin-top: 24px; text-align: center;">
-          This is a test email sent from the SendGrid test script
-        </p>
+              <p style="color: #6b7280; font-size: 12px; margin-top: 24px; text-align: center;">
+        This is a test email sent from the Brevo test script
+      </p>
       </div>
     `;
     
-    // Step 3: Send email using SendGrid
+    // Step 3: Send email using Brevo
     console.log(`📨 Sending test email to: ${TEST_EMAIL}`);
     const response = await sendEmail(TEST_EMAIL, subject, message);
     
-    console.log('✅ Email sent successfully with SendGrid!');
+    console.log('✅ Email sent successfully with Brevo!');
     console.log('📊 Response:', response);
   } catch (error) {
     console.error('❌ Test failed:', error);

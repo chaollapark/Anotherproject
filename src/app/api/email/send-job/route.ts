@@ -57,7 +57,7 @@ export async function POST(request: NextRequest) {
       </div>
     `;
 
-    // Send the email using SendGrid
+    // Send the email using Brevo
     const response = await sendEmail(email, subject, message);
 
     return NextResponse.json(
