@@ -2,7 +2,6 @@
 'use client';
 
 import { useState } from 'react';
-import { subscribeToNewsletter } from '@/app/actions/userActions';
 
 interface NewsletterFormProps {
   onSuccessfulSubscription?: (isNewSubscription: boolean) => void;
@@ -18,23 +17,35 @@ export default function NewsletterForm({ onSuccessfulSubscription }: NewsletterF
     setIsSubmitting(true);
     setMessage('');
     
-    const response = await subscribeToNewsletter(email);
-    setMessage(response.message);
-    
-    if (response.success) {
-      setEmail('');
-      // Call the callback to show success window (only for new subscriptions)
-      if (onSuccessfulSubscription) {
-        onSuccessfulSubscription(true);
+    try {
+      const response = await fetch('/api/newsletter/subscribe', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email }),
+      });
+
+      const data = await response.json();
+      setMessage(data.message);
+      
+      if (data.success) {
+        setEmail('');
+        // Call the callback to show success window (only for new subscriptions)
+        if (onSuccessfulSubscription) {
+          onSuccessfulSubscription(true);
+        }
+      } else {
+        // For already subscribed users, don't show success window, just the message
+        if (onSuccessfulSubscription && data.message.includes('already subscribed')) {
+          onSuccessfulSubscription(false);
+        }
       }
-    } else {
-      // For already subscribed users, don't show success window, just the message
-      if (onSuccessfulSubscription && response.message.includes('already subscribed')) {
-        onSuccessfulSubscription(false);
-      }
+    } catch (error) {
+      setMessage('Failed to subscribe. Please try again.');
+    } finally {
+      setIsSubmitting(false);
     }
-    
-    setIsSubmitting(false);
   };
 
   return (
