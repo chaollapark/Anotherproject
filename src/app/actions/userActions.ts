@@ -18,6 +18,11 @@ type CreateUserResult = {
   user?: User;
 };
 
+type NewsletterSubscriptionResult = {
+  success: boolean;
+  message: string;
+};
+
 // Helper Functions
 export async function isProfileComplete(): Promise<boolean> {
   try {
@@ -42,6 +47,28 @@ export async function getWorkosId(): Promise<string> {
     throw new Error('WorkOS user not found or invalid');
   }
   return workosUser.user.id;
+}
+
+// Newsletter subscription function
+export async function subscribeToNewsletter(email: string): Promise<NewsletterSubscriptionResult> {
+  try {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'}/api/newsletter/subscribe`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ email }),
+    });
+
+    const data = await response.json();
+    return data;
+  } catch (error) {
+    console.error('Error subscribing to newsletter:', error);
+    return {
+      success: false,
+      message: 'Failed to subscribe to newsletter. Please try again.'
+    };
+  }
 }
 
 // Main Functions
