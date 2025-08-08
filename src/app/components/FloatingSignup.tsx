@@ -73,7 +73,7 @@ export default function FloatingSignup() {
               Successfully Subscribed!
             </h3>
             <p className="text-sm text-gray-600">
-              You'll receive our latest EU job opportunities in your inbox.
+              You&apos;ll receive our latest EU job opportunities in your inbox.
             </p>
           </div>
         ) : (
