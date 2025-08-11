@@ -61,13 +61,13 @@ export default function JobForm({ jobDoc }: JobFormProps) {
       'Reach 110 000+ targeted professionals searching for EU jobs',
       'Instant job posting—go live in minutes',
       'Unlimited edits & updates to your listing anytime',
-      'Included in our bi-weekly newsletter',
+      'Featured on our homepage and job listings',
     ],
     pro: [
       'Everything in the Basic Plan, plus:',
       'Priority placement at the top of our homepage',
       'Highlighted listing—stand out and attract more applicants',
-      'Featured in our bi-weekly newsletter',
+      'Premium placement and highlighting',
     ],
     recruiter: [
       'Everything in the Pro Plan, plus:',
