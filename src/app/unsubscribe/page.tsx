@@ -63,7 +63,7 @@ export default function UnsubscribePage() {
             Unsubscribe from Daily Job Alerts
           </h1>
           <p className="text-gray-600">
-            We're sorry to see you go! You can resubscribe anytime.
+            We&apos;re sorry to see you go! You can resubscribe anytime.
           </p>
         </div>
 
