@@ -27,7 +27,7 @@ export default function FloatingPostJobButton() {
           <FaPlus className="mr-2 h-5 w-5" />
           <span>Post a Job</span>
         </div>
-        <span className="text-xs mt-1 font-normal">With EUjobs it's only 99.99 euros</span>
+        <span className="text-xs mt-1 font-normal">With EUjobs it&apos;s only 99.99 euros</span>
       </Link>
     </div>
   );
