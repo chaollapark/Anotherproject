@@ -45,7 +45,7 @@ export default function JobForm({ jobDoc }: JobFormProps) {
   const planPrices: Record<string, number> = {
     
     basic: 99.99,
-    pro: 299.99,
+pro: 299.99,
     recruiter: 500,
   };
 

@@ -15,7 +15,7 @@ export async function POST(req: Request) {
     // Define fixed default prices (in cents)
     const defaultPrices = {
       basic: 9999, // €99.99
-      pro: 29999, // €299.99
+pro: 29999, // €299.99
       recruiter: 50000, // €500
     };
 
