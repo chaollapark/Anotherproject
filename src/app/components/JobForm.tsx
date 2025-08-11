@@ -34,7 +34,7 @@ export default function JobForm({ jobDoc }: JobFormProps) {
   const [stateName, setStateName] = useState(jobDoc?.state || 'Brussels-Capital Region');
   const [cityName, setCityName] = useState(jobDoc?.city || 'Brussels');
   const [seniority, setSeniority] = useState(jobDoc?.seniority || 'junior');
-  const [plan, setPlan] = useState(jobDoc?.plan || 'basic');
+  const [plan, setPlan] = useState(jobDoc?.plan || 'pro');
   const [price, setPrice] = useState(0);
   const [discountedPrice, setDiscountedPrice] = useState(0); // Store the discounted price
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -419,7 +419,7 @@ async function handleSaveJob(data: FormData) {
             <div className="space-y-4">
               <h3 className="text-xl font-bold">Select a plan</h3>
                 <RadioGroup.Root 
-                defaultValue={plan} 
+                value={plan} 
                 name="plan" 
             onValueChange={(value) => {
               setPlan(value);
@@ -429,16 +429,16 @@ async function handleSaveJob(data: FormData) {
                 price: planPrices[value]
               });
             }}
-                className="space-y-4s"
+                className="space-y-4"
               >
-                  <div className="border border-gray-200 rounded-lg p-4 shadow-sm hover:border-blue-500 transition-colors">
+                  <label htmlFor="basic" className="block border border-gray-200 rounded-lg p-4 shadow-sm hover:border-blue-500 transition-colors cursor-pointer">
                     <div className="flex items-center mb-2">
                       <RadioGroup.Item 
                       value="basic" 
                       id="basic"
                       className="w-4 h-4 rounded-full mr-2 cursor-pointer"
                     />
-                        <label className="pl-2 font-bold text-lg cursor-pointer" htmlFor="basic">Basic (€99.99)</label>
+                        <span className="pl-2 font-bold text-lg cursor-pointer">Basic (€99.99)</span>
                     </div>
                     <ul className="space-y-2 ml-6">
                       {planFeatures.basic.map((feature, index) => (
@@ -450,16 +450,19 @@ async function handleSaveJob(data: FormData) {
                           </li>
                       ))}
                     </ul>
-                  </div>
+                  </label>
                   {/* Pro plan */}
-                  <div className="border border-gray-200 rounded-lg p-4 shadow-sm hover:border-blue-500 transition-colors">
+                  <label htmlFor="pro" className="block border border-gray-200 rounded-lg p-4 shadow-sm hover:border-blue-500 transition-colors cursor-pointer">
                     <div className="flex items-center mb-2">
                       <RadioGroup.Item 
                       value="pro" 
                       id="pro"
                       className="w-4 h-4 rounded-full mr-2 cursor-pointer"
                     />
-                      <label className="pl-2 font-bold text-lg cursor-pointer" htmlFor="pro">Pro (€299.99)</label>
+                      <div className="pl-2 flex items-center">
+                        <span className="font-bold text-lg cursor-pointer">Pro (€299.99)</span>
+                        <span className="ml-2 bg-green-100 text-green-800 text-xs font-medium px-2 py-1 rounded-full">Most Popular Plan</span>
+                      </div>
                     </div>
                     <ul className="space-y-2 ml-6">
                       {planFeatures.pro.map((feature, index) => (
@@ -471,10 +474,10 @@ async function handleSaveJob(data: FormData) {
                           </li>
                       ))}
                     </ul>
-                  </div>
+                  </label>
 
                   {/* Recruiter plan */}
-                  <div className="border border-gray-200 rounded-lg p-4 shadow-sm hover:border-blue-500 transition-colors">
+                  <label htmlFor="recruiter" className="block border border-gray-200 rounded-lg p-4 shadow-sm hover:border-blue-500 transition-colors cursor-pointer">
                     <div className="flex items-center mb-2">
                       <RadioGroup.Item 
                       value="recruiter" 
@@ -482,9 +485,9 @@ async function handleSaveJob(data: FormData) {
                       className="w-4 h-4 rounded-full mr-2 cursor-pointer"
                     />
                       <div className="pl-2">
-                        <label className="font-bold text-lg cursor-pointer" htmlFor="recruiter">
+                        <span className="font-bold text-lg cursor-pointer">
                         Recruiter (€500 upfront + 1300 Success Fee)
-                        </label>
+                        </span>
                       </div>
                     </div>
                     <ul className="space-y-2 ml-6">
@@ -497,7 +500,7 @@ async function handleSaveJob(data: FormData) {
                           </li>
                       ))}
                     </ul>
-                  </div>
+                  </label>
                 </RadioGroup.Root>
 
               <DiscountCodeInput
