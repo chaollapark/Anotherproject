@@ -44,8 +44,8 @@ export default function JobForm({ jobDoc }: JobFormProps) {
 
   const planPrices: Record<string, number> = {
     
-    basic: 50,
-    pro: 200,
+    basic: 99.99,
+    pro: 299.99,
     recruiter: 500,
   };
 
@@ -61,13 +61,13 @@ export default function JobForm({ jobDoc }: JobFormProps) {
       'Reach 110 000+ targeted professionals searching for EU jobs',
       'Instant job posting—go live in minutes',
       'Unlimited edits & updates to your listing anytime',
-      'Included in our bi-weekly newsletter',
+      'Featured on our homepage and job listings',
     ],
     pro: [
       'Everything in the Basic Plan, plus:',
       'Priority placement at the top of our homepage',
       'Highlighted listing—stand out and attract more applicants',
-      'Featured in our bi-weekly newsletter',
+      'Premium placement and highlighting',
     ],
     recruiter: [
       'Everything in the Pro Plan, plus:',
@@ -438,7 +438,7 @@ async function handleSaveJob(data: FormData) {
                       id="basic"
                       className="w-4 h-4 rounded-full mr-2 cursor-pointer"
                     />
-                        <label className="pl-2 font-bold text-lg cursor-pointer" htmlFor="basic">Basic (€50)</label>
+                        <label className="pl-2 font-bold text-lg cursor-pointer" htmlFor="basic">Basic (€99.99)</label>
                     </div>
                     <ul className="space-y-2 ml-6">
                       {planFeatures.basic.map((feature, index) => (
@@ -459,7 +459,7 @@ async function handleSaveJob(data: FormData) {
                       id="pro"
                       className="w-4 h-4 rounded-full mr-2 cursor-pointer"
                     />
-                      <label className="pl-2 font-bold text-lg cursor-pointer" htmlFor="pro">Pro (€200)</label>
+                      <label className="pl-2 font-bold text-lg cursor-pointer" htmlFor="pro">Pro (€299.99)</label>
                     </div>
                     <ul className="space-y-2 ml-6">
                       {planFeatures.pro.map((feature, index) => (

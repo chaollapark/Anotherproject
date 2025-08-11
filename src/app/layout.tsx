@@ -8,7 +8,6 @@ import { PostHogProvider } from "@/app/providers/PostHogProvider";
 import Link from "next/link";
 import GoogleAnalytics from "@/app/components/GoogleAnalytics";
 import LogoScroller from "@/app/components/layout/LogoScroller";
-import FloatingSignup from "@/app/components/FloatingSignup";
 import FloatingPostJobButton from "@/app/components/FloatingPostJobButton";
 
 
@@ -65,8 +64,6 @@ export default function RootLayout({
             <LogoScroller />
           </div>
           {children}
-          {/* Floating Email Signup */}
-          <FloatingSignup />
           {/* Floating Post a Job Button */}
           <FloatingPostJobButton />
           
