@@ -2,6 +2,7 @@
 
 import { useState, useRef } from "react";
 import { FaCheckCircle, FaSpinner, FaCloudUploadAlt, FaFile } from "react-icons/fa";
+import AIApplyModal from "./AIApplyModal";
 
 declare global {
   interface Window {
@@ -16,6 +17,7 @@ export default function Hero() {
   const [uploadSuccess, setUploadSuccess] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files.length > 0) {
@@ -108,29 +110,33 @@ export default function Hero() {
       </h1>
 
       <div className="flex max-w-4xl mx-auto">
-        {/* Cover Letter Writer Section */}
+        {/* AI Apply Section */}
         <div className="hidden md:block w-full bg-white rounded-xl shadow-lg p-4 border border-gray-200 hover:shadow-xl transition-shadow mb-4 flex flex-col items-center justify-center">
           <h2 className="text-base font-semibold mb-2 text-gray-800 text-center">
-            Free AI Coverletter Writer
+            Apply with AI — you approve every application
           </h2>
-          <a
-            href="https://client-production-a6d6.up.railway.app/"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="transition-colors flex items-center justify-center gap-2 text-white py-2 px-4 rounded-md text-sm bg-green-600 hover:bg-green-700 font-semibold shadow-md mt-2"
+          <button
             onClick={() => {
+              setIsModalOpen(true);
               if (typeof window !== 'undefined' && window.posthog) {
-                window.posthog.capture('coverletter_writer_click', { location: 'hero_section' });
+                window.posthog.capture('ai_apply_click', { location: 'hero_section' });
               }
             }}
+            className="transition-colors flex items-center justify-center gap-2 text-white py-2 px-4 rounded-md text-sm bg-green-600 hover:bg-green-700 font-semibold shadow-md mt-2"
           >
-            <span>Write 3 Coverletters for free!</span>
-          </a>
+            <span>100 applications for €100</span>
+          </button>
           <p className="mt-3 text-xs text-gray-600 text-center">
-            17x More Applications. Same Time.
+            We find high-fit roles, you tap Approve, we send from your email and track replies. 7-day turnaround. On EUJobs & partner employers only.
           </p>
         </div>
       </div>
+
+      {/* AI Apply Modal */}
+      <AIApplyModal 
+        isOpen={isModalOpen} 
+        onClose={() => setIsModalOpen(false)} 
+      />
     </section>
   );
 }

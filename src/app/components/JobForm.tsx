@@ -44,7 +44,6 @@ export default function JobForm({ jobDoc }: JobFormProps) {
   const [blockAIApplications, setBlockAIApplications] = useState(jobDoc?.blockAIApplications !== false);
 
   const planPrices: Record<string, number> = {
-    
     basic: 99.99,
     pro: 299.99,
     recruiter: 500,
