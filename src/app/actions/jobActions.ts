@@ -35,7 +35,8 @@ const JobSchema = z.object({
   plan: z.string().optional().default("pending"),
   applyLink: z
     .string()
-    .optional(), 
+    .optional(),
+  blockAIApplications: z.boolean().optional().default(true),
 });
 
 export async function updateJobStatusAfterPayment(jobId: string, plan: string): Promise<Job> {

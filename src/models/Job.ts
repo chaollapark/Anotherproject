@@ -32,6 +32,7 @@ export type Job = {
   plan?: string;
   userWorkosId?: string;
   source?: string;
+  blockAIApplications?: boolean;
 };
 
 function generateSlug(title: string | null | undefined, companyName: string | null | undefined, id: string): string {
@@ -86,6 +87,10 @@ const JobSchema = new Schema({
     type: String,
     enum: ['pending', 'basic', 'pro', 'recruiter', 'unlimited'],
     default: 'pending',
+  },
+  blockAIApplications: {
+    type: Boolean,
+    default: true, // Default to blocking AI applications
   }
 }, { timestamps: true });
 
