@@ -10,12 +10,21 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
 export async function POST(req: Request) {
   try {
     const body = await req.json();
-    const { name, email, phone, cv, preferences } = body;
+    const { package: packageType, cvFileUrl } = body;
 
     // Validate required fields
-    if (!name || !email || !phone || !cv) {
+    if (!packageType || !cvFileUrl) {
       return NextResponse.json(
-        { error: 'Name, email, phone, and CV link are required', receivedData: body },
+        { error: 'Package type and CV file URL are required', receivedData: body },
+        { status: 400 }
+      );
+    }
+
+    // Validate package type
+    const validPackages = ['trial', 'full'];
+    if (!validPackages.includes(packageType)) {
+      return NextResponse.json(
+        { error: 'Invalid package type. Must be "trial" or "full"' },
         { status: 400 }
       );
     }
@@ -23,20 +32,23 @@ export async function POST(req: Request) {
     // Connect to MongoDB
     await dbConnect();
 
+    // Define package prices and applications
+    const packageConfig = {
+      trial: { price: 5000, applications: 25, name: 'Trial Package' }, // €50
+      full: { price: 10000, applications: 100, name: 'Full Package' }   // €100
+    };
+
+    const selectedPackage = packageConfig[packageType as keyof typeof packageConfig];
+
     // Save AI apply request to database
     const aiApplyRequest = await AIApplyRequest.create({
-      name,
-      email,
-      phone,
-      cv,
-      preferences,
+      cvFileUrl,
+      packageType,
+      applicationsRequested: selectedPackage.applications,
       status: 'pending',
       createdAt: new Date(),
       updatedAt: new Date(),
     });
-
-    // AI Application Package price: €100
-    const price = 10000; // €100 in cents
 
     // Create Stripe Checkout session
     const session = await stripe.checkout.sessions.create({
@@ -46,10 +58,10 @@ export async function POST(req: Request) {
           price_data: {
             currency: 'eur',
             product_data: {
-              name: 'AI Application Package',
-              description: '100 AI-powered job applications with 7-day turnaround',
+              name: `AI Application ${selectedPackage.name}`,
+              description: `${selectedPackage.applications} AI-powered job applications with 7-day turnaround`,
             },
-            unit_amount: price,
+            unit_amount: selectedPackage.price,
           },
           quantity: 1,
         },
@@ -58,11 +70,9 @@ export async function POST(req: Request) {
       metadata: {
         aiApplyId: aiApplyRequest._id.toString(),
         service: 'ai-apply',
-        name,
-        email,
-        phone,
-        cv,
-        preferences: preferences || '',
+        packageType,
+        cvFileUrl,
+        applicationsRequested: selectedPackage.applications.toString(),
       },
       success_url: 'https://www.eujobs.co/ai-apply/success',
       cancel_url: 'https://www.eujobs.co/ai-apply',

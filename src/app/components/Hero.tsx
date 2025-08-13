@@ -108,24 +108,26 @@ export default function Hero() {
       </h1>
 
       <div className="flex max-w-4xl mx-auto">
-        {/* Apply with AI Section */}
+        {/* CV Upload Section */}
         <div className="hidden md:block w-full bg-white rounded-xl shadow-lg p-4 border border-gray-200 hover:shadow-xl transition-shadow mb-4 flex flex-col items-center justify-center">
           <h2 className="text-base font-semibold mb-2 text-gray-800 text-center">
-            Apply with AI — you approve every application
+            Free AI Coverletter Writer
           </h2>
           <a
-            href="/ai-apply"
+            href="https://client-production-a6d6.up.railway.app/"
+            target="_blank"
+            rel="noopener noreferrer"
             className="transition-colors flex items-center justify-center gap-2 text-white py-2 px-4 rounded-md text-sm bg-green-600 hover:bg-green-700 font-semibold shadow-md mt-2"
             onClick={() => {
               if (typeof window !== 'undefined' && window.posthog) {
-                window.posthog.capture('ai_apply_click', { location: 'hero_section' });
+                window.posthog.capture('coverletter_writer_click', { location: 'hero_section' });
               }
             }}
           >
-            <span>100 applications for €100</span>
+            <span>Write 3 Coverletters for free!</span>
           </a>
           <p className="mt-3 text-xs text-gray-600 text-center">
-            We find high-fit roles, you tap Approve, we send from your email and track replies. 7-day turnaround. On EUJobs & partner employers only.
+            17x More Applications. Same Time.
           </p>
         </div>
       </div>

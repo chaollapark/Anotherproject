@@ -1,23 +1,19 @@
 import mongoose from 'mongoose';
 
 const aiApplyRequestSchema = new mongoose.Schema({
-  name: {
+  cvFileUrl: {
     type: String,
     required: true,
   },
-  email: {
+  packageType: {
     type: String,
+    enum: ['trial', 'full'],
     required: true,
   },
-  phone: {
-    type: String,
+  applicationsRequested: {
+    type: Number,
     required: true,
   },
-  cv: {
-    type: String,
-    required: true,
-  },
-  preferences: String,
   status: {
     type: String,
     enum: ['pending', 'paid', 'processing', 'completed', 'cancelled'],

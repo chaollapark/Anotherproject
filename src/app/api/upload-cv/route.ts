@@ -39,9 +39,17 @@ export async function POST(req: NextRequest) {
     console.log("📂 File received:", file.name, file.type, file.size);
 
     // 🔴 STEP 2: CHECK FILE TYPE & SIZE
-    if (file.type !== "application/pdf") {
-      console.error("❌ File is not a PDF");
-      return NextResponse.json({ error: "Only PDF files allowed." }, { status: 400 });
+    const allowedTypes = [
+      "application/pdf",
+      "application/msword",
+      "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+      "text/plain",
+      "application/rtf"
+    ];
+    
+    if (!allowedTypes.includes(file.type)) {
+      console.error("❌ File type not allowed:", file.type);
+      return NextResponse.json({ error: "Only PDF, DOC, DOCX, TXT, and RTF files allowed." }, { status: 400 });
     }
 
     if (file.size === 0) {
