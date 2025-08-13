@@ -37,7 +37,7 @@ export default function AIApplySuccessClient() {
                 <span className="text-blue-600 text-sm font-semibold">1</span>
               </div>
               <div>
-                <h3 className="font-semibold">We'll review your CV and preferences</h3>
+                <h3 className="font-semibold">We&apos;ll review your CV and preferences</h3>
                 <p className="text-gray-600">Our team will analyze your profile to understand your career goals</p>
               </div>
             </div>
@@ -55,8 +55,8 @@ export default function AIApplySuccessClient() {
                 <span className="text-blue-600 text-sm font-semibold">3</span>
               </div>
               <div>
-                <h3 className="font-semibold">You'll receive applications for approval</h3>
-                <p className="text-gray-600">We'll send you personalized applications to review and approve before sending</p>
+                <h3 className="font-semibold">You&apos;ll receive applications for approval</h3>
+                <p className="text-gray-600">We&apos;ll send you personalized applications to review and approve before sending</p>
               </div>
             </div>
             <div className="flex items-start">
@@ -65,7 +65,7 @@ export default function AIApplySuccessClient() {
               </div>
               <div>
                 <h3 className="font-semibold">Track responses and follow-ups</h3>
-                <p className="text-gray-600">Monitor all responses and we'll handle follow-ups on your behalf</p>
+                <p className="text-gray-600">Monitor all responses and we&apos;ll handle follow-ups on your behalf</p>
               </div>
             </div>
           </div>
@@ -74,7 +74,7 @@ export default function AIApplySuccessClient() {
         <div className="bg-blue-50 rounded-lg p-6 mb-8">
           <h3 className="text-lg font-semibold mb-2">Timeline</h3>
           <p className="text-gray-600">
-            <strong>7-day turnaround:</strong> You'll receive your first batch of applications within 7 days
+            <strong>7-day turnaround:</strong> You&apos;ll receive your first batch of applications within 7 days
           </p>
         </div>
 

@@ -1,4 +1,5 @@
 import { Metadata } from 'next'
+import { Suspense } from 'react'
 import AIApplySuccessClient from './AIApplySuccessClient'
 
 export const metadata: Metadata = {
@@ -7,5 +8,9 @@ export const metadata: Metadata = {
 }
 
 export default function AIApplySuccessPage() {
-  return <AIApplySuccessClient />
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <AIApplySuccessClient />
+    </Suspense>
+  )
 }
