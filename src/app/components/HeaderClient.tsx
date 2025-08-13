@@ -95,6 +95,14 @@ export default function HeaderClient({
             Headhunter
           </Link>
 
+          <Link
+            className="text-lg text-white rounded-md py-2 px-6 bg-green-600 hover:bg-green-700 transition-colors inline-flex items-center justify-center"
+            href="/ai-apply"
+            onClick={() => setMenuOpen(false)}
+          >
+            Apply with AI
+          </Link>
+
           {!isAuthDisabled && isJobPoster && user && (
             <Link
               className="text-lg text-white rounded-md py-2 px-6 bg-gray-600 hover:bg-gray-700 transition-colors"
@@ -150,6 +158,14 @@ export default function HeaderClient({
           onClick={() => setMenuOpen(false)}
         >
           Headhunter
+        </Link>
+
+        <Link
+          className="text-sm sm:text-base rounded-md py-2 px-4 bg-green-600 text-white hover:bg-green-700 transition-colors duration-200 whitespace-nowrap inline-flex items-center justify-center"
+          href="/ai-apply"
+          onClick={() => setMenuOpen(false)}
+        >
+          Apply with AI
         </Link>
 
         {!isAuthDisabled && isJobPoster && user && (
