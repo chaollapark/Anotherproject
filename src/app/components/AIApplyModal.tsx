@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useRef, useEffect } from 'react'
+import { useState, useRef, useEffect, useCallback } from 'react'
 import { loadStripe } from '@stripe/stripe-js'
 import { FaUpload, FaSpinner, FaCheck, FaTimes, FaTimesCircle } from 'react-icons/fa'
 
@@ -65,27 +65,30 @@ export default function AIApplyModal({ isOpen, onClose }: AIApplyModalProps) {
     }
   }, [isOpen, onClose])
 
-  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileChange = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files.length > 0) {
-      setFile(event.target.files[0])
+      const selectedFile = event.target.files[0]
+      setFile(selectedFile)
       setUploadSuccess(false)
       setUploadError('')
+      // Automatically upload the file
+      handleFileUpload(selectedFile)
     }
-  }
+  }, [])
 
-  const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
+  const handleDragOver = useCallback((e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault()
     e.stopPropagation()
     setIsDragging(true)
-  }
+  }, [])
 
-  const handleDragLeave = (e: React.DragEvent<HTMLDivElement>) => {
+  const handleDragLeave = useCallback((e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault()
     e.stopPropagation()
     setIsDragging(false)
-  }
+  }, [])
 
-  const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
+  const handleDrop = useCallback((e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault()
     e.stopPropagation()
     setIsDragging(false)
@@ -95,7 +98,6 @@ export default function AIApplyModal({ isOpen, onClose }: AIApplyModalProps) {
       // Check if it's a valid file type
       const allowedTypes = [
         'application/pdf',
-        'application/msword',
         'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
         'text/plain',
         'application/rtf'
@@ -105,14 +107,47 @@ export default function AIApplyModal({ isOpen, onClose }: AIApplyModalProps) {
         setFile(droppedFile)
         setUploadSuccess(false)
         setUploadError('')
+        // Automatically upload the file
+        handleFileUpload(droppedFile)
       } else {
-        setUploadError('Please upload a valid file type (PDF, DOC, DOCX, TXT, RTF)')
+        setUploadError('Please upload a valid file type (PDF, DOCX, TXT, RTF)')
       }
     }
-  }
+  }, [])
 
-  const handleFileUpload = async () => {
-    if (!file) {
+  const handlePaste = useCallback((e: React.ClipboardEvent<HTMLDivElement>) => {
+    const items = e.clipboardData?.items
+    if (!items) return
+
+    for (let i = 0; i < items.length; i++) {
+      const item = items[i]
+      if (item.kind === 'file') {
+        const file = item.getAsFile()
+        if (file) {
+          const allowedTypes = [
+            'application/pdf',
+            'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+            'text/plain',
+            'application/rtf'
+          ]
+          
+          if (allowedTypes.includes(file.type)) {
+            setFile(file)
+            setUploadSuccess(false)
+            setUploadError('')
+            handleFileUpload(file)
+          } else {
+            setUploadError('Please paste a valid file type (PDF, DOCX, TXT, RTF)')
+          }
+        }
+        break
+      }
+    }
+  }, [])
+
+  const handleFileUpload = async (fileToUpload?: File) => {
+    const fileToProcess = fileToUpload || file
+    if (!fileToProcess) {
       setUploadError('Please select a CV file')
       return
     }
@@ -122,7 +157,7 @@ export default function AIApplyModal({ isOpen, onClose }: AIApplyModalProps) {
 
     try {
       const formData = new FormData()
-      formData.append('file', file)
+      formData.append('file', fileToProcess)
 
       const response = await fetch('/api/upload-cv', {
         method: 'POST',
@@ -136,8 +171,8 @@ export default function AIApplyModal({ isOpen, onClose }: AIApplyModalProps) {
       const result = await response.json()
       setUploadSuccess(true)
       
-      // Store the file URL for later use
-      localStorage.setItem('cvFileUrl', result.fileUrl)
+      // Store the file ID for later use
+      localStorage.setItem('cvFileId', result.id)
       
     } catch (error) {
       setUploadError('Upload failed. Please try again.')
@@ -157,7 +192,7 @@ export default function AIApplyModal({ isOpen, onClose }: AIApplyModalProps) {
     setUploadError('')
 
     try {
-      const cvFileUrl = localStorage.getItem('cvFileUrl')
+      const cvFileId = localStorage.getItem('cvFileId')
       
       const response = await fetch('/api/create-ai-apply-checkout', {
         method: 'POST',
@@ -166,7 +201,7 @@ export default function AIApplyModal({ isOpen, onClose }: AIApplyModalProps) {
         },
         body: JSON.stringify({
           package: selectedPackage,
-          cvFileUrl,
+          cvFileId,
         }),
       })
 
@@ -220,14 +255,14 @@ export default function AIApplyModal({ isOpen, onClose }: AIApplyModalProps) {
           {/* Description */}
           <div className="text-center">
             <p className="text-sm text-gray-600">
-              Being the first 5% of applicant raises your chances by 13x
+              Get noticed quickly with AI-powered job applications
             </p>
           </div>
 
           {/* CV Upload Section */}
           <div className="space-y-3">
             <label className="block text-sm font-medium text-gray-700">
-              Upload Your CV *
+              Upload Your CV * (automatic upload)
             </label>
             
             <div 
@@ -241,6 +276,8 @@ export default function AIApplyModal({ isOpen, onClose }: AIApplyModalProps) {
               onDragOver={handleDragOver}
               onDragLeave={handleDragLeave}
               onDrop={handleDrop}
+              onPaste={handlePaste}
+              tabIndex={0}
             >
               <input
                 ref={fileInputRef}
@@ -257,9 +294,9 @@ export default function AIApplyModal({ isOpen, onClose }: AIApplyModalProps) {
                 >
                   <FaUpload className="w-8 h-8" />
                   <span className="text-sm">
-                    {isDragging ? 'Drop your CV here' : 'Click to upload CV or drag & drop'}
+                    {isDragging ? 'Drop your CV here' : 'Click to select CV or drag & drop'}
                   </span>
-                  <span className="text-xs text-gray-500">PDF, DOC, DOCX, TXT, RTF</span>
+                  <span className="text-xs text-gray-500">PDF, DOCX, TXT, RTF</span>
                 </button>
               ) : (
                 <div className="flex items-center justify-between">
@@ -281,21 +318,11 @@ export default function AIApplyModal({ isOpen, onClose }: AIApplyModalProps) {
               )}
             </div>
 
-            {file && !uploadSuccess && (
-              <button
-                onClick={handleFileUpload}
-                disabled={isUploading}
-                className="w-full bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
-              >
-                {isUploading ? (
-                  <>
-                    <FaSpinner className="w-4 h-4 animate-spin" />
-                    Uploading...
-                  </>
-                ) : (
-                  'Upload CV'
-                )}
-              </button>
+            {file && isUploading && (
+              <div className="w-full bg-blue-600 text-white py-2 px-4 rounded-lg flex items-center justify-center gap-2">
+                <FaSpinner className="w-4 h-4 animate-spin" />
+                Uploading CV...
+              </div>
             )}
 
             {uploadSuccess && (

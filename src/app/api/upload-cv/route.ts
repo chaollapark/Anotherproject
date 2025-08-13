@@ -157,7 +157,7 @@ export async function POST(req: NextRequest) {
       success: true,
       message: "CV uploaded! We just sent you a email!",
       email,
-      fileUrl,
+      id: resume._id,
     });
 
   } catch (error) {
