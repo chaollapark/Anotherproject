@@ -43,6 +43,7 @@ export default function AIApplyModal({ isOpen, onClose }: AIApplyModalProps) {
   const [uploadError, setUploadError] = useState('')
   const [selectedPackage, setSelectedPackage] = useState<string>('trial')
   const [isProcessing, setIsProcessing] = useState(false)
+  const [isDragging, setIsDragging] = useState(false)
   const fileInputRef = useRef<HTMLInputElement>(null)
 
   // Close modal when clicking outside
@@ -69,6 +70,44 @@ export default function AIApplyModal({ isOpen, onClose }: AIApplyModalProps) {
       setFile(event.target.files[0])
       setUploadSuccess(false)
       setUploadError('')
+    }
+  }
+
+  const handleDragOver = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault()
+    e.stopPropagation()
+    setIsDragging(true)
+  }
+
+  const handleDragLeave = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault()
+    e.stopPropagation()
+    setIsDragging(false)
+  }
+
+  const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault()
+    e.stopPropagation()
+    setIsDragging(false)
+    
+    if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+      const droppedFile = e.dataTransfer.files[0]
+      // Check if it's a valid file type
+      const allowedTypes = [
+        'application/pdf',
+        'application/msword',
+        'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+        'text/plain',
+        'application/rtf'
+      ]
+      
+      if (allowedTypes.includes(droppedFile.type)) {
+        setFile(droppedFile)
+        setUploadSuccess(false)
+        setUploadError('')
+      } else {
+        setUploadError('Please upload a valid file type (PDF, DOC, DOCX, TXT, RTF)')
+      }
     }
   }
 
@@ -191,7 +230,18 @@ export default function AIApplyModal({ isOpen, onClose }: AIApplyModalProps) {
               Upload Your CV *
             </label>
             
-            <div className="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center hover:border-gray-400 transition-colors">
+            <div 
+              className={`border-2 border-dashed rounded-lg p-4 text-center transition-colors ${
+                isDragging 
+                  ? 'border-blue-500 bg-blue-50' 
+                  : file 
+                    ? 'border-green-300 bg-green-50' 
+                    : 'border-gray-300 hover:border-gray-400'
+              }`}
+              onDragOver={handleDragOver}
+              onDragLeave={handleDragLeave}
+              onDrop={handleDrop}
+            >
               <input
                 ref={fileInputRef}
                 type="file"
@@ -206,7 +256,9 @@ export default function AIApplyModal({ isOpen, onClose }: AIApplyModalProps) {
                   className="flex flex-col items-center gap-2 text-gray-600 hover:text-gray-800"
                 >
                   <FaUpload className="w-8 h-8" />
-                  <span className="text-sm">Click to upload CV</span>
+                  <span className="text-sm">
+                    {isDragging ? 'Drop your CV here' : 'Click to upload CV or drag & drop'}
+                  </span>
                   <span className="text-xs text-gray-500">PDF, DOC, DOCX, TXT, RTF</span>
                 </button>
               ) : (
