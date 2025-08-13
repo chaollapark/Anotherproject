@@ -71,7 +71,6 @@ export async function POST(req: Request) {
         aiApplyId: aiApplyRequest._id.toString(),
         service: 'ai-apply',
         packageType,
-        cvFileUrl,
         applicationsRequested: selectedPackage.applications.toString(),
       },
       success_url: 'https://www.eujobs.co/ai-apply/success',
