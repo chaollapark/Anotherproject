@@ -67,9 +67,12 @@ export default function AIApplyModal({ isOpen, onClose }: AIApplyModalProps) {
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files.length > 0) {
-      setFile(event.target.files[0])
+      const selectedFile = event.target.files[0]
+      setFile(selectedFile)
       setUploadSuccess(false)
       setUploadError('')
+      // Automatically upload the file
+      handleFileUpload(selectedFile)
     }
   }
 
@@ -105,14 +108,17 @@ export default function AIApplyModal({ isOpen, onClose }: AIApplyModalProps) {
         setFile(droppedFile)
         setUploadSuccess(false)
         setUploadError('')
+        // Automatically upload the file
+        handleFileUpload(droppedFile)
       } else {
         setUploadError('Please upload a valid file type (PDF, DOC, DOCX, TXT, RTF)')
       }
     }
   }
 
-  const handleFileUpload = async () => {
-    if (!file) {
+  const handleFileUpload = async (fileToUpload?: File) => {
+    const uploadFile = fileToUpload || file
+    if (!uploadFile) {
       setUploadError('Please select a CV file')
       return
     }
@@ -122,7 +128,7 @@ export default function AIApplyModal({ isOpen, onClose }: AIApplyModalProps) {
 
     try {
       const formData = new FormData()
-      formData.append('file', file)
+      formData.append('file', uploadFile)
 
       const response = await fetch('/api/upload-cv', {
         method: 'POST',
@@ -257,7 +263,7 @@ export default function AIApplyModal({ isOpen, onClose }: AIApplyModalProps) {
                 >
                   <FaUpload className="w-8 h-8" />
                   <span className="text-sm">
-                    {isDragging ? 'Drop your CV here' : 'Click to upload CV or drag & drop'}
+                    {isDragging ? 'Drop your CV here' : 'Click to select CV or drag & drop'}
                   </span>
                   <span className="text-xs text-gray-500">PDF, DOC, DOCX, TXT, RTF</span>
                 </button>
@@ -281,21 +287,11 @@ export default function AIApplyModal({ isOpen, onClose }: AIApplyModalProps) {
               )}
             </div>
 
-            {file && !uploadSuccess && (
-              <button
-                onClick={handleFileUpload}
-                disabled={isUploading}
-                className="w-full bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
-              >
-                {isUploading ? (
-                  <>
-                    <FaSpinner className="w-4 h-4 animate-spin" />
-                    Uploading...
-                  </>
-                ) : (
-                  'Upload CV'
-                )}
-              </button>
+            {isUploading && (
+              <div className="flex items-center justify-center gap-2 text-blue-600 text-sm">
+                <FaSpinner className="w-4 h-4 animate-spin" />
+                Uploading CV...
+              </div>
             )}
 
             {uploadSuccess && (
