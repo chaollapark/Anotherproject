@@ -56,6 +56,13 @@ export default function RootLayout({
       </Script>
         {/* Google Analytics Integration */}
         <GoogleAnalytics />
+        
+        {/* Ahrefs Analytics */}
+        <Script 
+          src="https://analytics.ahrefs.com/analytics.js" 
+          data-key="rLwFhC7/zyo3Zd2bH7lS5Q" 
+          strategy="afterInteractive"
+        />
       </head>
       <PostHogProvider>
         <body className={inter.className}>
