@@ -2,7 +2,7 @@
 
 import { saveJobAction } from "@/app/actions/jobActions";
 import type { Job } from "@/models/Job";
-import { faEnvelope, faPhone, faRoad, faUser, faCalendar, faLink } from "@fortawesome/free-solid-svg-icons";
+import { faEnvelope, faPhone, faRoad, faUser, faCalendar, faLink, faShieldAlt, faCheck } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Button, RadioGroup, TextArea, TextField, Theme } from "@radix-ui/themes";
 import { faChevronDown, faChevronUp } from "@fortawesome/free-solid-svg-icons";
@@ -41,6 +41,7 @@ export default function JobForm({ jobDoc }: JobFormProps) {
   const [error, setError] = useState<string | null>(null);
   const [showOptional, setShowOptional] = useState(false);
   const [jobDescription, setJobDescription] = useState(jobDoc?.description || '');
+  const [blockAIApplications, setBlockAIApplications] = useState(jobDoc?.blockAIApplications !== false);
 
   const planPrices: Record<string, number> = {
     
@@ -57,11 +58,12 @@ export default function JobForm({ jobDoc }: JobFormProps) {
 
   const planFeatures = {
     basic: [
+      'AI block feature on all jobs',
       'Job listing live for 30 days on our high-traffic homepage',
       'Reach 110 000+ targeted professionals searching for EU jobs',
       'Instant job posting—go live in minutes',
       'Unlimited edits & updates to your listing anytime',
-      'Featured on our homepage and job listings',
+
     ],
     pro: [
       'Everything in the Basic Plan, plus:',
@@ -92,6 +94,7 @@ async function handleSaveJob(data: FormData) {
     data.set('cityId', cityId.toString());
     data.set('seniority', seniority);
     data.set('description', jobDescription);
+    data.set('blockAIApplications', blockAIApplications.toString());
     data.set('price', discountedPrice.toString()); // Pass the discounted price to the backend
 
     // Handle the "Basic" plan FREE
@@ -233,6 +236,28 @@ async function handleSaveJob(data: FormData) {
                   <div className="flex items-center">
                     <RadioGroup.Item value="senior" className="w-4 h-4 rounded-full border border-gray-300" />
                     <span className="ml-2 text-gray-700">Senior</span>
+                  </div>
+                </RadioGroup.Root>
+              </div>
+
+              <div className="">
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  AI Applications Policy
+                </label>
+                <RadioGroup.Root defaultValue={blockAIApplications ? "true" : "false"} onValueChange={(value) => setBlockAIApplications(value === "true")}>
+                  <div className="flex items-center">
+                    <RadioGroup.Item value="true" className="w-4 h-4 rounded-full border border-gray-300" />
+                    <span className="ml-2 text-gray-700 flex items-center">
+                      <FontAwesomeIcon icon={faShieldAlt} className="w-4 h-4 mr-2 text-red-500" />
+                      Block AI applications
+                    </span>
+                  </div>
+                  <div className="flex items-center">
+                    <RadioGroup.Item value="false" className="w-4 h-4 rounded-full border border-gray-300" />
+                    <span className="ml-2 text-gray-700 flex items-center">
+                      <FontAwesomeIcon icon={faCheck} className="w-4 h-4 mr-2 text-green-500" />
+                      Allow AI applications
+                    </span>
                   </div>
                 </RadioGroup.Root>
               </div>
