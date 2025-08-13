@@ -109,25 +109,53 @@ export default function Hero() {
         Why go to 17 EU Jobsites? All EU jobs are here!
       </h1>
 
-      <div className="flex max-w-4xl mx-auto">
+      <div className="max-w-4xl mx-auto">
         {/* AI Apply Section */}
-        <div className="hidden md:block w-full bg-white rounded-xl shadow-lg p-4 border border-gray-200 hover:shadow-xl transition-shadow mb-4 flex flex-col items-center justify-center">
-          <h2 className="text-base font-semibold mb-2 text-gray-800 text-center">
+        <div className="hidden md:block w-full bg-white rounded-xl shadow-lg p-4 border border-gray-200 hover:shadow-xl transition-shadow mb-4">
+          <h2 className="text-base font-semibold mb-4 text-gray-800 text-center">
             Apply with AI — you approve every application
           </h2>
-          <button
-            onClick={() => {
-              setIsModalOpen(true);
-              if (typeof window !== 'undefined' && window.posthog) {
-                window.posthog.capture('ai_apply_click', { location: 'hero_section' });
-              }
-            }}
-            className="transition-colors flex items-center justify-center gap-2 text-white py-2 px-4 rounded-md text-sm bg-green-600 hover:bg-green-700 font-semibold shadow-md mt-2"
-          >
-            <span>100 applications for €100</span>
-          </button>
+          
+          <div className="flex gap-4 justify-center items-center">
+            {/* Trial Package - €50 */}
+            <div className="flex-1 max-w-xs">
+              <button
+                onClick={() => {
+                  setIsModalOpen(true);
+                  if (typeof window !== 'undefined' && window.posthog) {
+                    window.posthog.capture('ai_apply_click', { location: 'hero_section', package: 'trial' });
+                  }
+                }}
+                className="transition-colors flex items-center justify-center gap-2 text-white py-2 px-4 rounded-md text-sm bg-blue-600 hover:bg-blue-700 font-semibold shadow-md w-full"
+              >
+                <span>25 applications for €50</span>
+              </button>
+              <p className="mt-2 text-xs text-gray-600 text-center">
+                Trial package - perfect to test our service
+              </p>
+            </div>
+
+            {/* Full Package - €100 */}
+            <div className="flex-1 max-w-xs">
+              <button
+                onClick={() => {
+                  setIsModalOpen(true);
+                  if (typeof window !== 'undefined' && window.posthog) {
+                    window.posthog.capture('ai_apply_click', { location: 'hero_section', package: 'full' });
+                  }
+                }}
+                className="transition-colors flex items-center justify-center gap-2 text-white py-2 px-4 rounded-md text-sm bg-green-600 hover:bg-green-700 font-semibold shadow-md w-full"
+              >
+                <span>100 applications for €100</span>
+              </button>
+              <p className="mt-2 text-xs text-gray-600 text-center">
+                Best value - 7-day turnaround
+              </p>
+            </div>
+          </div>
+          
           <p className="mt-3 text-xs text-gray-600 text-center">
-            We find high-fit roles, you tap Approve, we send from your email and track replies. 7-day turnaround. On EUJobs & partner employers only.
+          Being the first 5% of applicant raises your chances by 13x.
           </p>
         </div>
       </div>
