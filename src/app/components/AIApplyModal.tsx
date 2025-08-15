@@ -4,10 +4,10 @@ import { useState, useRef, useEffect, useCallback } from 'react'
 import { loadStripe } from '@stripe/stripe-js'
 import { FaUpload, FaSpinner, FaCheck, FaTimes, FaTimesCircle } from 'react-icons/fa'
 
-const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!)
+const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY || '')
 
 interface PricingOption {
-  id: string
+  id: 'trial' | 'full'
   name: string
   price: number
   applications: number
@@ -15,20 +15,8 @@ interface PricingOption {
 }
 
 const pricingOptions: PricingOption[] = [
-  {
-    id: 'trial',
-    name: 'Trial Package',
-    price: 50,
-    applications: 25,
-    description: 'Perfect to test our service'
-  },
-  {
-    id: 'full',
-    name: 'Full Package',
-    price: 100,
-    applications: 100,
-    description: 'Best value for serious job seekers'
-  }
+  { id: 'trial', name: 'Trial Package', price: 50, applications: 25, description: 'Perfect to test our service' },
+  { id: 'full', name: 'Full Package', price: 100, applications: 100, description: 'Best value for serious job seekers' }
 ]
 
 interface AIApplyModalProps {
@@ -41,40 +29,88 @@ export default function AIApplyModal({ isOpen, onClose }: AIApplyModalProps) {
   const [isUploading, setIsUploading] = useState(false)
   const [uploadSuccess, setUploadSuccess] = useState(false)
   const [uploadError, setUploadError] = useState('')
-  const [selectedPackage, setSelectedPackage] = useState<string>('trial')
+  const [selectedPackage, setSelectedPackage] = useState<PricingOption['id']>('trial')
   const [isProcessing, setIsProcessing] = useState(false)
   const [isDragging, setIsDragging] = useState(false)
   const fileInputRef = useRef<HTMLInputElement>(null)
 
-  // Close modal when clicking outside
+  // close on Escape, lock scroll
   useEffect(() => {
     const handleEscape = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') {
-        onClose()
-      }
+      if (e.key === 'Escape') onClose()
     }
-
     if (isOpen) {
       document.addEventListener('keydown', handleEscape)
+      const prev = document.body.style.overflow
       document.body.style.overflow = 'hidden'
-    }
-
-    return () => {
-      document.removeEventListener('keydown', handleEscape)
-      document.body.style.overflow = 'unset'
+      return () => {
+        document.removeEventListener('keydown', handleEscape)
+        document.body.style.overflow = prev
+      }
     }
   }, [isOpen, onClose])
 
-  const handleFileChange = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
-    if (event.target.files && event.target.files.length > 0) {
-      const selectedFile = event.target.files[0]
-      setFile(selectedFile)
-      setUploadSuccess(false)
-      setUploadError('')
-      // Automatically upload the file
-      handleFileUpload(selectedFile)
+  const isAllowedFile = (f: File) => {
+    const allowedMimes = new Set([
+      'application/pdf',
+      'application/vnd.openxmlformats-officedocument.wordprocessingml.document', // .docx
+      'application/msword', // .doc
+      'text/plain',
+      'application/rtf',
+      'text/rtf'
+    ])
+    if (allowedMimes.has(f.type)) return true
+    // browsers sometimes give empty type; fall back to extension
+    const name = f.name.toLowerCase()
+    return /\.(pdf|docx?|txt|rtf)$/.test(name)
+  }
+
+  const handleFileUpload = useCallback(async (fileToUpload?: File) => {
+    const targetFile = fileToUpload ?? file
+    if (!targetFile) {
+      setUploadError('Please select a CV file')
+      return
     }
-  }, [])
+    if (!isAllowedFile(targetFile)) {
+      setUploadError('Please upload a valid file type (PDF, DOC/DOCX, TXT, RTF)')
+      return
+    }
+    if (targetFile.size > 10 * 1024 * 1024) {
+      setUploadError('File is too large (max 10 MB)')
+      return
+    }
+
+    setIsUploading(true)
+    setUploadError('')
+    try {
+      const formData = new FormData()
+      formData.append('file', targetFile)
+
+      const response = await fetch('/api/upload-cv', { method: 'POST', body: formData })
+      if (!response.ok) throw new Error('Upload failed')
+
+      const result: { id?: string } = await response.json()
+      if (!result.id) throw new Error('No file ID returned from server')
+
+      localStorage.setItem('cvFileId', result.id)
+      setUploadSuccess(true)
+    } catch (error) {
+      console.error('Upload error:', error)
+      setUploadError('Upload failed. Please try again.')
+      setUploadSuccess(false)
+    } finally {
+      setIsUploading(false)
+    }
+  }, [file])
+
+  const handleFileChange = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
+    const picked = event.target.files?.[0]
+    if (!picked) return
+    setFile(picked)
+    setUploadSuccess(false)
+    setUploadError('')
+    handleFileUpload(picked)
+  }, [handleFileUpload])
 
   const handleDragOver = useCallback((e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault()
@@ -92,95 +128,30 @@ export default function AIApplyModal({ isOpen, onClose }: AIApplyModalProps) {
     e.preventDefault()
     e.stopPropagation()
     setIsDragging(false)
-    
-    if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
-      const droppedFile = e.dataTransfer.files[0]
-      // Check if it's a valid file type
-      const allowedTypes = [
-        'application/pdf',
-        'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-        'text/plain',
-        'application/rtf'
-      ]
-      
-      if (allowedTypes.includes(droppedFile.type)) {
-        setFile(droppedFile)
-        setUploadSuccess(false)
-        setUploadError('')
-        // Automatically upload the file
-        handleFileUpload(droppedFile)
-      } else {
-        setUploadError('Please upload a valid file type (PDF, DOCX, TXT, RTF)')
-      }
-    }
-  }, [])
+    const dropped = e.dataTransfer.files?.[0]
+    if (!dropped) return
+    setFile(dropped)
+    setUploadSuccess(false)
+    setUploadError('')
+    handleFileUpload(dropped)
+  }, [handleFileUpload])
 
   const handlePaste = useCallback((e: React.ClipboardEvent<HTMLDivElement>) => {
     const items = e.clipboardData?.items
     if (!items) return
-
     for (let i = 0; i < items.length; i++) {
       const item = items[i]
       if (item.kind === 'file') {
-        const file = item.getAsFile()
-        if (file) {
-          const allowedTypes = [
-            'application/pdf',
-            'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-            'text/plain',
-            'application/rtf'
-          ]
-          
-          if (allowedTypes.includes(file.type)) {
-            setFile(file)
-            setUploadSuccess(false)
-            setUploadError('')
-            handleFileUpload(file)
-          } else {
-            setUploadError('Please paste a valid file type (PDF, DOCX, TXT, RTF)')
-          }
-        }
+        const pasted = item.getAsFile()
+        if (!pasted) break
+        setFile(pasted)
+        setUploadSuccess(false)
+        setUploadError('')
+        handleFileUpload(pasted)
         break
       }
     }
-  }, [])
-
-  const handleFileUpload = async (fileToUpload?: File) => {
-    const fileToProcess = fileToUpload || file
-    if (!fileToProcess) {
-      setUploadError('Please select a CV file')
-      return
-    }
-
-    setIsUploading(true)
-    setUploadError('')
-
-    try {
-      const formData = new FormData()
-      formData.append('file', fileToProcess)
-
-      const response = await fetch('/api/upload-cv', {
-        method: 'POST',
-        body: formData,
-      })
-
-      if (!response.ok) {
-        throw new Error('Upload failed')
-      }
-
-      const result = await response.json()
-      setUploadSuccess(true)
-      
-      // Store the file ID for later use
-      localStorage.setItem('cvFileId', result.id)
-      
-    } catch (error) {
-      setUploadError('Upload failed. Please try again.')
-      console.error('Upload error:', error)
-    } finally {
-      setIsUploading(false)
-    }
-  }
+  }, [handleFileUpload])
 
   const handleCheckout = async () => {
     if (!uploadSuccess) {
@@ -188,49 +159,39 @@ export default function AIApplyModal({ isOpen, onClose }: AIApplyModalProps) {
       return
     }
 
+    const cvFileId = localStorage.getItem('cvFileId')
+    if (!cvFileId) {
+      setUploadError('Missing uploaded CV reference. Please re-upload.')
+      return
+    }
+
     setIsProcessing(true)
     setUploadError('')
-
     try {
-      const cvFileId = localStorage.getItem('cvFileId')
-      
       const response = await fetch('/api/create-ai-apply-checkout', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          package: selectedPackage,
-          cvFileId,
-        }),
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ package: selectedPackage, cvFileId })
       })
+      if (!response.ok) throw new Error('Checkout failed')
 
-      if (!response.ok) {
-        throw new Error('Checkout failed')
-      }
+      const { sessionId } = await response.json() as { sessionId?: string }
+      if (!sessionId) throw new Error('No Stripe session created')
 
-      const { sessionId } = await response.json()
-
-      // Redirect to Stripe checkout
       const stripe = await stripePromise
       if (!stripe) throw new Error('Stripe failed to initialize')
 
-      const { error } = await stripe.redirectToCheckout({
-        sessionId,
-      })
-
-      if (error) {
-        throw error
-      }
+      const { error } = await stripe.redirectToCheckout({ sessionId })
+      if (error) throw error
     } catch (err: any) {
-      setUploadError(err.message || 'Something went wrong')
       console.error('Checkout error:', err)
+      setUploadError(err.message || 'Something went wrong')
     } finally {
       setIsProcessing(false)
     }
   }
 
-  const selectedOption = pricingOptions.find(option => option.id === selectedPackage)
+  const selectedOption = pricingOptions.find(o => o.id === selectedPackage)
 
   if (!isOpen) return null
 
@@ -239,45 +200,35 @@ export default function AIApplyModal({ isOpen, onClose }: AIApplyModalProps) {
       <div className="bg-white rounded-lg max-w-md w-full max-h-[90vh] overflow-y-auto">
         {/* Header */}
         <div className="flex items-center justify-between p-6 border-b">
-          <h2 className="text-xl font-semibold text-gray-900">
-            Apply with AI — You Approve Every Application
-          </h2>
-          <button
-            onClick={onClose}
-            className="text-gray-400 hover:text-gray-600 transition-colors"
-          >
+          <h2 className="text-xl font-semibold text-gray-900">Apply with AI — You Approve Every Application</h2>
+          <button onClick={onClose} className="text-gray-400 hover:text-gray-600 transition-colors" aria-label="Close">
             <FaTimesCircle className="w-6 h-6" />
           </button>
         </div>
 
         {/* Content */}
         <div className="p-6 space-y-6">
-          {/* Description */}
           <div className="text-center">
-            <p className="text-sm text-gray-600">
-              Get noticed quickly with AI-powered job applications
-            </p>
+            <p className="text-sm text-gray-600">Get noticed quickly with AI-powered job applications</p>
           </div>
 
-          {/* CV Upload Section */}
+          {/* CV Upload */}
           <div className="space-y-3">
-            <label className="block text-sm font-medium text-gray-700">
-              Upload Your CV * (automatic upload)
-            </label>
-            
-            <div 
-              className={`border-2 border-dashed rounded-lg p-4 text-center transition-colors ${
-                isDragging 
-                  ? 'border-blue-500 bg-blue-50' 
-                  : file 
-                    ? 'border-green-300 bg-green-50' 
-                    : 'border-gray-300 hover:border-gray-400'
+            <label className="block text-sm font-medium text-gray-700">Upload Your CV * (automatic upload)</label>
+
+            <div
+              className={`border-2 border-dashed rounded-lg p-4 text-center transition-colors focus:outline-none ${
+                isDragging ? 'border-blue-500 bg-blue-50'
+                  : file ? 'border-green-300 bg-green-50'
+                  : 'border-gray-300 hover:border-gray-400'
               }`}
               onDragOver={handleDragOver}
               onDragLeave={handleDragLeave}
               onDrop={handleDrop}
               onPaste={handlePaste}
               tabIndex={0}
+              role="region"
+              aria-label="CV upload area"
             >
               <input
                 ref={fileInputRef}
@@ -286,17 +237,16 @@ export default function AIApplyModal({ isOpen, onClose }: AIApplyModalProps) {
                 onChange={handleFileChange}
                 className="hidden"
               />
-              
+
               {!file ? (
                 <button
+                  type="button"
                   onClick={() => fileInputRef.current?.click()}
                   className="flex flex-col items-center gap-2 text-gray-600 hover:text-gray-800"
                 >
                   <FaUpload className="w-8 h-8" />
-                  <span className="text-sm">
-                    {isDragging ? 'Drop your CV here' : 'Click to select CV or drag & drop'}
-                  </span>
-                  <span className="text-xs text-gray-500">PDF, DOCX, TXT, RTF</span>
+                  <span className="text-sm">Click to select CV or drag & drop</span>
+                  <span className="text-xs text-gray-500">PDF, DOC/DOCX, TXT, RTF • Max 10 MB</span>
                 </button>
               ) : (
                 <div className="flex items-center justify-between">
@@ -305,12 +255,10 @@ export default function AIApplyModal({ isOpen, onClose }: AIApplyModalProps) {
                     <span className="text-sm font-medium">{file.name}</span>
                   </div>
                   <button
-                    onClick={() => {
-                      setFile(null)
-                      setUploadSuccess(false)
-                      setUploadError('')
-                    }}
+                    type="button"
+                    onClick={() => { setFile(null); setUploadSuccess(false); setUploadError('') }}
                     className="text-red-500 hover:text-red-700"
+                    aria-label="Remove file"
                   >
                     <FaTimes className="w-4 h-4" />
                   </button>
@@ -318,8 +266,8 @@ export default function AIApplyModal({ isOpen, onClose }: AIApplyModalProps) {
               )}
             </div>
 
-            {file && isUploading && (
-              <div className="w-full bg-blue-600 text-white py-2 px-4 rounded-lg flex items-center justify-center gap-2">
+            {isUploading && (
+              <div className="flex items-center justify-center gap-2 text-blue-600 text-sm">
                 <FaSpinner className="w-4 h-4 animate-spin" />
                 Uploading CV...
               </div>
@@ -332,25 +280,18 @@ export default function AIApplyModal({ isOpen, onClose }: AIApplyModalProps) {
               </div>
             )}
 
-            {uploadError && (
-              <div className="text-red-600 text-sm">{uploadError}</div>
-            )}
+            {uploadError && <div className="text-red-600 text-sm">{uploadError}</div>}
           </div>
 
-          {/* Pricing Options */}
+          {/* Pricing */}
           <div className="space-y-3">
-            <label className="block text-sm font-medium text-gray-700">
-              Choose Package
-            </label>
-            
+            <label className="block text-sm font-medium text-gray-700">Choose Package</label>
             <div className="space-y-2">
-              {pricingOptions.map((option) => (
+              {pricingOptions.map(option => (
                 <label
                   key={option.id}
                   className={`flex items-center p-3 border rounded-lg cursor-pointer transition-colors ${
-                    selectedPackage === option.id
-                      ? 'border-blue-500 bg-blue-50'
-                      : 'border-gray-200 hover:border-gray-300'
+                    selectedPackage === option.id ? 'border-blue-500 bg-blue-50' : 'border-gray-200 hover:border-gray-300'
                   }`}
                 >
                   <input
@@ -358,7 +299,7 @@ export default function AIApplyModal({ isOpen, onClose }: AIApplyModalProps) {
                     name="package"
                     value={option.id}
                     checked={selectedPackage === option.id}
-                    onChange={(e) => setSelectedPackage(e.target.value)}
+                    onChange={(e) => setSelectedPackage(e.target.value as PricingOption['id'])}
                     className="sr-only"
                   />
                   <div className="flex-1">
@@ -375,7 +316,7 @@ export default function AIApplyModal({ isOpen, onClose }: AIApplyModalProps) {
             </div>
           </div>
 
-          {/* Checkout Button */}
+          {/* Checkout */}
           <button
             onClick={handleCheckout}
             disabled={!uploadSuccess || isProcessing}
@@ -387,14 +328,11 @@ export default function AIApplyModal({ isOpen, onClose }: AIApplyModalProps) {
                 Processing...
               </>
             ) : (
-              `Get Started - €${selectedOption?.price}`
+              `Get Started - €${selectedOption?.price ?? ''}`
             )}
           </button>
 
-          {/* Info */}
-          <div className="text-xs text-gray-500 text-center">
-            7-day turnaround • EU Jobs & partner employers only
-          </div>
+          <div className="text-xs text-gray-500 text-center">7-day turnaround • EU Jobs & partner employers only</div>
         </div>
       </div>
     </div>
