@@ -239,7 +239,7 @@ export default function ApplyWithAIPage() {
           <div className="bg-white rounded-2xl shadow-xl p-8">
             {/* CV Upload Section */}
             <div className="mb-8">
-              <h2 className="text-2xl font-semibold text-gray-900 mb-4">Upload Your CV</h2>
+              <h2 className="text-2xl font-semibold text-gray-900 mb-4 text-center">Upload Your CV</h2>
               
               <div 
                 className={`border-2 border-dashed rounded-xl p-8 text-center transition-all duration-200 ${
