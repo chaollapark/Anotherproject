@@ -8,9 +8,11 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
 export async function POST(req: Request) {
   try {
     const { jobId, plan, price } = await req.json(); 
+    console.log("=== JOB CHECKOUT SESSION CREATION ===");
     console.log("Job ID:", jobId);
     console.log("Plan:", plan);
     console.log("Price (with discount if applicable):", price);
+    console.log("Service: Job Posting");
 
     // Define fixed default prices (in cents)
     const defaultPrices = {
@@ -64,6 +66,7 @@ export async function POST(req: Request) {
     });
 
     console.log("Stripe session created:", session.id);
+    console.log("=== JOB CHECKOUT SESSION CREATION COMPLETE ===");
     return NextResponse.json({ sessionId: session.id });
 
   } catch (err: any) {

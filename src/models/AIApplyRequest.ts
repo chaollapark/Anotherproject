@@ -1,6 +1,10 @@
 import mongoose from 'mongoose';
 
 const aiApplyRequestSchema = new mongoose.Schema({
+  cvFileId: {
+    type: String,
+    required: true,
+  },
   cvFileUrl: {
     type: String,
     required: true,

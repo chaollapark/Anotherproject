@@ -78,7 +78,16 @@ export async function saveJobAction(formData: FormData): Promise<Job> {
     console.log("we have entered the save job action function you get me.");
 
     // Convert FormData to an object
-    const jobData = Object.fromEntries(formData);
+    const jobData = Object.fromEntries(formData) as Record<string, any>;
+    
+    console.log('Raw jobData from FormData:', jobData);
+    
+    // Convert string boolean values to actual booleans
+    if (jobData.blockAIApplications !== undefined) {
+      console.log('Converting blockAIApplications from string to boolean:', jobData.blockAIApplications);
+      jobData.blockAIApplications = jobData.blockAIApplications === 'true';
+      console.log('Converted blockAIApplications:', jobData.blockAIApplications);
+    }
 
     let workosUserId = null;
     try {
