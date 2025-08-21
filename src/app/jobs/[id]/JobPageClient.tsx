@@ -155,9 +155,9 @@ export default function JobPage({ params }: { params: { id: string } }) {
                 />
                   <span className="text-sm">Share on LinkedIn</span>
                 </button>
-                {/* Inline Write My Cover Letter Button */}
+                {/* Inline Apply with AI Button */}
                 <a
-                  href="https://client-production-a6d6.up.railway.app/"
+                  href="https://www.eujobs.co/apply-with-ai"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex items-center gap-2 bg-green-100 hover:bg-green-200 text-green-800 px-3 py-1 rounded-md font-medium border border-green-300 transition-colors"
@@ -172,7 +172,7 @@ export default function JobPage({ params }: { params: { id: string } }) {
                     });
                   }}
                 >
-                  <span>Write my cover letter</span>
+                  <span>Apply with AI</span>
                 </a>
               </div>
             </div>
@@ -247,10 +247,10 @@ export default function JobPage({ params }: { params: { id: string } }) {
           >
             Apply for this position
           </a>
-            {/* Centered Write My Cover Letter Button */}
+            {/* Centered Apply with AI Button */}
             <div className="flex justify-center mt-3">
               <a
-                href="https://client-production-a6d6.up.railway.app/"
+                href="https://www.eujobs.co/apply-with-ai"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="bg-green-600 hover:bg-green-700 text-white py-2 px-4 rounded-md font-semibold transition-colors shadow-md"
@@ -263,7 +263,7 @@ export default function JobPage({ params }: { params: { id: string } }) {
                   });
                 }}
               >
-                Write my cover letter
+                Apply with AI
               </a>
             </div>
           </div>
@@ -285,7 +285,7 @@ export default function JobPage({ params }: { params: { id: string } }) {
                 });
               }}
             >
-              Write my cover letter
+              Apply with AI
             </a>
           </div>
         )}
