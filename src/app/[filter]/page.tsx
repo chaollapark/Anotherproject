@@ -1,7 +1,8 @@
 import dbConnect from '@/lib/dbConnect';
 import Hero from "@/app/components/Hero";
 import Jobs from "@/app/components/Jobs";
-import JobFilterBar from "@/app/components/JobFilterBar"; // ✅ import
+import JobSearchBar from "@/app/components/JobSearchBar";
+import JobFilterAccordion from "@/app/components/JobFilterAccordion";
 import { fetchJobsBySource, fetchJobs } from "@/models/Job";
 import { notFound } from "next/navigation";
 
@@ -38,7 +39,8 @@ export default async function FilteredPage({ params }: { params: { filter: strin
     <div className="relative">
       <div className="grid-background" />
       <Hero />
-      <JobFilterBar /> {/* ✅ Now also on filtered pages */}
+      <JobSearchBar />
+      <JobFilterAccordion />
       <Jobs header={header} initialJobs={jobs} isSearchResult={!!source} />
     </div>
   );

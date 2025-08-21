@@ -3,6 +3,7 @@
 import { useState, useRef } from "react";
 import { FaCheckCircle, FaSpinner, FaCloudUploadAlt, FaFile } from "react-icons/fa";
 import AIApplyModal from "./AIApplyModal";
+import JobSearchBar from "./JobSearchBar";
 
 declare global {
   interface Window {
@@ -49,7 +50,7 @@ export default function Hero() {
       if (droppedFile.type === "application/pdf") {
         setFile(droppedFile);
         setUploadSuccess(false);
-      } else {
+      } else {.
         setMessage("Only PDF files are accepted.");
         setUploadSuccess(false);
       }
@@ -108,7 +109,7 @@ export default function Hero() {
       <h1 className="text-2xl md:text-3xl font-bold text-center mb-4">
         Why go to 17 EU Jobsites? All EU jobs are here!
       </h1>
-
+      <JobSearchBar />
       <div className="max-w-4xl mx-auto">
         {/* AI Apply Section */}
         <div className="hidden md:block w-full bg-white rounded-xl shadow-lg p-4 border border-gray-200 hover:shadow-xl transition-shadow mb-4">

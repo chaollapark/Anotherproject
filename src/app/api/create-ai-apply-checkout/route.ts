@@ -133,8 +133,8 @@ export async function POST(req: Request) {
         cvFileId,
         applicationsRequested: selectedPackage.applications.toString(),
       },
-      success_url: 'https://www.eujobs.co/ai-apply/success',
-      cancel_url: 'https://www.eujobs.co/ai-apply',
+      success_url: 'https://www.eujobs.co/apply-with-ai/success',
+      cancel_url: 'https://www.eujobs.co/apply-with-ai',
     });
 
     console.log("=== AI APPLY CHECKOUT SESSION CREATION COMPLETE ===");
