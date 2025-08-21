@@ -2,30 +2,36 @@
 "use client";
 
 import { useRouter } from 'next/navigation';
+import { useState } from 'react';
 
 export default function JobFilterBar() {
   const router = useRouter();
+  const [searchQuery, setSearchQuery] = useState('');
 
-  const filters = [
-    { label: "Best EU jobs", path: "best-jobs" },
-    { label: "EU Institutions", path: "eu-institutions-jobs" },
-    { label: "EU Agencies", path: "eu-agencies-jobs" },
-    { label: "Eurobrussels", path: "eurobrussels-jobs" },
-    { label: "Euractiv", path: "euractiv-jobs" },
-    { label: "JobsInBrussels", path:"jobs-in-Brussels"}
-  ];
+  const handleSearch = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (searchQuery.trim()) {
+      router.push(`/all-jobs?q=${encodeURIComponent(searchQuery.trim())}`);
+    }
+  };
 
   return (
-    <div className="flex flex-wrap justify-center gap-3 my-6">
-      {filters.map(filter => (
+    <div className="flex justify-center my-6">
+      <form onSubmit={handleSearch} className="flex gap-2">
+        <input
+          type="text"
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          placeholder="Search for jobs..."
+          className="border border-gray-300 rounded-lg px-4 py-2 w-80"
+        />
         <button
-          key={filter.path}
-          onClick={() => router.push(`/${filter.path}`)}
-          className="bg-blue-100 hover:bg-blue-200 px-4 py-2 rounded-lg"
+          type="submit"
+          className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg"
         >
-          {filter.label}
+          Search
         </button>
-      ))}
+      </form>
     </div>
   );
 }
