@@ -1,12 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
-    remotePatterns: [
-      {
-        protocol: 'https',
-        hostname: 'zmantic-job-board.s3.amazonaws.com',
-      },
-    ],
+    remotePatterns: [],
   },
   async rewrites() {
     return [
