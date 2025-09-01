@@ -158,25 +158,6 @@ export default function JobRow({jobDoc}:{jobDoc:Job}) {
                 />
                 <span className="">Email to Me</span>
               </button>
-              {/* Inline Apply with AI Button */}
-              <a
-                href="https://www.eujobs.co/apply-with-ai"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center gap-2 bg-green-100 hover:bg-green-200 text-green-800 px-3 py-1 rounded-md font-medium border border-green-300 transition-colors"
-                style={{ fontSize: '0.95em' }}
-                onClick={e => {
-                  e.stopPropagation();
-                  posthog.capture('apply_with_ai_click', {
-                    job_title: jobDoc.title,
-                    job_slug: slug,
-                    company: jobDoc.companyName,
-                    location: 'inline_social_buttons'
-                  });
-                }}
-              >
-                <span>Apply with AI</span>
-              </a>
             </div>
             {/* Job Description Section */}
             {jobDoc.description && (
@@ -241,25 +222,6 @@ export default function JobRow({jobDoc}:{jobDoc:Job}) {
                 >
                   Apply for this position
                 </Link>
-                {/* Centered Apply with AI Button */}
-                <div className="flex justify-center mt-3">
-                  <a
-                    href="https://www.eujobs.co/apply-with-ai"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="bg-green-600 hover:bg-green-700 text-white py-2 px-4 rounded-md font-semibold transition-colors shadow-md"
-                    onClick={e => {
-                      e.stopPropagation();
-                      posthog.capture('write_my_cover_letter_click', {
-                        job_title: jobDoc.title,
-                        job_slug: slug,
-                        company: jobDoc.companyName
-                      });
-                    }}
-                  >
-                    Apply with AI
-                  </a>
-                </div>
               </div>
             ) : (
               <div className="flex flex-col items-center mt-4">
@@ -269,25 +231,6 @@ export default function JobRow({jobDoc}:{jobDoc:Job}) {
                 >
                   View Full Details
                 </Link>
-                {/* Centered Apply with AI Button */}
-                <div className="flex justify-center mt-3">
-                  <a
-                    href="https://www.eujobs.co/apply-with-ai"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="bg-green-600 hover:bg-green-700 text-white py-2 px-4 rounded-md font-semibold transition-colors shadow-md"
-                    onClick={e => {
-                      e.stopPropagation();
-                      posthog.capture('write_my_cover_letter_click', {
-                        job_title: jobDoc.title,
-                        job_slug: slug,
-                        company: jobDoc.companyName
-                      });
-                    }}
-                  >
-                    Apply with AI
-                  </a>
-                </div>
               </div>
             )}
 

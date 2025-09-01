@@ -2,7 +2,6 @@
 import Link from "next/link";
 import { useState } from "react";
 import posthog from "posthog-js";
-import AIApplyExpandingHeader from "./AIApplyExpandingHeader";
 
 interface HeaderClientProps {
   isAuthDisabled: boolean;
@@ -96,9 +95,6 @@ export default function HeaderClient({
             Headhunter
           </Link>
 
-          <div className="flex items-center">
-            <AIApplyExpandingHeader />
-          </div>
 
           {!isAuthDisabled && isJobPoster && user && (
             <Link
@@ -157,7 +153,6 @@ export default function HeaderClient({
           Headhunter
         </Link>
 
-        <AIApplyExpandingHeader />
 
         {!isAuthDisabled && isJobPoster && user && (
           <Link
