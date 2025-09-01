@@ -155,25 +155,6 @@ export default function JobPage({ params }: { params: { id: string } }) {
                 />
                   <span className="text-sm">Share on LinkedIn</span>
                 </button>
-                {/* Inline Apply with AI Button */}
-                <a
-                  href="https://www.eujobs.co/apply-with-ai"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center gap-2 bg-green-100 hover:bg-green-200 text-green-800 px-3 py-1 rounded-md font-medium border border-green-300 transition-colors"
-                  style={{ fontSize: '0.95em' }}
-                  onClick={e => {
-                    e.stopPropagation();
-                    posthog.capture('write_my_cover_letter_click', {
-                      job_title: job.title,
-                      job_slug: job.slug,
-                      company: job.companyName,
-                      location: 'inline_social_buttons'
-                    });
-                  }}
-                >
-                  <span>Apply with AI</span>
-                </a>
               </div>
             </div>
           </div>
@@ -247,46 +228,6 @@ export default function JobPage({ params }: { params: { id: string } }) {
           >
             Apply for this position
           </a>
-            {/* Centered Apply with AI Button */}
-            <div className="flex justify-center mt-3">
-              <a
-                href="https://www.eujobs.co/apply-with-ai"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="bg-green-600 hover:bg-green-700 text-white py-2 px-4 rounded-md font-semibold transition-colors shadow-md"
-                onClick={e => {
-                  e.stopPropagation();
-                  posthog.capture('write_my_cover_letter_click', {
-                    job_title: job.title,
-                    job_slug: job.slug,
-                    company: job.companyName
-                  });
-                }}
-              >
-                Apply with AI
-              </a>
-            </div>
-          </div>
-        )}
-        {/* If no applyLink, still show centered button */}
-        {!job.applyLink && (
-          <div className="mt-6 flex justify-center">
-            <a
-              href="https://client-production-a6d6.up.railway.app/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="bg-green-600 hover:bg-green-700 text-white py-2 px-4 rounded-md font-semibold transition-colors shadow-md"
-              onClick={e => {
-                e.stopPropagation();
-                posthog.capture('write_my_cover_letter_click', {
-                  job_title: job.title,
-                  job_slug: job.slug,
-                  company: job.companyName
-                });
-              }}
-            >
-              Apply with AI
-            </a>
           </div>
         )}
       </div>
