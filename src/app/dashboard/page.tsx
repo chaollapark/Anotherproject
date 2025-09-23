@@ -1,34 +1,18 @@
-'use server';
-
 import { redirect } from 'next/navigation';
 import Link from "next/link";
-import { withAuth } from "@workos-inc/authkit-nextjs";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowRight } from "@fortawesome/free-solid-svg-icons";
 
-export default async function NewListingPage() {
-  const { user } = await withAuth();
-  //console.log(user);
-  
-  if (!user) {
-    return (
-      <div className="container">
-        <div>You need to be logged to see your dashboard</div>
-      </div>
-    );
-  }
-
+export default function DashboardPage() {
   async function createNewListing() {
     'use server';
-    // Here you would typically create a new job listing
-    // For now, we'll just redirect to the job form page
     redirect('/new-listing/form');
   }
 
   return (
     <div className="container">
       <div>
-        <h2 className="text-lg mt-6">Hi {user.firstName}, this is your dashboard</h2>
+        <h2 className="text-lg mt-6">Dashboard</h2>
         <div>
           <form action={createNewListing}>
             <button

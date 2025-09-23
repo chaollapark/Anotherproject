@@ -22,8 +22,6 @@
     "@sendgrid/mail": "^8.1.5",
     "@stripe/react-stripe-js": "^3.1.1",
     "@stripe/stripe-js": "^5.4.0",
-    "@workos-inc/authkit-nextjs": "^0.14.0",
-    "@workos-inc/node": "^7.4.0",
     "axios": "^1.6.8",
     "firebase-admin": "^13.2.0",
     "gray-matter": "^4.0.3",
@@ -64,5 +62,6 @@
     "tailwindcss": "^3.4.1",
     "tsx": "^4.19.4",
     "typescript": "^5.4.5"
-  }
+  },
+  "packageManager": "pnpm@10.15.0+sha512.486ebc259d3e999a4e8691ce03b5cac4a71cbeca39372a9b762cb500cfdf0873e2cb16abe3d951b1ee2cf012503f027b98b6584e4df22524e0c7450d9ec7aa7b"
 }

@@ -30,7 +30,6 @@ export type Job = {
   seniority: string;
   experienceRequirements?: string;
   plan?: string;
-  userWorkosId?: string;
   source?: string;
   blockAIApplications?: boolean;
 };
@@ -82,7 +81,6 @@ const JobSchema = new Schema({
     enum: ["intern", "junior", "mid-level", "senior"],
     required: true,
   },
-  userWorkosId: { type: String },
   plan: {
     type: String,
     enum: ['pending', 'basic', 'pro', 'recruiter', 'unlimited'],

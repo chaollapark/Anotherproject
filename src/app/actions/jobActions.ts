@@ -2,7 +2,6 @@
 import { JobModel, Job } from '@/models/Job';
 import { revalidatePath } from 'next/cache';
 import { z } from 'zod';
-import { withAuth } from "@workos-inc/authkit-nextjs";
 import dbConnect from '@/lib/dbConnect';
 
 const JobSchema = z.object({
@@ -18,7 +17,6 @@ const JobSchema = z.object({
     .min(1, "Job description is required")
     .max(15000, "Description cannot exceed 15000 characters"),
   contactEmail: z.string().email("A valid email address is required"),
-  userWorkosId: z.string().optional(), 
   salary: z.string().optional(),
   country: z.string().optional(),
   state: z.string().optional(),
@@ -89,46 +87,13 @@ export async function saveJobAction(formData: FormData): Promise<Job> {
       console.log('Converted blockAIApplications:', jobData.blockAIApplications);
     }
 
-    let workosUserId = null;
-    try {
-      const workosUser = await withAuth();
-      // Add proper null checks
-      if (workosUser?.user?.id) {
-        workosUserId = workosUser.user.id;
-      } else {
-        console.log('User or user ID is null');
-      }
-    } catch (error) {
-      console.log('No authenticated user found, proceeding as guest');
-    }
-
-    //console.log(workosUserId);
-
-    let jobDataWithOptionalWorkosId = jobData;
-    if (workosUserId) {
-      jobDataWithOptionalWorkosId = {
-        ...jobData,
-        userWorkosId: workosUserId
-      };
-    }
-
-    // Validate the data
-    //const validatedData = JobSchema.parse({
-    //  ...jobDataWithOptionalWorkosId,
-    //  plan: jobDataWithOptionalWorkosId.plan || 'basic', // this might not be good, defaulting to basic might mean no pending status anymore! 
-    //});
-    const validatedData = JobSchema.parse(jobDataWithOptionalWorkosId);
+    // No authentication - proceed without user checks
+    const validatedData = JobSchema.parse(jobData);
     console.log("Validated data after schema parsing:", validatedData);
 
     let job;
     if (validatedData.id) {
-      // For updates, check ownership only if there's a user
-      if (workosUserId) {
-        const existingJob = await JobModel.findOne({ _id: validatedData.id, userWorkosId: workosUserId });
-        if (!existingJob) {
-          throw new Error('Job not found or you do not have permission to edit it');
-        }
-      }
+      // Update existing job without ownership checks
       job = await JobModel.findByIdAndUpdate(validatedData.id, validatedData, { new: true });
     } else {
       job = await JobModel.create(validatedData);
@@ -152,22 +117,9 @@ export async function saveJobAction(formData: FormData): Promise<Job> {
 
 export async function getMyJobs(): Promise<Job[]> {
   try {
-    const workosUser = await withAuth();
-    if (!workosUser?.user?.id) {
-      throw new Error('User not found or missing workosId');
-    }
-
-    const userWorkosId = workosUser.user.id;
-    const userWorkosEmail = workosUser.user.email;
-
-    // Define admin emails in a constant for better maintainability
-    const ADMIN_EMAILS = ['mouise12345@gmail.com', 'ceo@zatjob.com'];
-
-    // Use conditional assignment
-    const jobs = ADMIN_EMAILS.includes(userWorkosEmail)
-      ? await JobModel.find({})
-      : await JobModel.find({ userWorkosId: userWorkosId });
-
+    await dbConnect();
+    // No authentication - return all jobs or handle differently based on your needs
+    const jobs = await JobModel.find({});
     return jobs.map(job => job.toObject());
   } catch (error) {
     console.error('Error retrieving jobs:', error);

@@ -4,19 +4,7 @@ import { useState } from "react";
 import posthog from "posthog-js";
 import AIApplyExpandingHeader from "./AIApplyExpandingHeader";
 
-interface HeaderClientProps {
-  isAuthDisabled: boolean;
-  user: any;
-  signInUrl: string;
-  isJobPoster: boolean;
-}
-
-export default function HeaderClient({
-  isAuthDisabled,
-  user,
-  signInUrl,
-  isJobPoster,
-}: HeaderClientProps) {
+export default function HeaderClient() {
   const [menuOpen, setMenuOpen] = useState(false);
 
   const handlePostJobClick = () => {
@@ -54,32 +42,6 @@ export default function HeaderClient({
         } transition-transform duration-300 md:hidden`}
       >
         <div className="flex flex-col items-center justify-center h-full gap-6">
-          {/* {!isAuthDisabled && !user && (
-            <Link
-              className="text-lg text-white transition-colors hover:bg-gray-700 rounded-md bg-gray-600 py-2 px-6"
-              href={signInUrl}
-              onClick={() => setMenuOpen(false)}
-            >
-              Login
-            </Link>
-          )} */}
-
-          {!isAuthDisabled && user && (
-            <form
-              action="/api/auth/logout"
-              method="POST"
-              className="w-full text-center"
-            >
-              <button
-                type="submit"
-                className="text-lg text-white transition-colors hover:bg-gray-700 rounded-md bg-gray-600 py-2 px-6"
-                onClick={() => setMenuOpen(false)}
-              >
-                Logout
-              </button>
-            </form>
-          )}
-
           <Link
             className="text-lg text-white rounded-md py-2 px-6 bg-purple-500 hover:bg-purple-600 transition-colors mr-4 inline-flex items-center justify-center"
             href="/new-listing/form"
@@ -100,15 +62,13 @@ export default function HeaderClient({
             <AIApplyExpandingHeader />
           </div>
 
-          {!isAuthDisabled && isJobPoster && user && (
-            <Link
-              className="text-lg text-white rounded-md py-2 px-6 bg-gray-600 hover:bg-gray-700 transition-colors"
-              href="/dashboard"
-              onClick={() => setMenuOpen(false)}
-            >
-              Dashboard
-            </Link>
-          )}
+          <Link
+            className="text-lg text-white rounded-md py-2 px-6 bg-gray-600 hover:bg-gray-700 transition-colors"
+            href="/dashboard"
+            onClick={() => setMenuOpen(false)}
+          >
+            Dashboard
+          </Link>
 
           <button
             className="text-white text-sm underline mt-4"
@@ -121,26 +81,6 @@ export default function HeaderClient({
 
       {/* Desktop menu */}
       <nav className="hidden md:flex md:flex-wrap gap-4">
-        {/* {!isAuthDisabled && !user && (
-          <Link
-            className="text-sm sm:text-base transition-colors hover:bg-gray-300 rounded-md bg-gray-200 py-2 px-4 whitespace-nowrap"
-            href={signInUrl}
-          >
-            Login
-          </Link>
-        )} */}
-
-        {!isAuthDisabled && user && (
-          <form action="/api/auth/logout" method="POST">
-            <button
-              type="submit"
-              className="text-sm sm:text-base transition-colors hover:bg-gray-300 rounded-md bg-gray-200 py-1 px-4 whitespace-nowrap"
-            >
-              Logout
-            </button>
-          </form>
-        )}
-
         <Link
           className="text-sm sm:text-base rounded-md py-2 px-4 bg-purple-500 text-white hover:bg-purple-600 transition-colors duration-200 whitespace-nowrap mr-4 inline-flex items-center justify-center"
           href="/new-listing/form"
@@ -159,15 +99,13 @@ export default function HeaderClient({
 
         <AIApplyExpandingHeader />
 
-        {!isAuthDisabled && isJobPoster && user && (
-          <Link
-            className="text-sm sm:text-base rounded-md py-1 px-4 bg-gray-600 text-white hover:bg-gray-700 transition-colors duration-200 whitespace-nowrap"
-            href="/dashboard"
-            onClick={() => setMenuOpen(false)}
-          >
-            Dashboard
-          </Link>
-        )}
+        <Link
+          className="text-sm sm:text-base rounded-md py-1 px-4 bg-gray-600 text-white hover:bg-gray-700 transition-colors duration-200 whitespace-nowrap"
+          href="/dashboard"
+          onClick={() => setMenuOpen(false)}
+        >
+          Dashboard
+        </Link>
       </nav>
     </>
   );

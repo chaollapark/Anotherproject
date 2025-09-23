@@ -1,26 +1,11 @@
-'use server';
-
 import { redirect } from 'next/navigation';
 import Link from "next/link";
-import { withAuth } from "@workos-inc/authkit-nextjs";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowRight } from "@fortawesome/free-solid-svg-icons";
 
-export default async function NewListingPage() {
-  const { user } = await withAuth();
-
-  if (!user) {
-    return (
-      <div className="container">
-        <div>You need to be logged in to post a job</div>
-      </div>
-    );
-  }
-
+export default function NewListingPage() {
   async function createNewListing() {
     'use server';
-    // Here you would typically create a new job listing
-    // For now, we'll just redirect to the job form page
     redirect('/new-listing/form');
   }
 
