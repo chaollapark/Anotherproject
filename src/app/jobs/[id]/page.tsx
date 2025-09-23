@@ -19,10 +19,14 @@ export async function generateMetadata(
 /** 
  * Generate static pages for all job slugs at build time
  * This ensures all job detail pages are pre-rendered as static HTML
+ * Filters out slugs that are too long to prevent filesystem path issues
  */
 export async function generateStaticParams() {
   const slugs = await getAllJobSlugs();
-  return slugs.map(slug => ({ id: slug }));
+  // Filter out slugs that would cause filesystem path issues (over 100 chars)
+  const validSlugs = slugs.filter(slug => slug && slug.length <= 100);
+  console.log(`Filtered ${slugs.length - validSlugs.length} overly long slugs from static generation`);
+  return validSlugs.map(slug => ({ id: slug }));
 }
 
 /** 

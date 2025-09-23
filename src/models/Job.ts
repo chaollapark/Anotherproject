@@ -35,19 +35,23 @@ export type Job = {
 };
 
 function generateSlug(title: string | null | undefined, companyName: string | null | undefined, id: string): string {
-  const processString = (str: string | null | undefined) =>
+  const processString = (str: string | null | undefined, maxLength: number = 50) =>
     (str || '')
       .toLowerCase()
       .replace(/[^\w\s-]/g, '')
       .replace(/\s+/g, '-')
       .replace(/-+/g, '-')
-      .trim();
+      .trim()
+      .substring(0, maxLength)
+      .replace(/-+$/, ''); // Remove trailing dashes
 
-  const titleSlug = processString(title) || 'untitled';
-  const companySlug = processString(companyName) || 'unknown-company';
+  const titleSlug = processString(title, 30) || 'untitled';
+  const companySlug = processString(companyName, 40) || 'unknown-company';
   const shortId = id.slice(-6);
 
-  return `${titleSlug}-at-${companySlug}-${shortId}`;
+  // Ensure total slug length doesn't exceed 100 characters
+  const baseSlug = `${titleSlug}-at-${companySlug}-${shortId}`;
+  return baseSlug.length > 100 ? baseSlug.substring(0, 100).replace(/-+$/, '') : baseSlug;
 }
 
 const JobSchema = new Schema({
@@ -186,7 +190,10 @@ export async function getAllJobSlugs() {
   try {
     await dbConnect();
     const jobs = await JobModel.find({}, 'slug');
-    return jobs.map(job => job.slug).filter(Boolean); // Filter out any undefined/null slugs
+    return jobs
+      .map(job => job.slug)
+      .filter(Boolean) // Filter out any undefined/null slugs
+      .filter(slug => slug.length <= 100); // Filter out overly long slugs that cause build issues
   } catch (error) {
     console.error('Error fetching all job slugs:', error);
     return [];
