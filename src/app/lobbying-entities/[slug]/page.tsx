@@ -3,7 +3,7 @@ import LobbyingEntityModel from '@/models/LobbyingEntity';
 import mongoose from 'mongoose';
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
-import { ReactNode } from 'react';
+import React, { ReactNode } from 'react';
 import { 
   LobbyingEntity, 
   LeanLobbyingEntityForPage, 
@@ -158,20 +158,96 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
+// Helper function to safely render values
+const renderValue = (value: any): ReactNode => {
+  if (value === null || typeof value === 'undefined') {
+    return null;
+  }
+  
+  if (Array.isArray(value)) {
+    return (
+      <ul className="list-disc list-inside ml-4">
+        {value.map((item, index) => <li key={index}>{renderValue(item)}</li>)}
+      </ul>
+    );
+  }
+  
+  if (typeof value === 'object') {
+    // Handle specific object types
+    if (value.url || value.href) {
+      const url = value.url || value.href;
+      return (
+        <a 
+          href={url.startsWith('http') ? url : `http://${url}`} 
+          target="_blank" 
+          rel="noopener noreferrer" 
+          className="text-blue-600 hover:underline"
+        >
+          {url}
+        </a>
+      );
+    }
+    
+    // Handle phone objects
+    if (value.number || value.phone) {
+      return <span>{value.number || value.phone}</span>;
+    }
+    
+    // Handle address-like objects
+    if (value.street || value.city || value.country) {
+      const addressParts = [
+        value.street,
+        value.city,
+        value.postalCode,
+        value.country
+      ].filter(Boolean);
+      return <span>{addressParts.join(', ')}</span>;
+    }
+    
+    // For other objects, render key-value pairs
+    const entries = Object.entries(value).filter(([_, v]) => v !== null && v !== undefined && v !== '');
+    if (entries.length === 0) return null;
+    
+    return (
+      <div className="ml-4 space-y-1">
+        {entries.map(([key, val]) => (
+          <div key={key} className="text-sm">
+            <span className="font-medium">{key.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase())}:</span>{' '}
+            <span>{renderValue(val)}</span>
+          </div>
+        ))}
+      </div>
+    );
+  }
+  
+  if (typeof value === 'string' && value.trim() === '') {
+    return null;
+  }
+  
+  return <span>{String(value)}</span>;
+};
+
 // Helper components for rendering sections
 const DetailItem: React.FC<{ label: string; value?: ReactNode }> = ({ label, value }) => {
   if (value === null || typeof value === 'undefined' || (typeof value === 'string' && value.trim() === '') || (Array.isArray(value) && value.length === 0)) {
     return null;
   }
+  
+  const renderedValue = typeof value === 'object' && value !== null && !Array.isArray(value) && !React.isValidElement(value) 
+    ? renderValue(value) 
+    : value;
+  
+  if (!renderedValue) return null;
+  
   return (
     <div className="mb-2">
-      <strong className="font-semibold">{label}:</strong> 
+      <strong className="font-semibold">{label}:</strong>{' '}
       {Array.isArray(value) ? (
         <ul className="list-disc list-inside ml-4">
-          {value.map((item, index) => <li key={index}>{item}</li>)}
+          {value.map((item, index) => <li key={index}>{renderValue(item)}</li>)}
         </ul>
       ) : (
-        <span> {typeof value === 'number' ? value : String(value)}</span>
+        renderedValue
       )}
     </div>
   );
@@ -271,7 +347,7 @@ export default async function LobbyingEntityPage({ params }: Props) {
           <div>
             <h2 className="text-2xl font-semibold mb-3 text-slate-800">General Information</h2>
             <DetailItem label="Identification Code" value={entity.identificationCode} />
-            <DetailItem label="Website" value={entity.webSiteURL ? <a href={entity.webSiteURL.startsWith('http') ? entity.webSiteURL : `http://${entity.webSiteURL}`} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">{entity.webSiteURL}</a> : undefined} />
+            <DetailItem label="Website" value={entity.webSiteURL} />
             <DetailItem label="Entity Form" value={entity.entityForm} />
             <DetailItem label="Registration Category" value={entity.registrationCategory} />
             <DetailItem label="Registration Date" value={entity.registrationDate ? new Date(entity.registrationDate).toLocaleDateString() : undefined} />
