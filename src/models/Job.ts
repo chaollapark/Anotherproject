@@ -189,11 +189,22 @@ export async function fetchJobsByCity(cityName: string) {
 export async function getAllJobSlugs() {
   try {
     await dbConnect();
-    const jobs = await JobModel.find({}, 'slug');
+    // Use lean() for better memory efficiency and limit initial query
+    const jobs = await JobModel.find(
+      { 
+        slug: { $exists: true, $ne: null },
+        // Pre-filter by slug length in database to reduce memory usage
+        $expr: { $lte: [{ $strLenCP: "$slug" }, 100] }
+      }, 
+      'slug'
+    )
+    .lean() // Return plain objects instead of Mongoose documents
+    .sort({ createdAt: -1 }) // Get newest jobs first for static generation
+    .limit(5000); // Limit to prevent memory issues
+    
     return jobs
       .map(job => job.slug)
-      .filter(Boolean) // Filter out any undefined/null slugs
-      .filter(slug => slug.length <= 100); // Filter out overly long slugs that cause build issues
+      .filter(Boolean); // Filter out any undefined/null slugs
   } catch (error) {
     console.error('Error fetching all job slugs:', error);
     return [];

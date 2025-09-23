@@ -17,21 +17,27 @@ export async function generateMetadata(
 }
 
 /** 
- * Generate static pages for all job slugs at build time
- * This ensures all job detail pages are pre-rendered as static HTML
- * Filters out slugs that are too long to prevent filesystem path issues
+ * Generate static pages for a limited number of job slugs at build time
+ * This prevents memory issues while still pre-rendering the most important pages
+ * The rest will be generated on-demand (ISR)
  */
 export async function generateStaticParams() {
   const slugs = await getAllJobSlugs();
   // Filter out slugs that would cause filesystem path issues (over 100 chars)
   const validSlugs = slugs.filter(slug => slug && slug.length <= 100);
-  console.log(`Filtered ${slugs.length - validSlugs.length} overly long slugs from static generation`);
-  return validSlugs.map(slug => ({ id: slug }));
+  
+  // Limit to first 1000 jobs to prevent memory issues during build
+  // The rest will be generated on-demand using ISR
+  const limitedSlugs = validSlugs.slice(0, 1000);
+  
+  console.log(`Static generation: ${limitedSlugs.length} of ${validSlugs.length} valid slugs (filtered ${slugs.length - validSlugs.length} overly long slugs)`);
+  return limitedSlugs.map(slug => ({ id: slug }));
 }
 
 /** 
  * Renders the job page or returns 404 for invalid slugs
  * This prevents orphan pages by ensuring only valid job pages are accessible
+ * Uses ISR for pages not pre-generated at build time
  */
 export default async function JobPage({ params }: { params: Params }) {
   // Check if job exists, return 404 if not found
@@ -42,3 +48,6 @@ export default async function JobPage({ params }: { params: Params }) {
   
   return <JobPageClient params={params} />;
 }
+
+// Enable ISR with 1 hour revalidation for job pages not pre-generated
+export const revalidate = 3600;
