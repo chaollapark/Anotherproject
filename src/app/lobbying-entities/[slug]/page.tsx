@@ -3,7 +3,7 @@ import LobbyingEntityModel from '@/models/LobbyingEntity';
 import mongoose from 'mongoose';
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
-import { ReactNode } from 'react';
+import React, { ReactNode } from 'react';
 import { 
   LobbyingEntity, 
   LeanLobbyingEntityForPage, 
