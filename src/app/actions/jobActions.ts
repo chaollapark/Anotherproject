@@ -2,7 +2,6 @@
 import { JobModel, Job } from '@/models/Job';
 import { revalidatePath } from 'next/cache';
 import { z } from 'zod';
-import { withAuth } from "@workos-inc/authkit-nextjs";
 import dbConnect from '@/lib/dbConnect';
 
 const JobSchema = z.object({
@@ -89,28 +88,8 @@ export async function saveJobAction(formData: FormData): Promise<Job> {
       console.log('Converted blockAIApplications:', jobData.blockAIApplications);
     }
 
-    let workosUserId = null;
-    try {
-      const workosUser = await withAuth();
-      // Add proper null checks
-      if (workosUser?.user?.id) {
-        workosUserId = workosUser.user.id;
-      } else {
-        console.log('User or user ID is null');
-      }
-    } catch (error) {
-      console.log('No authenticated user found, proceeding as guest');
-    }
-
-    //console.log(workosUserId);
-
+    // Authentication removed - proceeding without user authentication
     let jobDataWithOptionalWorkosId = jobData;
-    if (workosUserId) {
-      jobDataWithOptionalWorkosId = {
-        ...jobData,
-        userWorkosId: workosUserId
-      };
-    }
 
     // Validate the data
     //const validatedData = JobSchema.parse({
@@ -122,13 +101,7 @@ export async function saveJobAction(formData: FormData): Promise<Job> {
 
     let job;
     if (validatedData.id) {
-      // For updates, check ownership only if there's a user
-      if (workosUserId) {
-        const existingJob = await JobModel.findOne({ _id: validatedData.id, userWorkosId: workosUserId });
-        if (!existingJob) {
-          throw new Error('Job not found or you do not have permission to edit it');
-        }
-      }
+      // Update existing job (no authentication check)
       job = await JobModel.findByIdAndUpdate(validatedData.id, validatedData, { new: true });
     } else {
       job = await JobModel.create(validatedData);
@@ -152,22 +125,9 @@ export async function saveJobAction(formData: FormData): Promise<Job> {
 
 export async function getMyJobs(): Promise<Job[]> {
   try {
-    const workosUser = await withAuth();
-    if (!workosUser?.user?.id) {
-      throw new Error('User not found or missing workosId');
-    }
-
-    const userWorkosId = workosUser.user.id;
-    const userWorkosEmail = workosUser.user.email;
-
-    // Define admin emails in a constant for better maintainability
-    const ADMIN_EMAILS = ['mouise12345@gmail.com', 'ceo@zatjob.com'];
-
-    // Use conditional assignment
-    const jobs = ADMIN_EMAILS.includes(userWorkosEmail)
-      ? await JobModel.find({})
-      : await JobModel.find({ userWorkosId: userWorkosId });
-
+    await dbConnect();
+    // Authentication removed - return all jobs
+    const jobs = await JobModel.find({});
     return jobs.map(job => job.toObject());
   } catch (error) {
     console.error('Error retrieving jobs:', error);

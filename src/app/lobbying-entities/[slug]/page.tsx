@@ -85,22 +85,10 @@ async function getEntityBySlug(slug: string): Promise<LobbyingEntity | null> {
   return result;
 }
 
+// Disable static generation for lobbying entities to reduce build time
+// Pages will be generated on-demand instead of at build time
 export async function generateStaticParams() {
-  try {
-    await dbConnect();
-    // Use LobbyingEntityForStaticParams for the type of lean() result
-    // Explicitly type `entities` as LobbyingEntityForStaticParams[] and let .lean() infer its specific object structure.
-    // Mongoose's .find().lean() returns an array of plain objects. For a query selecting 'slug',
-    // these objects will be like { _id: ..., slug: ... }, which is compatible with LobbyingEntityForStaticParams ({ slug: string }).
-    const entities = (await LobbyingEntityModel.find({}, 'slug').lean()) as unknown as LobbyingEntityForStaticParams[];
-    
-    return entities.filter(entity => entity.slug).map((entity) => ({
-      slug: entity.slug,
-    }));
-  } catch (error) {
-    console.error("Failed to generate static params for lobbying entities:", error);
-    return [];
-  }
+  return []; // Return empty array to disable static generation
 }
 
 type Props = {
