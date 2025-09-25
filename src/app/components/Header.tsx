@@ -1,24 +1,15 @@
 "use server";
-import { getSignInUrl, withAuth, signOut } from "@workos-inc/authkit-nextjs";
 import Link from "next/link";
 import Image from "next/image";
 import { getCustomUser } from "@/app/actions/userActions";
 import HeaderClient from "./HeaderClient";
 
 export default async function Header() {
-  const isAuthDisabled = process.env.DISABLE_AUTH === "true";
-  const { user } = !isAuthDisabled ? await withAuth() : { user: null };
-  const signInUrl = !isAuthDisabled ? await getSignInUrl() : "";
-
-  let isJobPoster = true;
-  if (user && !isAuthDisabled) {
-    try {
-      const customUser = await getCustomUser();
-      isJobPoster = customUser?.isJobPoster ?? true;
-    } catch (error) {
-      console.error("Error fetching custom user:", error);
-    }
-  }
+  // Authentication removed - simplified header
+  const isAuthDisabled = true;
+  const user = null;
+  const signInUrl = "";
+  const isJobPoster = true;
 
   return (
     <header>

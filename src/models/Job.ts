@@ -187,8 +187,16 @@ export async function fetchJobsByCity(cityName: string) {
 export async function getAllJobSlugs() {
   try {
     await dbConnect();
-    const jobs = await JobModel.find({}, 'slug');
-    return jobs.map(job => job.slug).filter(Boolean); // Filter out any undefined/null slugs
+    // Limit to 1000 jobs for static generation to prevent Vercel build timeouts
+    const jobs = await JobModel.find({}, 'slug', { 
+      sort: { createdAt: -1 }, // Get most recent jobs first
+      limit: 1000 
+    });
+    // Filter out slugs that are too long (over 100 characters) to prevent build errors
+    return jobs
+      .map(job => job.slug)
+      .filter(Boolean) // Filter out any undefined/null slugs
+      .filter(slug => slug.length <= 100); // Filter out overly long slugs
   } catch (error) {
     console.error('Error fetching all job slugs:', error);
     return [];
