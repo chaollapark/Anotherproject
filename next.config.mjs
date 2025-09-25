@@ -19,8 +19,6 @@ const nextConfig = {
   },
   // Increase build timeout for large page counts
   staticPageGenerationTimeout: 300, // 5 minutes
-  // Optimize output
-  output: 'standalone',
   // Reduce bundle size
   swcMinify: true,
 };
