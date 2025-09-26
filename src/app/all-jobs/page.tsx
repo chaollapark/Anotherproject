@@ -1,7 +1,7 @@
 import { Suspense } from 'react';
 import Link from 'next/link';
 import dbConnect from '@/lib/dbConnect';
-import { JobModel, getAllJobSlugs } from '@/models/Job';
+import { JobModel } from '@/models/Job';
 
 // Define how many jobs to show per page
 const JOBS_PER_PAGE = 100;
@@ -13,17 +13,11 @@ function chunkArray(array: any[], size: number) {
   );
 }
 
-// Generate static params for pagination
-export async function generateStaticParams() {
-  await dbConnect();
-  const allSlugs = await getAllJobSlugs();
-  const totalPages = Math.ceil(allSlugs.length / JOBS_PER_PAGE);
-  
-  // Generate an array of page numbers starting from 1
-  return Array.from({ length: totalPages }, (_, i) => ({
-    page: (i + 1).toString(),
-  }));
-}
+/** 
+ * Use Incremental Static Regeneration (ISR) for all-jobs page
+ * This prevents build timeouts from database connections
+ */
+export const revalidate = 3600; // Revalidate every hour
 
 // This is our main page component for /all-jobs
 export default async function AllJobsPage({ 

@@ -29,32 +29,68 @@ export async function GET() {
   try {
     await dbConnect();
     
-    // Get all jobs (both with and without slugs to fix length issues)
-    const jobs = await JobModel.find({});
-    let updated = 0;
-    let fixed = 0;
-
-    for (const job of jobs) {
-      const newSlug = generateSafeSlug(job.title, job.companyName, job._id.toString());
+    // Process jobs in smaller batches to prevent timeouts
+    const BATCH_SIZE = 50; // Smaller batches for better performance
+    let totalUpdated = 0;
+    let totalFixed = 0;
+    let skip = 0;
+    
+    while (true) {
+      // Get jobs in batches with only necessary fields
+      const jobs = await JobModel.find({}, 'title companyName slug')
+        .skip(skip)
+        .limit(BATCH_SIZE)
+        .lean(); // Use lean for better performance
       
-      // Update if no slug exists or if current slug is too long
-      if (!job.slug || job.slug.length > 150) {
-        await JobModel.findByIdAndUpdate(job._id, { slug: newSlug });
-        if (!job.slug) {
-          updated++;
-        } else {
-          fixed++;
+      if (jobs.length === 0) break;
+      
+      const bulkOps = [];
+      
+      for (const job of jobs) {
+        const newSlug = generateSafeSlug(job.title, job.companyName, String(job._id));
+        
+        // Update if no slug exists or if current slug is too long
+        if (!job.slug || job.slug.length > 150) {
+          bulkOps.push({
+            updateOne: {
+              filter: { _id: job._id },
+              update: { slug: newSlug }
+            }
+          });
+          
+          if (!job.slug) {
+            totalUpdated++;
+          } else {
+            totalFixed++;
+          }
         }
+      }
+      
+      // Bulk update for better performance
+      if (bulkOps.length > 0) {
+        await JobModel.bulkWrite(bulkOps);
+      }
+      
+      skip += BATCH_SIZE;
+      
+      // Safety check to prevent infinite loops
+      if (skip > 10000) {
+        console.log('Migration stopped at 10,000 jobs for safety');
+        break;
       }
     }
 
     return NextResponse.json({
       success: true,
-      message: `Updated ${updated} jobs with new slugs, fixed ${fixed} jobs with overly long slugs`,
-      total: updated + fixed
+      message: `Updated ${totalUpdated} jobs with new slugs, fixed ${totalFixed} jobs with overly long slugs`,
+      total: totalUpdated + totalFixed
     });
   } catch (error) {
     console.error('Error in migration:', error);
     return NextResponse.json({ error: 'Migration failed' }, { status: 500 });
   }
 }
+
+// Prevent static generation of this API route
+export const dynamic = 'force-dynamic';
+export const runtime = 'nodejs';

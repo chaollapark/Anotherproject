@@ -58,6 +58,12 @@ export const metadata: Metadata = {
   description: 'Browse a comprehensive directory of EU lobbying organizations and their profiles.',
 };
 
+/** 
+ * Use Incremental Static Regeneration (ISR) for lobbying entities
+ * This prevents build timeouts from database connections
+ */
+export const revalidate = 3600; // Revalidate every hour
+
 export default async function LobbyingEntitiesIndexPage({ searchParams }: { searchParams?: { page?: string } }) {
   const currentPage = Number(searchParams?.page) || 1;
   const { entities, totalEntities, totalPages } = await getLobbyingEntities(currentPage);

@@ -17,6 +17,7 @@ const FILTER_MAP: Record<string, string> = {
 export const revalidate = 60;
 
 // Generate static pages for all valid filters at build time
+// Keep static generation for filters since there are only a few filter pages
 export function generateStaticParams() {
   return Object.keys(FILTER_MAP).map(filter => ({ filter }));
 }
