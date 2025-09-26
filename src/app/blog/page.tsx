@@ -4,6 +4,12 @@ import { fetchJobs } from "@/models/Job";
 import dbConnect from '@/lib/dbConnect';
 import { Job } from "@/models/Job";
 
+/** 
+ * Use Incremental Static Regeneration (ISR) for blog index page
+ * This prevents build timeouts from database connections
+ */
+export const revalidate = 3600; // Revalidate every hour
+
 export default async function BlogIndex() {
   await dbConnect();
   
