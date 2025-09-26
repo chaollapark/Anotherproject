@@ -35,19 +35,25 @@ export type Job = {
 };
 
 function generateSlug(title: string | null | undefined, companyName: string | null | undefined, id: string): string {
-  const processString = (str: string | null | undefined) =>
+  const processString = (str: string | null | undefined, maxLength: number = 50) =>
     (str || '')
       .toLowerCase()
       .replace(/[^\w\s-]/g, '')
       .replace(/\s+/g, '-')
       .replace(/-+/g, '-')
-      .trim();
+      .trim()
+      .substring(0, maxLength)
+      .replace(/-+$/, ''); // Remove trailing dashes
 
-  const titleSlug = processString(title) || 'untitled';
-  const companySlug = processString(companyName) || 'unknown-company';
+  const titleSlug = processString(title, 50) || 'untitled';
+  const companySlug = processString(companyName, 50) || 'unknown-company';
   const shortId = id.slice(-6);
 
-  return `${titleSlug}-at-${companySlug}-${shortId}`;
+  const fullSlug = `${titleSlug}-at-${companySlug}-${shortId}`;
+  
+  // Ensure total slug length doesn't exceed filesystem limits (usually 255 chars)
+  // We'll keep it under 150 to be safe for URL purposes as well
+  return fullSlug.length > 150 ? fullSlug.substring(0, 150).replace(/-+$/, '') : fullSlug;
 }
 
 const JobSchema = new Schema({
