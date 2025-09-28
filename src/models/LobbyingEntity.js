@@ -11,31 +11,57 @@ const LobbyingEntitySchema = new mongoose.Schema({
     type: String,
     required: [true, 'Please provide a name for the entity.'],
   },
+  originalName: {
+    type: String,
+  },
   description: {
+    type: String,
+  },
+  goals: {
     type: String,
   },
   website: {
     type: String,
   },
-  // You can add other fields from your eu_interest_representatives collection here
-  // For example:
-  // identifier: String, // Official identifier if any
-  // registrationDate: Date,
-  // categories: [String],
-  // address: {
-  //   street: String,
-  //   city: String,
-  //   postalCode: String,
-  //   country: String,
-  // },
-  // contact: {
-  //   email: String,
-  //   phone: String,
-  // },
-  // financialData: mongoose.Schema.Types.Mixed, // For complex, less structured data
+  webSiteURL: {
+    type: String,
+  },
+  interests: [{
+    type: String,
+  }],
+  levelsOfInterest: [{
+    type: String,
+  }],
+  interestRepresented: {
+    type: String,
+  },
+  registrationCategory: {
+    type: String,
+  },
+  // Add other fields that are actually used
+  acronym: String,
+  identificationCode: String,
+  EPAccreditedNumber: mongoose.Schema.Types.Mixed,
+  EULegislativeProposals: String,
+  EUOffice: mongoose.Schema.Types.Mixed,
+  EUSupportedForumsAndPlatforms: String,
+  communicationActivities: String,
+  entityForm: String,
+  financialData: mongoose.Schema.Types.Mixed,
+  headOffice: mongoose.Schema.Types.Mixed,
+  interOrUnofficalGroupings: String,
+  lastUpdateDate: Date,
+  members: mongoose.Schema.Types.Mixed,
+  rawXML: String,
+  registrationDate: Date,
+  structure: mongoose.Schema.Types.Mixed,
+  structureType: String,
+  isMemberOf: String,
+  organisationMembers: String,
 }, {
   timestamps: true, // Adds createdAt and updatedAt timestamps
-  collection: 'eu_interest_representatives' // Explicitly set collection name
+  collection: 'eu_interest_representatives', // Explicitly set collection name
+  strict: false // Allow fields not defined in schema since this is a flexible collection
 });
 
 // Ensure the model is not recompiled if it already exists
