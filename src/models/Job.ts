@@ -30,25 +30,30 @@ export type Job = {
   seniority: string;
   experienceRequirements?: string;
   plan?: string;
-  userWorkosId?: string;
   source?: string;
   blockAIApplications?: boolean;
 };
 
 function generateSlug(title: string | null | undefined, companyName: string | null | undefined, id: string): string {
-  const processString = (str: string | null | undefined) =>
+  const processString = (str: string | null | undefined, maxLength: number = 50) =>
     (str || '')
       .toLowerCase()
       .replace(/[^\w\s-]/g, '')
       .replace(/\s+/g, '-')
       .replace(/-+/g, '-')
-      .trim();
+      .trim()
+      .substring(0, maxLength)
+      .replace(/-+$/, ''); // Remove trailing dashes
 
-  const titleSlug = processString(title) || 'untitled';
-  const companySlug = processString(companyName) || 'unknown-company';
+  const titleSlug = processString(title, 50) || 'untitled';
+  const companySlug = processString(companyName, 50) || 'unknown-company';
   const shortId = id.slice(-6);
 
-  return `${titleSlug}-at-${companySlug}-${shortId}`;
+  const fullSlug = `${titleSlug}-at-${companySlug}-${shortId}`;
+  
+  // Ensure total slug length doesn't exceed filesystem limits (usually 255 chars)
+  // We'll keep it under 150 to be safe for URL purposes as well
+  return fullSlug.length > 150 ? fullSlug.substring(0, 150).replace(/-+$/, '') : fullSlug;
 }
 
 const JobSchema = new Schema({
@@ -82,7 +87,6 @@ const JobSchema = new Schema({
     enum: ["intern", "junior", "mid-level", "senior"],
     required: true,
   },
-  userWorkosId: { type: String },
   plan: {
     type: String,
     enum: ['pending', 'basic', 'pro', 'recruiter', 'unlimited'],
@@ -142,7 +146,7 @@ export async function findJobBySlug(slug: string) {
   }
 }
 
-export async function fetchJobsBySource(source: string) {
+export async function fetchJobsBySource(source: string | string[]) {
   await dbConnect();
 
   const featuredJobs = await JobModel.find(
@@ -151,9 +155,11 @@ export async function fetchJobsBySource(source: string) {
     { sort: '-createdAt', limit: 5 }
   );
 
+  const sourceQuery = Array.isArray(source) ? { $in: source } : source;
+  
   const regularJobs = await JobModel.find(
     {
-      source,
+      source: sourceQuery,
       plan: { $nin: ['pro', 'recruiter', 'pending'] }
     },
     {},
@@ -191,6 +197,106 @@ export async function getAllJobSlugs() {
     return jobs.map(job => job.slug).filter(Boolean); // Filter out any undefined/null slugs
   } catch (error) {
     console.error('Error fetching all job slugs:', error);
+    return [];
+  }
+}
+
+export async function fetchJobsForEntity(entityWebsiteUrl?: string, entityName?: string, limit: number = 3) {
+  await dbConnect();
+
+  try {
+    let jobs: any[] = [];
+
+    // Strategy 1: Try to match by apply link domain if entity has a website
+    if (entityWebsiteUrl) {
+      try {
+        const entityUrl = new URL(entityWebsiteUrl);
+        const entityDomain = entityUrl.hostname.toLowerCase().replace('www.', '');
+        
+        // First try to find jobs where apply link contains the entity domain
+        const domainJobs = await JobModel.find(
+          {
+            applyLink: { 
+              $regex: new RegExp(entityDomain.replace(/\./g, '\\.'), 'i') 
+            },
+            plan: { $nin: ['pending'] }
+          },
+          {},
+          { sort: { createdAt: -1 }, limit }
+        );
+        
+        jobs = domainJobs;
+        console.log(`Found ${jobs.length} jobs by domain matching for ${entityDomain}`);
+      } catch (error) {
+        console.log('Failed to parse entity website URL:', error);
+      }
+    }
+
+    // Strategy 2: If we don't have enough jobs and have entity name, try company name matching
+    if (jobs.length < limit && entityName) {
+      const remainingLimit = limit - jobs.length;
+      const existingJobIds = jobs.map(job => job._id.toString());
+      
+      const nameJobs = await JobModel.find(
+        {
+          _id: { $nin: existingJobIds },
+          companyName: { $regex: new RegExp(entityName, 'i') },
+          plan: { $nin: ['pending'] }
+        },
+        {},
+        { sort: { createdAt: -1 }, limit: remainingLimit }
+      );
+      
+      jobs = [...jobs, ...nameJobs];
+      console.log(`Found ${nameJobs.length} additional jobs by name matching for ${entityName}`);
+    }
+
+    // Strategy 3: If still not enough jobs, get jobs with no source or any source
+    if (jobs.length < limit) {
+      const remainingLimit = limit - jobs.length;
+      const existingJobIds = jobs.map(job => job._id.toString());
+      
+      // First try jobs with no source
+      const noSourceJobs = await JobModel.find(
+        {
+          _id: { $nin: existingJobIds },
+          $or: [
+            { source: { $exists: false } },
+            { source: null },
+            { source: '' }
+          ],
+          plan: { $nin: ['pending'] }
+        },
+        {},
+        { sort: { createdAt: -1 }, limit: remainingLimit }
+      );
+      
+      jobs = [...jobs, ...noSourceJobs];
+      console.log(`Found ${noSourceJobs.length} jobs with no source`);
+      
+      // If still not enough, get any jobs with source
+      if (jobs.length < limit) {
+        const finalRemainingLimit = limit - jobs.length;
+        const finalExistingJobIds = jobs.map(job => job._id.toString());
+        
+        const anySourceJobs = await JobModel.find(
+          {
+            _id: { $nin: finalExistingJobIds },
+            source: { $exists: true, $ne: null },
+            plan: { $nin: ['pending'] }
+          },
+          {},
+          { sort: { createdAt: -1 }, limit: finalRemainingLimit }
+        );
+        
+        jobs = [...jobs, ...anySourceJobs];
+        console.log(`Found ${anySourceJobs.length} jobs with any source`);
+      }
+    }
+
+    return JSON.parse(JSON.stringify(jobs.slice(0, limit))); // Ensure we return exactly the limit
+  } catch (error) {
+    console.error('Error fetching jobs for entity:', error);
     return [];
   }
 }

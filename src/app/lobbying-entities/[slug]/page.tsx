@@ -1,5 +1,6 @@
 import dbConnect from '@/lib/dbConnect';
 import LobbyingEntityModel from '@/models/LobbyingEntity';
+import { fetchJobsForEntity, Job } from '@/models/Job';
 import mongoose from 'mongoose';
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
@@ -85,22 +86,10 @@ async function getEntityBySlug(slug: string): Promise<LobbyingEntity | null> {
   return result;
 }
 
+// Disable static generation for lobbying entities to reduce build time
+// Pages will be generated on-demand instead of at build time
 export async function generateStaticParams() {
-  try {
-    await dbConnect();
-    // Use LobbyingEntityForStaticParams for the type of lean() result
-    // Explicitly type `entities` as LobbyingEntityForStaticParams[] and let .lean() infer its specific object structure.
-    // Mongoose's .find().lean() returns an array of plain objects. For a query selecting 'slug',
-    // these objects will be like { _id: ..., slug: ... }, which is compatible with LobbyingEntityForStaticParams ({ slug: string }).
-    const entities = (await LobbyingEntityModel.find({}, 'slug').lean()) as unknown as LobbyingEntityForStaticParams[];
-    
-    return entities.filter(entity => entity.slug).map((entity) => ({
-      slug: entity.slug,
-    }));
-  } catch (error) {
-    console.error("Failed to generate static params for lobbying entities:", error);
-    return [];
-  }
+  return []; // Return empty array to disable static generation
 }
 
 type Props = {
@@ -275,6 +264,9 @@ export default async function LobbyingEntityPage({ params }: Props) {
     notFound(); // Use Next.js notFound function
   }
 
+  // Fetch jobs for this entity
+  const entityJobs = await fetchJobsForEntity(entity.webSiteURL, entity.name, 3);
+
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'; // Fallback for local dev
   const entityUrl = `${siteUrl}/lobbying-entities/${entity.slug}`;
 
@@ -387,6 +379,85 @@ export default async function LobbyingEntityPage({ params }: Props) {
            <DetailItem label="Structure Type" value={entity.structureType} />
            <DetailItem label="Is Member Of" value={entity.isMemberOf} />
            <DetailItem label="Organisation Members" value={entity.organisationMembers} />
+        </section>
+
+        <section className="mb-6">
+          <h2 className="text-2xl font-semibold mb-4 text-slate-800">Current Job Opportunities</h2>
+          {entityJobs.length > 0 ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {entityJobs.map((job: Job) => (
+                <div key={job._id} className="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow duration-200 bg-white">
+                  <div className="mb-3">
+                    <h3 className="font-semibold text-lg mb-1 text-slate-900">
+                      <a 
+                        href={`/jobs/${job.slug}`} 
+                        className="text-blue-600 hover:text-blue-800 transition-colors duration-200"
+                      >
+                        {job.title}
+                      </a>
+                    </h3>
+                    <p className="text-gray-600 text-sm font-medium">{job.companyName}</p>
+                  </div>
+                  
+                  <div className="flex flex-wrap gap-1 mb-3">
+                    <span className="bg-blue-100 text-blue-800 px-2 py-1 rounded-full text-xs font-medium">
+                      {job.seniority}
+                    </span>
+                    <span className="bg-green-100 text-green-800 px-2 py-1 rounded-full text-xs font-medium">
+                      {job.city || 'Brussels'}, {job.country || 'Belgium'}
+                    </span>
+                    <span className="bg-purple-100 text-purple-800 px-2 py-1 rounded-full text-xs font-medium">
+                      {job.type}-time
+                    </span>
+                  </div>
+
+                  <div className="flex flex-col gap-2">
+                    <a 
+                      href={`/jobs/${job.slug}`}
+                      className="inline-block text-center bg-blue-600 text-white px-3 py-2 rounded-md text-sm font-medium hover:bg-blue-700 transition-colors duration-200"
+                    >
+                      View Details
+                    </a>
+                    {job.applyLink && (
+                      <a 
+                        href={job.applyLink}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-block text-center bg-green-600 text-white px-3 py-2 rounded-md text-sm font-medium hover:bg-green-700 transition-colors duration-200"
+                      >
+                        Apply Now →
+                      </a>
+                    )}
+                  </div>
+                  
+                  {job.createdAt && (
+                    <div className="mt-2 text-xs text-gray-500">
+                      Posted: {new Date(job.createdAt).toLocaleDateString()}
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="bg-gray-50 border border-gray-200 rounded-lg p-6 text-center">
+              <div className="text-gray-400 mb-2">
+                <svg className="mx-auto h-12 w-12" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2-2v2m8 0H8m8 0v2a2 2 0 002 2h4a2 2 0 002-2V8a2 2 0 00-2-2h-4z" />
+                </svg>
+              </div>
+              <h3 className="text-lg font-medium text-gray-900 mb-1">No Job Openings</h3>
+              <p className="text-gray-600 text-sm">
+                This organization doesn&apos;t currently have any job listings. 
+                Check back regularly as new opportunities are posted frequently.
+              </p>
+              <a 
+                href="/all-jobs" 
+                className="inline-block mt-3 text-blue-600 hover:text-blue-800 text-sm font-medium"
+              >
+                Browse all EU jobs →
+              </a>
+            </div>
+          )}
         </section>
 
       </article>

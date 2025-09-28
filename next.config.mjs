@@ -11,6 +11,16 @@ const nextConfig = {
       },
     ];
   },
+  // Build optimizations for Vercel
+  experimental: {
+    // Reduce memory usage during build
+    workerThreads: false,
+    cpus: 1,
+  },
+  // Increase build timeout for large page counts
+  staticPageGenerationTimeout: 300, // 5 minutes
+  // Reduce bundle size
+  swcMinify: true,
 };
 
 export default nextConfig;

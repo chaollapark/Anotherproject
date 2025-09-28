@@ -1,6 +1,6 @@
 import { Metadata } from "next";
 import JobPageClient from "./JobPageClient";
-import { getAllJobSlugs, findJobBySlug } from "@/models/Job";
+import { findJobBySlug } from "@/models/Job";
 import { notFound } from "next/navigation";
 
 type Params = { id: string };
@@ -17,13 +17,11 @@ export async function generateMetadata(
 }
 
 /** 
- * Generate static pages for all job slugs at build time
- * This ensures all job detail pages are pre-rendered as static HTML
+ * Use Incremental Static Regeneration (ISR) instead of generateStaticParams
+ * Pages will be generated on-demand when first visited, then cached
+ * This prevents build timeouts while maintaining good performance
  */
-export async function generateStaticParams() {
-  const slugs = await getAllJobSlugs();
-  return slugs.map(slug => ({ id: slug }));
-}
+export const revalidate = 3600; // Revalidate every hour
 
 /** 
  * Renders the job page or returns 404 for invalid slugs
