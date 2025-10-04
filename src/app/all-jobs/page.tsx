@@ -53,6 +53,48 @@ export default async function AllJobsPage({
         Browse through all available job listings. Page {currentPage} of {totalPages}.
       </p>
       
+      {/* Seniority Filter Navigation */}
+      <div className="bg-blue-50 rounded-lg p-6 mb-8">
+        <h2 className="text-xl font-semibold mb-4 text-center">Filter by Experience Level</h2>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <Link 
+            href="/internships" 
+            className="bg-white hover:bg-blue-100 border-2 border-blue-200 hover:border-blue-300 rounded-lg p-4 text-center transition-all duration-200 group"
+          >
+            <div className="text-2xl mb-2">🎓</div>
+            <div className="font-semibold text-blue-800 group-hover:text-blue-900">Internships</div>
+            <div className="text-sm text-gray-600">Entry-level opportunities</div>
+          </Link>
+          
+          <Link 
+            href="/junior-positions" 
+            className="bg-white hover:bg-green-100 border-2 border-green-200 hover:border-green-300 rounded-lg p-4 text-center transition-all duration-200 group"
+          >
+            <div className="text-2xl mb-2">🌱</div>
+            <div className="font-semibold text-green-800 group-hover:text-green-900">Junior Positions</div>
+            <div className="text-sm text-gray-600">0-2 years experience</div>
+          </Link>
+          
+          <Link 
+            href="/mid-level-positions" 
+            className="bg-white hover:bg-orange-100 border-2 border-orange-200 hover:border-orange-300 rounded-lg p-4 text-center transition-all duration-200 group"
+          >
+            <div className="text-2xl mb-2">⚡</div>
+            <div className="font-semibold text-orange-800 group-hover:text-orange-900">Mid-Level</div>
+            <div className="text-sm text-gray-600">3-5 years experience</div>
+          </Link>
+          
+          <Link 
+            href="/senior-positions" 
+            className="bg-white hover:bg-purple-100 border-2 border-purple-200 hover:border-purple-300 rounded-lg p-4 text-center transition-all duration-200 group"
+          >
+            <div className="text-2xl mb-2">👑</div>
+            <div className="font-semibold text-purple-800 group-hover:text-purple-900">Senior Positions</div>
+            <div className="text-sm text-gray-600">5+ years experience</div>
+          </Link>
+        </div>
+      </div>
+      
       <div className="bg-white rounded-lg shadow-md p-6 mb-8">
         <Suspense fallback={<div>Loading job listings...</div>}>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -73,27 +115,96 @@ export default async function AllJobsPage({
         </Suspense>
       </div>
       
-      {/* Pagination */}
-      <div className="flex justify-center mt-6">
-        <nav className="inline-flex rounded-md shadow">
-          <ul className="flex">
-            {Array.from({ length: totalPages }, (_, i) => (
-              <li key={i + 1}>
+      {/* Smart Pagination */}
+      {totalPages > 1 && (
+        <div className="flex justify-center mt-6">
+          <nav className="inline-flex rounded-md shadow">
+            <div className="flex">
+              {/* Previous Button */}
+              {currentPage > 1 && (
                 <Link
-                  href={`/all-jobs?page=${i + 1}`}
-                  className={`px-4 py-2 border ${
-                    currentPage === i + 1
-                      ? 'bg-blue-600 text-white'
-                      : 'bg-white text-gray-700 hover:bg-gray-50'
-                  }`}
+                  href={`/all-jobs?page=${currentPage - 1}`}
+                  className="px-3 py-2 border border-r-0 bg-white text-gray-700 hover:bg-gray-50 rounded-l-md"
                 >
-                  {i + 1}
+                  ← Previous
                 </Link>
-              </li>
-            ))}
-          </ul>
-        </nav>
-      </div>
+              )}
+              
+              {/* First page */}
+              {currentPage > 3 && (
+                <>
+                  <Link
+                    href="/all-jobs?page=1"
+                    className="px-4 py-2 border border-r-0 bg-white text-gray-700 hover:bg-gray-50"
+                  >
+                    1
+                  </Link>
+                  {currentPage > 4 && (
+                    <span className="px-4 py-2 border border-r-0 bg-white text-gray-500">...</span>
+                  )}
+                </>
+              )}
+              
+              {/* Pages around current page */}
+              {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
+                let pageNum;
+                if (totalPages <= 5) {
+                  pageNum = i + 1;
+                } else if (currentPage <= 3) {
+                  pageNum = i + 1;
+                } else if (currentPage >= totalPages - 2) {
+                  pageNum = totalPages - 4 + i;
+                } else {
+                  pageNum = currentPage - 2 + i;
+                }
+                
+                if (pageNum < 1 || pageNum > totalPages) return null;
+                if (currentPage > 3 && pageNum === 1) return null;
+                if (currentPage < totalPages - 2 && pageNum === totalPages) return null;
+                
+                return (
+                  <Link
+                    key={pageNum}
+                    href={`/all-jobs?page=${pageNum}`}
+                    className={`px-4 py-2 border border-r-0 ${
+                      currentPage === pageNum
+                        ? 'bg-blue-600 text-white'
+                        : 'bg-white text-gray-700 hover:bg-gray-50'
+                    }`}
+                  >
+                    {pageNum}
+                  </Link>
+                );
+              })}
+              
+              {/* Last page */}
+              {currentPage < totalPages - 2 && (
+                <>
+                  {currentPage < totalPages - 3 && (
+                    <span className="px-4 py-2 border border-r-0 bg-white text-gray-500">...</span>
+                  )}
+                  <Link
+                    href={`/all-jobs?page=${totalPages}`}
+                    className="px-4 py-2 border border-r-0 bg-white text-gray-700 hover:bg-gray-50"
+                  >
+                    {totalPages}
+                  </Link>
+                </>
+              )}
+              
+              {/* Next Button */}
+              {currentPage < totalPages && (
+                <Link
+                  href={`/all-jobs?page=${currentPage + 1}`}
+                  className="px-3 py-2 border bg-white text-gray-700 hover:bg-gray-50 rounded-r-md"
+                >
+                  Next →
+                </Link>
+              )}
+            </div>
+          </nav>
+        </div>
+      )}
     </div>
   );
 }

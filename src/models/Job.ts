@@ -190,6 +190,30 @@ export async function fetchJobsByCity(cityName: string) {
   return JSON.parse(JSON.stringify([...featuredJobs, ...regularJobs]));
 }
 
+export async function fetchJobsBySeniority(seniority: string) {
+  await dbConnect();
+
+  const featuredJobs = await JobModel.find(
+    { 
+      seniority: seniority,
+      plan: { $in: ['pro', 'recruiter'] } 
+    },
+    {},
+    { sort: '-createdAt', limit: 5 }
+  );
+
+  const regularJobs = await JobModel.find(
+    {
+      seniority: seniority,
+      plan: { $nin: ['pro', 'recruiter', 'pending'] }
+    },
+    {},
+    { sort: '-createdAt', limit: 50 }
+  );
+
+  return JSON.parse(JSON.stringify([...featuredJobs, ...regularJobs]));
+}
+
 export async function getAllJobSlugs() {
   try {
     await dbConnect();

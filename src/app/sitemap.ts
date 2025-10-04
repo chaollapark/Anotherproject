@@ -63,6 +63,31 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       changeFrequency: 'daily',
       priority: 0.7, // This was in the new sitemap
     },
+    // Seniority-based job filter pages
+    {
+      url: `${baseUrl}/internships`,
+      lastModified: new Date(),
+      changeFrequency: 'daily',
+      priority: 0.8,
+    },
+    {
+      url: `${baseUrl}/junior-positions`,
+      lastModified: new Date(),
+      changeFrequency: 'daily',
+      priority: 0.8,
+    },
+    {
+      url: `${baseUrl}/mid-level-positions`,
+      lastModified: new Date(),
+      changeFrequency: 'daily',
+      priority: 0.8,
+    },
+    {
+      url: `${baseUrl}/senior-positions`,
+      lastModified: new Date(),
+      changeFrequency: 'daily',
+      priority: 0.8,
+    },
     // Assuming /jobs is the main listing page for jobs, if different from /all-jobs
     // If /all-jobs is the main one, you might not need a separate /jobs entry or adjust priorities.
     {
